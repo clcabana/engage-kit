@@ -1,0 +1,28 @@
+{
+  "project": {
+    "name": "Riverside Community Hub",
+    "client": "[Client name]",
+    "phase": "Pre-design — design options (steps 5–8 of the consultation workflow)",
+    "audience": ["residents", "user groups", "client steering committee"],
+    "palette": { "paper": "#F7F6F2", "ink": "#23241F", "marker": "#E8642C", "plan": "#2E5E8C" },
+    "typeface": "Archivo",
+    "language": "plain, public-facing; architect vocabulary only in the designer notes"
+  },
+  "source": { "deck": "input/pre-design-deck.pdf", "ingested": "work/brief.json" },
+  "install": [
+    { "skill": "ek-shell", "reason": "required container" },
+    { "skill": "ek-timeline", "reason": "deck has 6 dated site/community events; residents asked for context" },
+    { "skill": "ek-site-massing-3d", "reason": "three massing options are the main decision gate" },
+    { "skill": "ek-program-diagram", "reason": "program areas are still contested; sizes need to be felt, not read" },
+    { "skill": "ek-voice-reactions", "reason": "drop-in sessions; typing on phones suppresses responses" },
+    { "skill": "ek-massing-markup", "reason": "client wants location-specific comments on the massing" },
+    { "skill": "ek-model-roundtrip", "reason": "two user groups model; they asked to show rather than tell" },
+    { "skill": "ek-drawing-markup", "reason": "drop-in sessions with printed plans on the table" },
+    { "skill": "ek-submissions-gallery", "reason": "required when round-trip or markup is installed" },
+    { "skill": "ek-feedback-synthesis", "reason": "required for the synthesis document at step 7" }
+  ],
+  "skip": [
+    { "skill": "ek-live-questionnaire", "reason": "no scheduled live session; use the reaction bar instead" }
+  ],
+  "reaction_schema": { "feature": "string", "target": "string", "kind": "voice|note|pin|vote|edit|submission|markup", "value": "any", "ts": "ISO-8601" }
+}

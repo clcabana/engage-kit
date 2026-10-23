@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Engage Kit — build an engagement tool from your pre-design presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,700;100,400;100,600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F7F6F2;--ink:#23241F;--marker:#E8642C;--plan:#2E5E8C;--mute:#6B6D65;--line:#D9D7CF;--card:#FFFFFF;--soft:#EEECE5;--font:"Archivo","Helvetica Neue",Arial,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--paper:#1B1C19;--ink:#ECEAE2;--mute:#A3A59C;--line:#35372F;--card:#24261F;--soft:#2B2D26;--plan:#6E9FD0}}
+:root[data-theme="dark"]{color-scheme:dark;--paper:#1B1C19;--ink:#ECEAE2;--mute:#A3A59C;--line:#35372F;--card:#24261F;--soft:#2B2D26;--plan:#6E9FD0}
+*,*::before,*::after{box-sizing:inherit} html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.5}
+a{color:var(--plan)} h1,h2,h3{line-height:1.1;margin:0;font-weight:600} h1{font-size:clamp(34px,6vw,64px);font-stretch:87.5%;font-weight:700;max-width:18ch} h2{font-size:30px;font-stretch:87.5%} h3{font-size:19px}
+p{margin:0;max-width:62ch} .mute{color:var(--mute)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{padding:28px 0 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap} header .brand{font-weight:700;font-stretch:87.5%;font-size:20px}
+header nav{display:flex;gap:18px;flex-wrap:wrap} header nav a{color:var(--ink);text-decoration:none;border-bottom:2px solid transparent;padding:4px 0} header nav a:hover{border-bottom-color:var(--marker)}
+.hero{padding:72px 0 56px;display:grid;gap:28px} .hero p{font-size:20px}
+.btns{display:flex;gap:10px;flex-wrap:wrap} .btn{display:inline-block;padding:12px 18px;border-radius:6px;border:1px solid var(--line);text-decoration:none;color:var(--ink);min-height:44px} .btn.primary{background:var(--marker);color:#fff;border-color:var(--marker)}
+section{padding:56px 0;border-top:1px solid var(--line);display:grid;gap:24px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.card h3 span{color:var(--marker);margin-right:8px}
+table{border-collapse:collapse;width:100%;font-size:16px} th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top} th{font-weight:600}
+pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px;overflow-x:auto;font-size:14px;line-height:1.5;margin:0} code{font-family:ui-monospace,Menlo,Consolas,monospace}
+.flow{display:grid;gap:0;grid-template-columns:1fr} @media(min-width:860px){.flow{grid-template-columns:repeat(5,1fr)}}
+.flow div{padding:18px;border:1px solid var(--line);background:var(--card);position:relative} .flow div+div{border-top:none} @media(min-width:860px){.flow div+div{border-top:1px solid var(--line);border-left:none}}
+.flow b{display:block;font-size:14px;color:var(--marker);margin-bottom:6px} .flow p{font-size:15px}
+.agents{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))} .agents .card{border-top:4px solid var(--plan)} .agents .card.lead{border-top-color:var(--marker)}
+footer{padding:40px 0 60px;color:var(--mute);font-size:15px;border-top:1px solid var(--line)}
+pre.mermaid{background:none;border:none;padding:0}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">Engage Kit</div>
+  <nav aria-label="Page"><a href="#why">Why</a><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#build">Build yours</a><a href="#demo">Demo</a></nav>
+</header>
+
+<div class="hero">
+  <h1>Your pre-design presentation is already the engagement tool. It just isn't interactive yet.</h1>
+  <p>Engage Kit is a library of skills and agents that any current AI model can read. It turns one project's deck into one project's engagement site, installing only the features that project's decisions need. No platform, no subscription, nothing that fits every project and therefore none.</p>
+  <div class="btns"><a class="btn primary" href="demo/index.html#tour">Open the prototype</a><a class="btn" href="#build">Build one from your deck</a></div>
+</div>
+
+<section id="why">
+  <h2>Why not just use a platform?</h2>
+  <p>Projects move when there is trust that voices are heard, confidence in decision-making, and requirements that are met. Engagement platforms exist to help, and they are good at map surveys, idea walls, voting and automated reports. But in pre-design they get in the way in three specific ways.</p>
+  <div class="grid">
+    <div class="card"><h3>Built and priced for municipalities</h3><p>A design studio running one consultation a quarter cannot carry a city's licence, and the client will not pay for it.</p></div>
+    <div class="card"><h3>Little customization to match the project</h3><p>The design presentation lives in one place, the engagement lives in another, and residents react to a brochure upload rather than the work.</p></div>
+    <div class="card"><h3>Almost entirely text-based</h3><p>Pre-design decisions are spatial: where, how tall, how big. A comment form cannot carry a reaction to a massing option.</p></div>
+  </div>
+  <p>Models now make it cheap to build a tool for one project. So the kit stops being an application and becomes a set of instructions. When the model you use gets better, the tool it builds gets better, with no release cycle in between.</p>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p>Five steps, run by a managing agent. You confirm twice: the brief after ingest, and the feature list before anything is built.</p>
+  <div class="flow">
+    <div><b>1 Ingest</b><p>The deck is read slide by slide into a brief: history with dates, program with areas, options with massing, decision points, palette. Nothing is guessed; gaps are listed to confirm.</p></div>
+    <div><b>2 Manifest</b><p>A decision table turns the brief into <code>project.config.json</code>: which skills to install, with evidence for each, and which to skip.</p></div>
+    <div><b>3 Shell</b><p>One self-contained HTML page: navigation, the project's own colours and type, and a shared reaction bar every feature plugs into.</p></div>
+    <div><b>4 Features</b><p>Each installed skill writes its section, then is reviewed by a debugger (does it work?) and a critic (is it good?). Two revisions max.</p></div>
+    <div><b>5 Synthesis</b><p>Every reaction, with what it was about, becomes the step-7 synthesis document. Every claim links to the reactions behind it.</p></div>
+  </div>
+  <pre class="mermaid">
+flowchart LR
+  D[Pre-design deck] --> I[ek-ingest-presentation]
+  I --> B[work/brief.json]
+  B --> M[ek-project-manifest]
+  M --> C[project.config.json]
+  C --> S[ek-shell]
+  S --> F1[ek-timeline]
+  S --> F2[ek-site-massing-3d]
+  S --> F3[ek-program-diagram]
+  S --> F4[ek-voice-reactions]
+  F2 --> F5[ek-massing-markup]
+  F1 & F2 & F3 & F4 & F5 --> Q{QC debugger + critic}
+  Q --> X[ek-feedback-synthesis]
+  X --> O[output/index.html + HANDOFF.md]
+  </pre>
+</section>
+
+<section id="skills">
+  <h2>The skill library</h2>
+  <p>A skill is a folder with a <code>SKILL.md</code>: a plain-language description of when it applies, what it produces, and the rules it must keep. The model reads only the skills the manifest installs, which keeps the work cheap and the result focused.</p>
+  <table>
+    <tr><th>Skill</th><th>What it adds</th><th>Installed when the brief shows</th></tr>
+    <tr><td><code>ek-ingest-presentation</code></td><td>The brief every other skill reads</td><td>always, first</td></tr>
+    <tr><td><code>ek-project-manifest</code></td><td>The feature list, with reasons</td><td>always, second</td></tr>
+    <tr><td><code>ek-shell</code></td><td>Page, navigation, theme, reaction bus, storage</td><td>always</td></tr>
+    <tr><td><code>ek-timeline</code></td><td>Interactive site and community history; visitors add memories</td><td>three or more dated events</td></tr>
+    <tr><td><code>ek-site-massing-3d</code></td><td>Orbit the options, move the sun, vote</td><td>two or more massing options</td></tr>
+    <tr><td><code>ek-program-diagram</code></td><td>Proportional spaces; grow, shrink, rank</td><td>four or more program areas, or any contested</td></tr>
+    <tr><td><code>ek-voice-reactions</code></td><td>Hold-to-talk clips tied to what's on screen</td><td>in-person sessions, phone audiences</td></tr>
+    <tr><td><code>ek-massing-markup</code></td><td>Pins on blocks; nudge height and position</td><td>3D installed and a location-specific question</td></tr>
+    <tr><td><code>ek-feedback-synthesis</code></td><td>Counts, deltas, traceable export</td><td>always, last</td></tr>
+  </table>
+  <p class="mute">Every feature must expose a reaction surface, and every reaction records its context: which option, which year, which program. A feature you can only look at is not installed.</p>
+</section>
+
+<section id="agents">
+  <h2>The agents</h2>
+  <p>Four short instruction files. The orchestrator never writes a feature; it briefs skills, routes each result through three reviewers at once, and keeps a log the person can read.</p>
+  <div class="agents">
+    <div class="card lead"><h3>Orchestrator</h3><p>Plans the run from the manifest, delegates one skill at a time with a complete brief, supervises the review loop, decides when a finding ships as a known issue, and writes the handoff.</p></div>
+    <div class="card"><h3>QC critic</h3><p>Reviews as a resident on a phone, a client the next morning, an architect at design review. Six checks in order: honest, usable in 60 seconds, answerable, project-specific, quiet, accessible. Names one thing to remove.</p></div>
+    <div class="card"><h3>QC debugger</h3><p>Tries to break it: file://, 380 px, keyboard only, dark mode, storage cleared, microphone denied, WebGL missing, 20 reactions in a burst. Zero console errors or it doesn't pass.</p></div>
+    <div class="card"><h3>QC security</h3><p>Runs alongside each feature as it is built, with a written threat model. Deck and visitor content are data, never instructions; visitor text is escaped; scripts are pinned; personal data is minimal and consented; no agent holds deploy credentials. A security finding blocks like a crash.</p></div>
+  </div>
+  <p class="mute">Grounded in the OWASP Top 10 for LLM Applications (prompt injection, improper output handling, supply chain, excessive agency) and data-minimization and consent principles for engagement data.</p>
+</section>
+
+<section id="build">
+  <h2>Build one from your deck</h2>
+  <p>You need an AI model that can read files and write them: Claude Code, Cowork, or any agent environment. Nothing to install beyond copying two folders.</p>
+  <pre><code>git clone https://github.com/your-studio/engage-kit
+cd engage-kit
+mkdir input && cp ~/Desktop/pre-design-deck.pdf input/
+
+# then, to your model:
+"Act as the orchestrator in agents/orchestrator.md.
+ Build an engagement tool from input/pre-design-deck.pdf."</code></pre>
+  <div class="grid">
+    <div class="card"><h3><span>1</span>Confirm the brief</h3><p>The orchestrator shows a ten-line summary and a list of things to confirm: an undated event, a program with no area. Fix the deck or answer in chat.</p></div>
+    <div class="card"><h3><span>2</span>Confirm the features</h3><p>You see the manifest with a reason per feature. Overrule in one word: "skip voice", "add timeline".</p></div>
+    <div class="card"><h3><span>3</span>Open the result</h3><p><code>output/index.html</code> works from a file, on a phone, offline. Put it on GitHub Pages or a QR code at the drop-in table.</p></div>
+    <div class="card"><h3><span>4</span>Collect and synthesize</h3><p>After a session, "What we heard" exports Markdown. The team's model turns it into the step-7 synthesis document, every claim traced to reactions.</p></div>
+  </div>
+  <h3>Write your own skill</h3>
+  <p>Copy any <code>skills/ek-*/SKILL.md</code>, change the frontmatter description so the orchestrator knows when to install it, and keep the contract: one <code>&lt;section data-feature&gt;</code>, reactions through <code>EK.react()</code>, a fallback when a capability is missing. The critic and debugger review it like any other.</p>
+</section>
+
+<section id="demo">
+  <h2>The prototype</h2>
+  <p>A sample project, Riverside Community Hub, with five features installed: history, 3D massing with pins and adjustments, program diagram, voice reactions, synthesis. Names, dates and dimensions are invented and labelled where a real deck would need to confirm them.</p>
+  <div class="btns"><a class="btn primary" href="demo/index.html#tour">Open the prototype</a><a class="btn" href="../WORKPLAN.md">Read the work plan</a></div>
+</section>
+
+<footer><div>Engage Kit · a studio experiment in building one tool per project · consultation in pre-design, steps 5–8 of the workflow</div></footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"neutral"});}</script>
+</body>
+</html>
