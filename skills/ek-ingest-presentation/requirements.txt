@@ -1,0 +1,8 @@
+# ek-ingest-presentation — pinned Python dependencies (Python 3.11+).
+# Versions are the ones the script was tested with on 2026-10-23.
+# Install with:  python -m pip install -r skills/ek-ingest-presentation/requirements.txt
+PyMuPDF==2.0.0        # PDF text, fonts, renders; Tesseract OCR bridge when tesseract is on PATH
+Pillow==13.0.0        # palette measurement
+numpy==2.5.4          # palette measurement
+python-pptx==1.0.2    # optional: PPTX text extraction
+# System tools, optional, improve fidelity: poppler (pdftotext, pdftoppm), Tesseract OCR, LibreOffice (PPTX renders)

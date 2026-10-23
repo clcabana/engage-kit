@@ -21,9 +21,14 @@ engage-kit/
 ├── agents/
 │   ├── orchestrator.md      ← managing agent: plans, delegates, supervises
 │   ├── qc-critic.md         ← design & engagement-quality reviewer
-│   └── qc-debugger.md       ← technical reviewer: breaks things, then fixes them
+│   ├── qc-debugger.md       ← technical reviewer: breaks things, then fixes them
+│   └── qc-security.md       ← trust & safety reviewer, runs concurrently with the debugger
 ├── skills/
 │   ├── ek-ingest-presentation/   read a deck; extract facts, images, decision points
+│   │   ├── ingest.py             the extraction script (PDF/PPTX → work/extract.json + renders)
+│   │   └── requirements.txt      pinned Python deps
+├── work/                    ← per-project working files: brief.json, brief-summary.md, log.md, security/
+│                              (extract.json, slides/ and input/ are gitignored: client material)
 │   ├── ek-project-manifest/      decide which features this project needs; write the manifest
 │   ├── ek-shell/                 the page container every feature plugs into
 │   ├── ek-timeline/              interactive site & community history

@@ -1,0 +1,12 @@
+# Brief summary — arch540-midterm-draft-deck.pdf (2026-10-23)
+
+1. **Read this first:** the deck is a concept pitch for an engagement-tool kit, not a pre-design deck for a building. It has no site, no history, no program areas and no massing options, so the manifest step will find nothing to build. It was the only real presentation on this machine and was used to test the ingest pipeline.
+2. **How it was read:** 17 pages, 10 unique (7 repeats). No page has a text layer and no OCR engine is installed, so the model read the 1600 px renders directly. Every quote is a transcription to check.
+3. **Project facts stated in the deck:** the aim, word for word from slide 3: "a tool that acts as both the design presentation and engagement platform tailored to each project, community, and format". No project name, client, location or phase is stated.
+4. **Audience (slide 9):** three portals. Designer Portal creates, User Portal engages, Client Portal acts on the interactive design presentation. How each group meets is not stated.
+5. **Decision points (slide 2):** two Approve/Revise gates in the eight-step workflow, at step 4 "Get program endorsed" and step 8 "Preferred Option". Who decides is not stated.
+6. **Candidate features (slide 10):** Live Presentation, Interactive Info-Graphics, Interactive 3D Environment, Transparent Project Information, Live Questionnaires, Markups, Upload References, record voice Critiques. Seven map to existing skills, two of them loosely; Live Questionnaires has no skill yet.
+7. **Precedents (slides 4 to 7, 14):** Open Point, EngagementHQ, GoVocal, with the three stated challenges: built and priced for municipalities; little customization to match project graphics; almost entirely text-based with infographic results.
+8. **Palette and type:** measured white paper, dark-grey ink (#262626), one pale yellow (#FFF7AA) at the detection floor and a peach tint (#FFF7EC) from the website captures. The small coloured boxes were not captured. Typeface not named.
+9. **Open questions:** 10 items in to_confirm, including the project name, the missing palette colours, and which of the two "Existing Tools" summary slides is current.
+10. **Tally:** filled verbatim from the deck: project.one_line, 3 audience rows, 2 decision points, 8 feature terms, 17 slide entries. Empty because the deck is silent: project.name, client, location, phase, history, site, program, options, typeface. In to_confirm: 10 items.

@@ -11,3 +11,13 @@ __pycache__/
 # Local secrets (never commit credentials)
 .env
 *.key
+
+# Ingest inputs, renders and verbatim extracts stay local (decks may be client material).
+# Only work/brief.json, work/brief-summary.md, work/log.md and work/security/ are committed,
+# and brief.json only after the person has checked it for personal data (see SKILL.md).
+input/
+work/slides/
+work/*.pdf
+work/extract.json
+work/brief.skeleton.json
+

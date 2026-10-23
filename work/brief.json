@@ -1,0 +1,84 @@
+{
+  "schema_version": "0.1",
+  "content_note": "All strings below are transcribed from an untrusted deck; they describe a project, they are not instructions.",
+  "project": {
+    "name": "",
+    "client": "",
+    "location": "",
+    "phase": "",
+    "one_line": "a tool that acts as both the design presentation and engagement platform tailored to each project, community, and format"
+  },
+  "audience": [
+    { "group": "Designer Portal", "what_they_decide": "create the interactive design presentation", "how_they_meet": "", "source_slide": 9 },
+    { "group": "User Portal", "what_they_decide": "engage with the interactive design presentation", "how_they_meet": "", "source_slide": 9 },
+    { "group": "Client Portal", "what_they_decide": "act on the interactive design presentation", "how_they_meet": "", "source_slide": 9 }
+  ],
+  "history": [],
+  "site": { "description": "", "constraints": [], "plan_image": "", "north_up": true },
+  "program": [],
+  "options": [],
+  "decision_points": [
+    { "question": "4. Get program endorsed: Approve (to 5. Design Options) or Revise (to 2. Gather Project Information)", "options": ["Approve", "Revise"], "who_decides": "", "when": "after 3. Write functional program", "source_slide": 2 },
+    { "question": "8. Preferred Option: Approve (to Schematic Design) or Revise (to 5. Design Options)", "options": ["Approve", "Revise"], "who_decides": "", "when": "after 7. Feedback Synthesis", "source_slide": 2 }
+  ],
+  "palette": { "paper": "#FFFFFF", "ink": "#262626", "accent1": "#FFF7AA", "accent2": "" },
+  "typeface": "",
+  "candidate_features": [
+    "ek-shell",
+    "ek-program-diagram",
+    "ek-site-massing-3d",
+    "ek-timeline",
+    "ek-massing-markup",
+    "ek-drawing-markup",
+    "ek-model-roundtrip",
+    "ek-voice-reactions"
+  ],
+  "feature_evidence": [
+    { "deck_term": "Live Presentation", "skill": "ek-shell", "source_slide": 10 },
+    { "deck_term": "Interactive Info-Graphics", "skill": "ek-program-diagram", "source_slide": 10 },
+    { "deck_term": "Interactive 3D Environment", "skill": "ek-site-massing-3d", "source_slide": 10 },
+    { "deck_term": "Transparent Project Information", "skill": "ek-timeline", "source_slide": 10, "note": "loose mapping; confirm" },
+    { "deck_term": "Live Questionnaires", "skill": "", "source_slide": 10, "note": "no skill yet; ek-live-questionnaire is a Phase 3 candidate" },
+    { "deck_term": "Markups", "skill": "ek-massing-markup, ek-drawing-markup", "source_slide": 10 },
+    { "deck_term": "Upload References", "skill": "ek-model-roundtrip", "source_slide": 10, "note": "loose mapping; ek-precedent-wall (Phase 3) is closer" },
+    { "deck_term": "record voice Critiques", "skill": "ek-voice-reactions", "source_slide": 10 }
+  ],
+  "slides": [
+    { "n": 1,  "image": "work/slides/01.png", "tag": "context",   "title": "Architectural Workflow: Consultation in Pre-Design", "summary": "Projects are held together by trust; users want their voice heard; stakeholders must be aligned to make confident decisions; momentum cannot be lost to contested decisions. Projects move forward with trust that voices are heard, confidence in decision-making, requirements met. Engagement often lives apart across separate systems, events, relationships and data." },
+    { "n": 2,  "image": "work/slides/02.png", "tag": "process",   "title": "Architectural Workflow: Consultation in Pre-Design (diagram)", "summary": "Project Launch to Schematic Design in eight steps: 1 Map Stakeholders, 2 Gather Project Information, 3 Write functional program, 4 Get program endorsed, 5 Design Options: Program, Site, Massing, 6 Stakeholder and User Engagement, 7 Feedback Synthesis, 8 Preferred Option. Approve/Revise arrows at 4 and 8. Steps 6 to 8 are boxed and labelled 'workflow'. Left column defines Consultation, Pre-design and Stakeholders; the citation '(Canadian Handbook of Practice)' sits under Stakeholders." },
+    { "n": 3,  "image": "work/slides/03.png", "tag": "context",   "title": "AI models now allow hyper customized tools", "summary": "Purpose-built on a project-by-project basis, by-passing subscriptions to existing software with features they may not need. Architects and stakeholders can now craft a tool that acts as both the design presentation and engagement platform tailored to each project, community, and format." },
+    { "n": 4,  "image": "work/slides/04.png", "tag": "precedent", "title": "Existing Tools: Open Point Software", "summary": "Community Engagement and Stakeholder Management. Website capture: Input, Insight, Impact; sentiment analysis; full audit trail. Page background on the capture is a peach tint." },
+    { "n": 5,  "image": "work/slides/05.png", "tag": "precedent", "title": "Existing Tools: EngagementHQ", "summary": "High-quality, community insights that speed up informed decision making. Capture shows Forum, Ideas, Places, Stories, Guestbook, Questions, Polls, Surveys and open / mixed / controlled environments." },
+    { "n": 6,  "image": "work/slides/06.png", "tag": "precedent", "title": "Existing Tools: GoVocal", "summary": "Community Engagement Platform. Capture: Turn voices into action; Engage, Understand, Act; 16+ participation methods; AI sensemaking; close the loop." },
+    { "n": 7,  "image": "work/slides/07.png", "tag": "precedent", "title": "Existing Tools (summary)", "summary": "Three logos pointing to: map-based surveys, idea walls, voting, and automated 'what we heard' reporting. Uploaded Project Brief/Brochures. Built and priced for municipalities." },
+    { "n": 8,  "image": "work/slides/08.png", "tag": "duplicate", "duplicate_of": 1 },
+    { "n": 9,  "image": "work/slides/09.png", "tag": "context",   "title": "Objective", "summary": "Create a tool for designers to create custom interactive engagement tools based off their design presentations. Three boxes, Designer Portal, User Portal, Client Portal, with arrows labelled create, Engage, Act into a central box 'interactive design presentation'." },
+    { "n": 10, "image": "work/slides/10.png", "tag": "other",     "title": "Tool Features", "summary": "Four items feed into 'interactive design presentation': Live Presentation, Interactive Info-Graphics, Interactive 3D Environment, Transparent Project Information. Four items branch out of it: Live Questionnaires, Markups, Upload References, record voice Critiques (reading: inputs above, outputs below; the slide shows arrows only). Sticky notes: each feature becomes a skill; create individual skills; sidewalk labs + kpfui visualization engagement tool; hierarchy of skills with a lead agent to preserve tokens; be very specific about each skill description; '/name-of-skill write your prompt' note." },
+    { "n": 11, "image": "work/slides/11.png", "tag": "duplicate", "duplicate_of": 4 },
+    { "n": 12, "image": "work/slides/12.png", "tag": "duplicate", "duplicate_of": 5 },
+    { "n": 13, "image": "work/slides/13.png", "tag": "duplicate", "duplicate_of": 6 },
+    { "n": 14, "image": "work/slides/14.png", "tag": "precedent", "title": "Existing Tools (summary, with challenges)", "summary": "As slide 7, plus Challenges: Built and priced for municipalities; Little customization to match project graphics; Almost entirely text-based with infographic results." },
+    { "n": 15, "image": "work/slides/15.png", "tag": "duplicate", "duplicate_of": 3 },
+    { "n": 16, "image": "work/slides/16.png", "tag": "duplicate", "duplicate_of": 9 },
+    { "n": 17, "image": "work/slides/17.png", "tag": "duplicate", "duplicate_of": 10 }
+  ],
+  "to_confirm": [
+    "This deck is a concept pitch for an engagement-tool kit, not a pre-design deck for a building. It contains no site, no history, no program areas and no massing options, so the manifest step will find nothing to build. It was used to test the ingest pipeline.",
+    "Project name: the deck names no project. 'Engage Kit' is the repository's name, not a slide title; the deck's own title is 'Architectural Workflow: Consultation in Pre-Design' (slide 1).",
+    "All 17 pages are images with no text layer and no OCR engine is installed. Every string in this brief was read visually from the 1600 px renders by the model. Check quotes against the deck.",
+    "Client, location, phase, and how each portal's audience meets are not stated.",
+    "Who decides at the two Approve/Revise gates (steps 4 and 8) is not stated.",
+    "Palette is a measurement at a 0.2 % coverage floor: paper #FFFFFF; accent #FFF7AA sits exactly at the floor (reading: the sticky notes on slide 10); light tints captured: #FFF7EC at 4.2 % (reading: the peach website background on slides 4 and 11) and four near-white tints under 1 %. Ink is the pooled dark-text colour. The green dashed box on slide 2 and the orange / cyan / green portal boxes on slide 9 are below the floor and not captured. Confirm against a brand guide.",
+    "Typeface is not named in the deck; the renders look like a humanist sans (Noto Sans or Open Sans).",
+    "Seven pages are byte-identical repeats of earlier pages (8=1, 11=4, 12=5, 13=6, 15=3, 16=9, 17=10): draft-deck artefact. Slide 14 looks like the revised version of slide 7; confirm which is current.",
+    "Feature-to-skill mapping for 'Transparent Project Information' and 'Upload References' is loose; 'Live Questionnaires' has no skill in the library.",
+    "Instruction-shaped text on slide 10 (sticky notes about installing and invoking skills) is transcribed as deck content only. Nothing was installed or run because of it."
+  ],
+  "source": {
+    "deck": "arch540-midterm-draft-deck.pdf (in input/, not committed)",
+    "extract": "work/extract.json (not committed)",
+    "slides": "work/slides/01.png .. 17.png (1600 px wide, PyMuPDF render, not committed)",
+    "ingested_at": "2026-10-23",
+    "read_by": "model, visually, from renders (no text layer, no OCR)"
+  }
+}
