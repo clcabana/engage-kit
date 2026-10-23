@@ -17,6 +17,17 @@ p{margin:0;max-width:62ch} .mute{color:var(--mute)}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
 header{padding:28px 0 0;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap} header .brand{font-weight:700;font-stretch:87.5%;font-size:20px}
 header nav{display:flex;gap:18px;flex-wrap:wrap} header nav a{color:var(--ink);text-decoration:none;border-bottom:2px solid transparent;padding:4px 0} header nav a:hover{border-bottom-color:var(--marker)}
+header nav a:focus-visible,#menuBtn:focus-visible{outline:2px solid var(--marker);outline-offset:3px}
+#menuBtn{display:none;appearance:none;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:6px;min-width:44px;min-height:44px;padding:0 12px;font:inherit;font-size:15px;cursor:pointer;align-items:center;gap:8px}
+#menuBtn svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+#menuBtn .x{display:none} header.open #menuBtn .x{display:block} header.open #menuBtn .bars{display:none}
+@media(max-width:720px){
+  header{position:relative;flex-wrap:nowrap}
+  #menuBtn{display:inline-flex}
+  header nav{display:none;position:absolute;left:0;right:0;top:calc(100% + 10px);z-index:20;flex-direction:column;gap:0;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.18);overflow:hidden}
+  header.open nav{display:flex}
+  header nav a{padding:14px 18px;min-height:48px;border-bottom:1px solid var(--line);display:flex;align-items:center} header nav a:last-child{border-bottom:none} header nav a:hover{background:var(--soft)}
+}
 .hero{padding:72px 0 56px;display:grid;gap:28px} .hero p{font-size:20px}
 .btns{display:flex;gap:10px;flex-wrap:wrap} .btn{display:inline-block;padding:12px 18px;border-radius:6px;border:1px solid var(--line);text-decoration:none;color:var(--ink);min-height:44px} .btn.primary{background:var(--marker);color:#fff;border-color:var(--marker)}
 section{padding:56px 0;border-top:1px solid var(--line);display:grid;gap:24px}
@@ -36,9 +47,14 @@ pre.mermaid{background:none;border:none;padding:0}
 </head>
 <body>
 <div class="wrap">
-<header>
+<header id="top">
   <div class="brand">Engage Kit</div>
-  <nav aria-label="Page"><a href="#why">Why</a><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#build">Build yours</a><a href="#demo">Demo</a></nav>
+  <button id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+    <svg class="bars" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <svg class="x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    <span>Menu</span>
+  </button>
+  <nav id="siteNav" aria-label="Page"><a href="#why">Why</a><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#build">Build yours</a><a href="#demo">Demo</a></nav>
 </header>
 
 <div class="hero">
@@ -146,5 +162,17 @@ mkdir input && cp ~/Desktop/pre-design-deck.pdf input/
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
 <script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"neutral"});}</script>
+<script>
+(function(){
+  var hdr=document.getElementById("top"),btn=document.getElementById("menuBtn"),nav=document.getElementById("siteNav");
+  if(!hdr||!btn||!nav) return;
+  function setOpen(o){hdr.classList.toggle("open",o);btn.setAttribute("aria-expanded",o?"true":"false");btn.setAttribute("aria-label",o?"Close menu":"Open menu");}
+  btn.addEventListener("click",function(){setOpen(!hdr.classList.contains("open"));});
+  nav.addEventListener("click",function(e){if(e.target.closest("a")) setOpen(false);});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&hdr.classList.contains("open")){setOpen(false);btn.focus();}});
+  document.addEventListener("click",function(e){if(hdr.classList.contains("open")&&!hdr.contains(e.target)) setOpen(false);});
+  matchMedia("(min-width:721px)").addEventListener("change",function(m){if(m.matches) setOpen(false);});
+})();
+</script>
 </body>
 </html>
