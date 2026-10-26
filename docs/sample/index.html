@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Riverside Community Hub — have your say</title>
+<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-10-26T20:26:01+00:00">
+
+<style>
+/* ===== ek-shell: theme tokens (from the project brief) ===== */
+:root{
+  --paper:#F7F6F2; --ink:#23241F; --marker:#E8642C; --plan:#2E5E8C; --mute:#6B6B67; --line:#D9D9D4; --card:#FCFBFA; --soft:#ECECE7; --on-marker:#23241F;
+  --font:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ color-scheme:dark; --paper:#1A1B17; --ink:#F9F9F6; --marker:#E8642C; --plan:#7796B4; --mute:#9C9C98; --line:#3E3E3B; --card:#282825; --soft:#31312E; --on-marker:#23241F; } }
+:root[data-theme="dark"]{ color-scheme:dark; --paper:#1A1B17; --ink:#F9F9F6; --marker:#E8642C; --plan:#7796B4; --mute:#9C9C98; --line:#3E3E3B; --card:#282825; --soft:#31312E; --on-marker:#23241F; }
+/* ===== ek-shell: base ===== */
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)} html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;display:flex;flex-direction:column}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:10}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.1}
+h1{font-size:28px} h2{font-size:20px} h3{font-size:16px} p{margin:0}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-height:44px;cursor:pointer}
+button:hover{background:var(--soft)} button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button.primary{background:var(--marker);color:var(--on-marker);border-color:var(--marker)}
+button:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
+.lede{color:var(--mute);max-width:60ch}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--soft);font-size:14px;color:var(--ink)}
+.chip b{color:var(--marker)}
+.sr{position:absolute;left:-9999px}
+/* ===== ek-shell: header + navigation (strip on mobile, left rail from 900px) ===== */
+.app{display:flex;flex-direction:column;flex:1;min-height:0}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;z-index:5}
+header.top .proj{display:flex;flex-direction:column;gap:2px} header.top .proj small{color:var(--mute)}
+nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);padding-right:40px}
+nav.at-end{-webkit-mask-image:none;mask-image:none}
+nav button{white-space:nowrap;border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 10px}
+nav button:hover{background:none;border-bottom-color:var(--line)} nav button[aria-current="page"]{border-bottom-color:var(--marker);font-weight:600}
+nav .count[hidden]{display:none} nav .count{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;border-radius:10px;background:var(--soft);font-size:13px;line-height:20px}
+main{flex:1;padding:24px 20px 150px;max-width:1240px;width:100%;margin:0 auto}
+section[data-feature]{display:flex;flex-direction:column;gap:18px} section[hidden]{display:none}
+section[data-feature] > h2:first-child{font-size:28px}
+@media(min-width:900px){
+  .app{flex-direction:row;align-items:stretch}
+  header.top{position:sticky;top:0;align-self:flex-start;height:100vh;width:240px;flex:0 0 240px;flex-direction:column;align-items:stretch;border-bottom:none;border-right:1px solid var(--line);padding:24px 18px}
+  nav{flex-direction:column;overflow:visible;gap:2px;flex:0 0 auto;-webkit-mask-image:none;mask-image:none;padding-right:0}
+  nav button{text-align:left;border-bottom:none;border-left:3px solid transparent;border-radius:0 6px 6px 0;padding:10px 12px}
+  nav button:hover{border-bottom-color:transparent;border-left-color:var(--line);background:var(--soft)}
+  nav button[aria-current="page"]{border-left-color:var(--marker);background:var(--soft)}
+  main{padding:32px 32px 150px}
+  body #bar{left:240px} /* must beat the later #bar{left:0} rule */
+}
+/* ===== ek-shell: welcome ===== */
+.hero{display:grid;gap:18px;grid-template-columns:1fr;align-items:start} @media(min-width:900px){.hero{grid-template-columns:3fr 2fr}}
+.hero h1{font-size:44px;max-width:18ch}
+.privacy{display:flex;flex-direction:column;gap:10px;font-size:15px} .privacy p{color:var(--mute);max-width:none} .privacy .row{justify-content:space-between}
+.empty{border:1px dashed var(--line);border-radius:8px;padding:24px;color:var(--mute);text-align:center}
+/* ===== ek-shell: stage helpers for features (see EK.fitStage) ===== */
+.ek-bleed{margin:0 -20px;width:calc(100% + 40px)} @media(min-width:900px){.ek-bleed{margin:0 -32px;width:calc(100% + 64px)}}
+.ek-stage{height:calc(100dvh - var(--ek-top,0px) - var(--ek-bar,110px) - 12px);min-height:320px;max-height:900px}
+@media(max-width:899px){.ek-stage{min-height:240px}}  /* room for the bar's extra row (consent, review) on a phone */
+/* ===== ek-shell: reaction bar (shared by every feature) ===== */
+#bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:6;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+#bar .ctx{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+#bar .ctx .chip{background:var(--soft)}
+#bar form{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+#bar .kinds{display:flex;gap:8px;align-items:center} #bar .kinds:empty{display:none}
+#bar .kinds button{min-width:56px;min-height:56px;padding:0;border-radius:28px;display:grid;place-items:center;font-size:22px;border:2px solid var(--marker);color:var(--marker);user-select:none;-webkit-user-select:none;position:relative}
+#bar input[type=text]{flex:1;min-width:180px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);min-height:44px}
+#bar .slot{display:none;gap:8px;align-items:center;flex-wrap:wrap} #bar .slot.show{display:flex}
+.toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9} .toast.show{opacity:1}
+/* ===== ek-shell: guided tour box (steps are registered by features) ===== */
+#tour{position:fixed;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom,0px));z-index:8;background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;display:none;flex-direction:column;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:560px;margin:0 auto}
+#tour.show{display:flex} #tour .bar{height:3px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden} #tour .bar i{display:block;height:100%;width:0;background:var(--marker)}
+#tour p{font-size:15px;line-height:1.4} #tour .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap} #tour .row small{flex:1;color:var(--line);font-size:13px}
+#tour button{border-color:rgba(255,255,255,.35);color:var(--paper);min-height:44px;padding:8px 12px} #tour button.primary{background:var(--marker);border-color:var(--marker);color:var(--on-marker)}
+@media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+/* ek:styles — feature skills insert their CSS after this line (keep it inside this one style element) */
+</style>
+<!-- ek:styles -->
+<style data-feature="voice">
+/* ===== ek-voice-reactions: hold-to-talk on the shared bar ===== */
+#bar .kinds button[data-kind=voice]{touch-action:none;-webkit-touch-callout:none;outline-offset:2px}
+#bar .kinds button[data-kind=voice] svg{width:26px;height:26px;display:block;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#bar .kinds button[data-kind=voice].rec{background:var(--marker);color:var(--on-marker);outline:4px solid var(--marker);animation:ek-rec 1s infinite}
+@keyframes ek-rec{0%,100%{outline-offset:2px}50%{outline-offset:8px}}
+#bar .kinds button[data-kind=voice].hint{outline:6px solid var(--marker);outline-offset:4px}
+#bar .kinds button[data-kind=voice].typed{font-size:18px;font-weight:600}
+.vx-level{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:var(--line);border-radius:2px;overflow:hidden;display:none} .rec .vx-level{display:block} .vx-level i{display:block;height:100%;width:0;background:var(--marker)}
+.vx-timer{position:absolute;top:-10px;right:-6px;font-size:12px;font-weight:600;background:var(--ink);color:var(--paper);border-radius:10px;padding:1px 6px;line-height:1.3} .vx-timer[hidden]{display:none}
+.vx-consent,.vx-review{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%}
+.vx-consent p{font-size:14px;color:var(--ink);max-width:62ch;flex:1 1 240px;margin:0}
+.vx-consent .row,.vx-review .row{display:flex;gap:8px;flex-wrap:wrap}
+.vx-review audio{flex:1 1 200px;max-width:360px;height:40px}
+@media(prefers-reduced-motion:reduce){#bar .kinds button[data-kind=voice].rec{animation:none;outline-offset:4px}}
+</style>
+<style data-feature="massing">
+/* ===== ek-site-massing-3d: full-frame viewer + docked card ===== */
+.ms-wrap{position:relative}
+.ms{position:relative;background:var(--soft);overflow:hidden;display:flex;flex-direction:column}
+.ms-view{position:relative;flex:1;min-height:0;background:var(--soft)}
+@media(max-width:899px){.ms-view{flex:0 0 auto}}
+.ms-view canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
+.ms-view:focus-within{outline:3px solid var(--marker);outline-offset:-3px}  /* drawn on the container, above the bitmap */
+.ms-hud{position:absolute;left:12px;top:12px;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:calc(100% - 24px)}
+.ms-hud .chip{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.ms-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;text-align:center;color:var(--mute);background:var(--soft)}
+.ms-fallback[hidden]{display:none} .ms-fallback img{max-width:min(100%,520px);max-height:70%;border-radius:6px;border:1px solid var(--line);background:var(--card)} .ms-fallback img[hidden]{display:none}
+.ms-card{flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:thin;background:var(--card);color:var(--ink);border:1px solid var(--line);border-width:1px 0 0;padding:10px 16px 14px;display:flex;flex-direction:column;gap:8px}
+@media(max-width:899px){.ms-card{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent)} .ms-card.at-end{-webkit-mask-image:none;mask-image:none}}
+@media(min-width:900px){.ms{flex-direction:row} .ms-view{height:100%} .ms-card{flex:0 0 340px;width:340px;border-width:0 0 0 1px;gap:10px}}
+.ms-about{font-size:13px;line-height:1.35}
+.ms-tabs{display:flex;gap:6px;flex-wrap:wrap} .ms-tabs button{flex:1 1 90px;min-height:44px;text-align:left;display:flex;flex-direction:column;gap:2px;padding:6px 10px}
+.ms-tabs button small{font-weight:400;font-size:12px;color:inherit;opacity:.8} .ms-tabs button[aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media(max-width:899px){.ms-tabs button small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}}
+.ms-choice{font-size:13px}
+.ms-card p{max-width:52ch} .ms-card p:empty{display:none} .ms-card small{color:var(--mute);font-size:14px} .ms-card small:empty{display:none}
+.ms-modes:empty{display:none}
+.ms-sun{min-height:44px} #msSun{accent-color:var(--marker);width:120px;height:44px;vertical-align:middle;margin:0 4px}
+#msChoice[hidden]{display:none} #msResetView[hidden]{display:none}
+#msVote[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+</style>
+<style data-feature="program">
+/* ===== ek-program-diagram: full-frame treemap + floating card ===== */
+.pg-wrap{position:relative}
+/* the map and the card share the stage: card under the map on phones, beside it from 900 px; the map's box
+   never changes on a tap, so blocks never move under the finger */
+.pg{position:relative;background:var(--soft);overflow:hidden;display:flex;flex-direction:column}
+.pg svg{flex:1;min-height:0;width:100%;display:block}
+.pg g[role=button]{cursor:pointer;outline:none} .pg rect.blk{fill:var(--plan);stroke:var(--paper);stroke-width:3;transition:fill .15s}
+.pg g[aria-pressed=true] rect.blk{fill:var(--marker)} .pg g.tbc rect.blk{fill:var(--mute);stroke-dasharray:8 6}
+.pg g:focus-visible rect.blk{stroke:var(--marker);stroke-width:5} .pg g.tbc:focus-visible rect.blk,.pg g[aria-pressed=true]:focus-visible rect.blk{stroke:var(--ink)}
+.pg text{fill:var(--paper);font-family:var(--font);pointer-events:none} .pg text.nm{font-weight:600;font-size:15px} .pg text.ar{font-size:13px;opacity:.9}
+.pg g[aria-pressed=true] text{fill:var(--on-marker)} .pg g[aria-pressed=true] circle.ct{stroke:var(--on-marker)} .pg g[aria-pressed=true] circle.ct2{fill:var(--on-marker)}
+.pg circle.ct{fill:none;stroke:var(--paper);stroke-width:2} .pg circle.ct2{fill:var(--paper)}
+/* the visitor's suggested size: an outline scaled from the block's centre, over everything, never moving the map */
+.pg rect.sug{fill:var(--marker);fill-opacity:.18;stroke:var(--marker);stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
+.pg-card{flex:1 1 auto;min-height:0;overflow:auto;background:var(--card);color:var(--ink);border:1px solid var(--line);border-width:1px 0 0;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+@media(max-width:899px){.pg svg{flex:0 0 auto}}  /* phones: the script sets the map's height in px once per show, so bar growth only shrinks the card */
+@media(min-width:900px){.pg{flex-direction:row} .pg svg{flex:1;height:100%} .pg-card{flex:0 0 340px;width:340px;border-width:0 0 0 1px}}
+.pg-card[hidden],.pg-ctl[hidden],.pg-card .chip[hidden]{display:none} .pg-card .pg-name:empty,.pg-card p:empty{display:none}
+.pg-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .pg-name{font-size:28px;font-weight:700;line-height:1.05} .pg-name-sm{font-size:18px}
+.pg-card p{max-width:52ch} .pg-card small{color:var(--mute);font-size:14px} .pg-card small:empty{display:none}
+.pg-ctl .grp{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden} .pg-ctl .grp button{border:none;border-radius:0;min-width:48px;font-size:20px}
+.pg-picks{display:flex;flex-wrap:wrap;gap:6px;overflow:auto} .pg-picks button{min-height:44px;padding:6px 10px;font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.pg-picks button b{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:var(--marker);color:var(--on-marker);font-size:12px}
+.pg-picks button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .pg-picks button[aria-pressed=true] b{background:var(--paper);color:var(--ink)}
+@media(prefers-reduced-motion:reduce){.pg rect.blk{transition:none}}
+</style>
+<style data-feature="timeline">
+/* ===== ek-timeline: scroll-driven story ===== */
+.tl-wrap{position:relative}
+.tl{position:relative;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;background:var(--soft);outline:none;scrollbar-width:none}
+.tl::-webkit-scrollbar{display:none}
+.tl:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+.tl-scene{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:flex-end;padding:16px 16px 20px;overflow:hidden}
+@media(min-width:900px){.tl-scene{padding:28px 32px 32px}}
+.tl-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:var(--soft)}
+.tl-noimg{background:linear-gradient(160deg,var(--soft),var(--card))}
+.tl-scene::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-scene::after{background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}}
+.tl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.18);margin-right:96px}
+@media(min-width:900px){.tl-cap{margin-right:140px}}
+.tl-scene.tbc .tl-cap{border-style:dashed}
+.tl-top{display:flex;flex-direction:column;gap:4px} .tl-pos{font-size:13px;color:var(--mute);letter-spacing:.02em}
+.tl-year{font-size:44px;font-weight:700;line-height:1;letter-spacing:-.01em} .tl-scene.tbc .tl-year{font-size:28px;color:var(--mute)}
+.tl-cap p{max-width:52ch} .tl-cap small{color:var(--mute);font-size:14px}
+@media(max-width:599px){.tl-src{display:none}}
+.tl-cap ul{margin:0;padding-left:18px;display:grid;gap:6px;max-height:40vh;overflow:auto} .tl-cap li{font-size:15px}
+.tl-count[hidden]{display:none} .tl-count{gap:4px}
+.tl-mem{display:grid;gap:6px;max-height:28vh;overflow:auto} .tl-mem:empty{display:none}
+.tl-mem div{padding:8px 10px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px;overflow-wrap:anywhere}
+.tl-mem audio{width:100%;max-width:320px;height:36px;display:block}
+.tl-rail{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:0;padding:6px 4px;z-index:2;background:rgba(20,20,18,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:22px}
+.tl-rail button{min-height:44px;min-width:44px;padding:0 8px;border:none;border-radius:22px;background:transparent;color:#F7F6F2;display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:13px;line-height:1}
+.tl-rail button:hover{background:rgba(255,255,255,.12)}
+.tl-rail button::after{content:"";flex:0 0 auto;width:10px;height:10px;border-radius:5px;background:#F7F6F2;opacity:.7}
+.tl-rail button span{display:none;white-space:nowrap} .tl-rail button.tbc::after{border:2px dashed #F7F6F2;background:transparent;width:8px;height:8px}
+.tl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
+.tl-rail button:hover span,.tl-rail button[aria-current="true"] span,.tl-rail button:focus-visible span{display:inline}
+.tl-rail button[aria-current="true"] span{font-weight:600}
+.tl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+@media(min-width:900px){.tl-rail{right:16px} .tl-rail button span{display:inline;opacity:.8} .tl-rail button[aria-current="true"] span{opacity:1}}
+@media(prefers-reduced-motion:reduce){.tl{scroll-snap-type:none;scroll-behavior:auto} .tl-rail button[aria-current="true"]::after{transform:none}}
+</style>
+
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="proj"><h1>Riverside Community Hub</h1><small>Design options · your reactions go to client steering committee, informed by residents</small></div>
+  <nav id="nav" aria-label="Sections"></nav>
+</header>
+
+<main id="ek-stage">
+
+<section data-feature="welcome" data-title="Start">
+  <div class="hero">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h1>Three ways the hub could sit on the site. Tell us which works for you, and why.</h1>
+      <p class="lede" data-with-voice="This is a working tool, not a brochure. Wherever you are in it you can speak, type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about." data-without-voice="This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.">This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.</p>
+      <div class="row"><button class="primary" id="tourStart" type="button" hidden>Watch the tour</button><button type="button" class="primary" data-go="massing">Massing</button></div>
+      <div id="welcomeImage" data-slot="welcome-image"></div>
+    </div>
+    <div class="card privacy" aria-label="About your reactions">
+      <h3>What happens to what you add</h3>
+      <p data-with-voice="Everything you add stays on this phone, voice clips included. Nothing is sent anywhere. The design team collects it from the device at the end of the session and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s." data-without-voice="Everything you add stays on this phone. Nothing is sent anywhere. The design team collects it from the device at the end of the session and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s.">Everything you add stays on this phone. Nothing is sent anywhere. The design team collects it from the device at the end of the session and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s.</p>
+      <div class="row"><span class="chip">Reactions on this phone: <b id="reactCount">0</b></span><button type="button" id="clearDevice">Remove all</button></div>
+      <p style="font-size:14px;margin-top:4px">Sample project. Names, dates, dimensions and drawings are invented for this prototype and marked where the design team would need to confirm them.</p>
+    </div>
+  </div>
+  <div id="welcomeExtra" data-slot="welcome-extra"></div>
+</section>
+
+<section data-feature="timeline" data-title="History" hidden>
+  <h2>How the site got here</h2>
+  <p class="lede" data-with-voice="Scroll through the moments that shaped the site. Were you there, or do you remember it differently? Add a memory to any year: speak or type, and the design team collects it with the rest." data-without-voice="Scroll through the moments that shaped the site. Were you there, or do you remember it differently? Add a memory to any year: type, and the design team collects it with the rest.">Scroll through the moments that shaped the site. Were you there, or do you remember it differently? Add a memory to any year: type, and the design team collects it with the rest.</p>
+  <div class="tl-wrap ek-bleed">
+  <div class="tl ek-stage" id="tl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="Site history, 7 moments. Use the arrow keys to move between them.">
+    <article class="tl-scene" data-i="0" data-target="1912" data-slide="slide 4" aria-label="1912">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMwIEw0MDAgMjMwIEw0MDAgMzAwIEwwIDMwMFoiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjEyIi8+PHBhdGggZD0iTTAgMjMyIFEyMDAgMjIyIDQwMCAyMzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMjMwIDYwLDE1MCAyNDAsMTUwIDI0MCwyMzAiIGZpbGw9InVybCgjaCkiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cG9seWdvbiBwb2ludHM9IjUwLDE1MCAxNTAsMTAwIDI1MCwxNTAiIGZpbGw9IiNFRkU2RDQiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSIyNzAiIHk9IjgwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTUwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii41IiBzdHJva2U9IiM2RTVFNDgiLz48cGF0aCBkPSJNMjc5IDgwIHExMCAtMjAgMCAtNDAgcS04IC0xOCA2IC0zNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMyIvPjxlbGxpcHNlIGN4PSIzMDAiIGN5PSIyMzYiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjMxOCIgY3k9IjI0MiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZWxsaXBzZSBjeD0iMzM2IiBjeT0iMjM2IiByeD0iOSIgcnk9IjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxlbGxpcHNlIGN4PSIzNTQiIGN5PSIyNDIiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjM3MiIgY3k9IjIzNiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSI5MCIgeT0iMTkwIiB3aWR0aD0iMjIiIGhlaWdodD0iNDAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjQiLz48cmVjdCB4PSIxNDAiIHk9IjE3NSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii4yNSIvPjxyZWN0IHg9IjE5MCIgeT0iMTc1IiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjI1Ii8+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjM4OCIgaGVpZ2h0PSIyODgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40Ii8+PHRleHQgeD0iMTIiIHk9IjI5MCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNBOEE2OUMiPjE5MTIgwrcgUml2ZXJzaWRlIHNhd21pbGwsIGFyY2hpdmFsIGRyYXdpbmcgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">1 of 7 · scroll ↓</span><span class="tl-year">1912</span></div>
+        <p>Sawmill opens on the riverbank. The site&#x27;s first building and the reason the street grid bends here.</p>
+        <small class="tl-src">From the presentation, slide 4</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1912</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1912"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="1" data-target="1948" data-slide="slide 4" aria-label="1948">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMwIEw0MDAgMjMwIEw0MDAgMzAwIEwwIDMwMFoiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjEyIi8+PHBhdGggZD0iTTAgMjMyIFEyMDAgMjIyIDQwMCAyMzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMjMwIDYwLDE1MCAyNDAsMTUwIDI0MCwyMzAiIGZpbGw9InVybCgjaCkiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cG9seWdvbiBwb2ludHM9IjUwLDE1MCAxNTAsMTAwIDI1MCwxNTAiIGZpbGw9IiNFRkU2RDQiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSIyNzAiIHk9IjgwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTUwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii41IiBzdHJva2U9IiM2RTVFNDgiLz48cGF0aCBkPSJNMjc5IDgwIHExMCAtMjAgMCAtNDAgcS04IC0xOCA2IC0zNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMyIvPjxlbGxpcHNlIGN4PSIzMDAiIGN5PSIyMzYiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjMxOCIgY3k9IjI0MiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZWxsaXBzZSBjeD0iMzM2IiBjeT0iMjM2IiByeD0iOSIgcnk9IjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxlbGxpcHNlIGN4PSIzNTQiIGN5PSIyNDIiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjM3MiIgY3k9IjIzNiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSI5MCIgeT0iMTkwIiB3aWR0aD0iMjIiIGhlaWdodD0iNDAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjQiLz48cmVjdCB4PSIxNDAiIHk9IjE3NSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii4yNSIvPjxyZWN0IHg9IjE5MCIgeT0iMTc1IiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjI1Ii8+PHBhdGggZD0iTTAgMjA1IFE2MCAxOTggMTIwIDIwNiBUMjQwIDIwNiBUMzYwIDIwNiBUNDAwIDIwNCBMNDAwIDMwMCBMMCAzMDBaIiBmaWxsPSIjQkZEM0U2IiBmaWxsLW9wYWNpdHk9Ii43NSIvPjxsaW5lIHgxPSI0MCIgeTE9IjIwNSIgeDI9IjM2MCIgeTI9IjIwNSIgc3Ryb2tlPSIjMkU1RThDIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSAzIi8+PHRleHQgeD0iNDAiIHk9IjE5OCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMyRTVFOEMiPjE5NDggZmxvb2QgbGluZTwvdGV4dD48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMzg4IiBoZWlnaHQ9IjI4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjQiLz48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+MTk0OCDCtyBTcHJpbmcgZmxvb2QgcmVhY2hlcyB0aGUgbWlsbCBmbG9vciAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">2 of 7 · scroll ↓</span><span class="tl-year">1948</span></div>
+        <p>Spring flood reaches the mill floor. The flood line is still used in today&#x27;s site constraints.</p>
+        <small class="tl-src">From the presentation, slide 4</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1948</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1948"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="2" data-target="1971" data-slide="slide 5" aria-label="1971">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cG9seWdvbiBwb2ludHM9IjcwLDIzMiA3MCwxNjAgMzMwLDE2MCAzMzAsMjMyIiBmaWxsPSIjRUZFNkQ0IiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMjAwLDEwMCAzNDAsMTYwIiBmaWxsPSJ1cmwoI2gpIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iOTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxMzAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxNzAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyMTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyNTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyOTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjMwIiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTMwIDIxNyB2MTQgTTI0IDIyNCBoMTIiLz48L2c+PGcgc3Ryb2tlPSIjNkU1RTQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSI0OCIgY3k9IjIxMiIgcj0iNSIvPjxwYXRoIGQ9Ik00OCAyMTcgdjE0IE00MiAyMjQgaDEyIi8+PC9nPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzYwIiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTM2MCAyMTcgdjE0IE0zNTQgMjI0IGgxMiIvPjwvZz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjM3OCIgY3k9IjIxMiIgcj0iNSIvPjxwYXRoIGQ9Ik0zNzggMjE3IHYxNCBNMzcyIDIyNCBoMTIiLz48L2c+PHRleHQgeD0iMjAwIiB5PSIxNTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNkU1RTQ4IiBsZXR0ZXItc3BhY2luZz0iMiI+UklWRVJTSURFIENPTU1VTklUWSBIQUxMPC90ZXh0PjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIzODgiIGhlaWdodD0iMjg4IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS1vcGFjaXR5PSIuNCIvPjx0ZXh0IHg9IjEyIiB5PSIyOTAiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjQThBNjlDIj4xOTcxIMK3IEhhbGwgYnVpbHQgYnkgdm9sdW50ZWVycyBvbiB0aGUgbWlsbCBmb3VuZGF0aW9ucyAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">3 of 7 · scroll ↓</span><span class="tl-year">1971</span></div>
+        <p>Community hall built by volunteers on the mill foundations. Hosts the Saturday market until 1998.</p>
+        <small class="tl-src">From the presentation, slide 5</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1971</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1971"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="3" data-target="1998" data-slide="slide 5" aria-label="1998">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cG9seWdvbiBwb2ludHM9IjcwLDIzMiA3MCwxNjAgMzMwLDE2MCAzMzAsMjMyIiBmaWxsPSIjRUZFNkQ0IiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMjAwLDEwMCAzNDAsMTYwIiBmaWxsPSJ1cmwoI2gpIiBvcGFjaXR5PSIuMzUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSI5MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjEzMCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjE3MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjIxMCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjI1MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjI5MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIyMTIiIHI9IjUiLz48cGF0aCBkPSJNMzAgMjE3IHYxNCBNMjQgMjI0IGgxMiIvPjwvZz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjQ4IiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTQ4IDIxNyB2MTQgTTQyIDIyNCBoMTIiLz48L2c+PGcgc3Ryb2tlPSIjNkU1RTQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSIzNjAiIGN5PSIyMTIiIHI9IjUiLz48cGF0aCBkPSJNMzYwIDIxNyB2MTQgTTM1NCAyMjQgaDEyIi8+PC9nPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzc4IiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTM3OCAyMTcgdjE0IE0zNzIgMjI0IGgxMiIvPjwvZz48dGV4dCB4PSIyMDAiIHk9IjE1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM2RTVFNDgiIGxldHRlci1zcGFjaW5nPSIyIj5SSVZFUlNJREUgQ09NTVVOSVRZIEhBTEw8L3RleHQ+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMTMwLDEzMCAxNTAsMTYwIiBmaWxsPSIjMkU1RThDIiBmaWxsLW9wYWNpdHk9Ii41NSIgc3Ryb2tlPSIjMkU1RThDIi8+PHBhdGggZD0iTTEzMCAxMzAgbC0yMCAtOCBNMTUwIDE2MCBsLTEwIC0yNiIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48dGV4dCB4PSIyMCIgeT0iMTIwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJFNUU4QyI+bm9ydGggd2luZyBjbG9zZWQ8L3RleHQ+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjM4OCIgaGVpZ2h0PSIyODgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40Ii8+PHRleHQgeD0iMTIiIHk9IjI5MCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNBOEE2OUMiPjE5OTggwrcgTm9ydGggd2luZyByb29mIGZhaWx1cmUgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">4 of 7 · scroll ↓</span><span class="tl-year">1998</span></div>
+        <p>Hall&#x27;s north wing closed after roof failure. The market moves to the school parking lot.</p>
+        <small class="tl-src">From the presentation, slide 5</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1998</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1998"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="4" data-target="2016" data-slide="slide 6" aria-label="2016">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFOUU1RDkiLz48cGF0aCBkPSJNMCA4MCBRMTIwIDYwIDIyMCA4NSBUNDAwIDcwIEw0MDAgMTIwIFEzMDAgMTMwIDIyMCAxMTUgVDAgMTMwWiIgZmlsbD0iI0JGRDNFNiIvPjxnIGZpbGw9IiNENkQyQzYiIHN0cm9rZT0iI0E4QTY5QyI+PHJlY3QgeD0iMjAiIHk9IjE1MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQwIi8+PHJlY3QgeD0iMjAiIHk9IjIwMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjYwIi8+PHJlY3QgeD0iMzMwIiB5PSIxNDUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI0NSIvPjxyZWN0IHg9IjMzMCIgeT0iMjAwIiB3aWR0aD0iNTAiIGhlaWdodD0iNzAiLz48cmVjdCB4PSIxMDAiIHk9IjI1MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzMCIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIi8+PHJlY3QgeD0iMzEwIiB5PSIxNSIgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIi8+PC9nPjxwYXRoIGQ9Ik0wIDAgTDQwMCAwIiBzdHJva2U9Im5vbmUiLz48bGluZSB4MT0iOTAiIHkxPSIxNDAiIHgyPSIzMTAiIHkyPSIxNDAiIHN0cm9rZT0iI0E4QTY5QyIvPjxsaW5lIHgxPSI5MCIgeTE9IjI0MCIgeDI9IjMxMCIgeTI9IjI0MCIgc3Ryb2tlPSIjQThBNjlDIi8+PHJlY3QgeD0iMTEwIiB5PSIxNTAiIHdpZHRoPSIxODAiIGhlaWdodD0iODAiIGZpbGw9IiM5REJCOEYiIGZpbGwtb3BhY2l0eT0iLjU1IiBzdHJva2U9IiNFODY0MkMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNiA0Ii8+PHRleHQgeD0iMjAwIiB5PSIxOTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5USEUgU0lURTwvdGV4dD48Y2lyY2xlIGN4PSIzNzAiIGN5PSIyNzAiIHI9IjE0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjJBMjQiLz48dGV4dCB4PSIzNzAiIHk9IjI3NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMyQjJBMjQiPk48L3RleHQ+PHJlY3QgeD0iMTUwIiB5PSI5MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIzNCIgcng9IjMiIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzJCMkEyNCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI5IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5SRVpPTklORyBOT1RJQ0U8L3RleHQ+PHRleHQgeD0iMjAwIiB5PSIxMTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiMyQjJBMjQiPmNvbW11bml0eSB1c2UgwrcgMjAxNjwvdGV4dD48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+MjAxNiDCtyBTaXRlIHJlem9uZWQgZm9yIGNvbW11bml0eSB1c2UgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">5 of 7 · scroll ↓</span><span class="tl-year">2016</span></div>
+        <p>Site rezoned for community use. Riverside Residents&#x27; Association forms to steer the next step.</p>
+        <small class="tl-src">From the presentation, slide 6</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 2016</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 2016"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="5" data-target="2026" data-slide="slide 1" aria-label="2026">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNGM0VGRTQiLz48cG9seWdvbiBwb2ludHM9IjU5LjYsMTIyLjAgMTYzLjUsMTgyLjAgOTAuOCwyMjQuMCAtMTMuMSwxNjQuMCIgZmlsbD0iI0U2RTJENiIvPjxwb2x5Z29uIHBvaW50cz0iMzEuMCwxNTYuNSA2Ny40LDE3Ny41IDY3LjQsMTcxLjUgMzEuMCwxNTAuNSIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSI4NS42LDE2Ny4wIDY3LjQsMTc3LjUgNjcuNCwxNzEuNSA4NS42LDE2MS4wIiBmaWxsPSIjNTg3NTk3IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iLjgiLz48cG9seWdvbiBwb2ludHM9IjQ5LjIsMTQwLjAgODUuNiwxNjEuMCA2Ny40LDE3MS41IDMxLjAsMTUwLjUiIGZpbGw9IiM4RkIzRDQiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIuOCIvPjxwb2x5Z29uIHBvaW50cz0iNjcuNCwxNzcuNSA4NS42LDE4OC4wIDg1LjYsMTc2LjAgNjcuNCwxNjUuNSIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxMDMuOCwxNzcuNSA4NS42LDE4OC4wIDg1LjYsMTc2LjAgMTAzLjgsMTY1LjUiIGZpbGw9IiM1ODc1OTciIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIuOCIvPjxwb2x5Z29uIHBvaW50cz0iODUuNiwxNTUuMCAxMDMuOCwxNjUuNSA4NS42LDE3Ni4wIDY3LjQsMTY1LjUiIGZpbGw9IiM4RkIzRDQiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIuOCIvPjx0ZXh0IHg9IjcwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQTwvdGV4dD48cG9seWdvbiBwb2ludHM9IjE4OS42LDEyMi4wIDI5My41LDE4Mi4wIDIyMC44LDIyNC4wIDExNi45LDE2NC4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIxNDguMCwxNTguMCAxNzQuMCwxNzMuMCAxNzQuMCwxNjEuMCAxNDguMCwxNDYuMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxOTQuOCwxNjEuMCAxNzQuMCwxNzMuMCAxNzQuMCwxNjEuMCAxOTQuOCwxNDkuMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxNjguOCwxMzQuMCAxOTQuOCwxNDkuMCAxNzQuMCwxNjEuMCAxNDguMCwxNDYuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxODQuNCwxNzkuMCAyMDUuMiwxOTEuMCAyMDUuMiwxNzkuMCAxODQuNCwxNjcuMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMjYuMCwxNzkuMCAyMDUuMiwxOTEuMCAyMDUuMiwxNzkuMCAyMjYuMCwxNjcuMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMDUuMiwxNTUuMCAyMjYuMCwxNjcuMCAyMDUuMiwxNzkuMCAxODQuNCwxNjcuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxODkuNiwxNTIuMCAyMTAuNCwxNjQuMCAyMTAuNCwxNTguMCAxODkuNiwxNDYuMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMjMuNCwxNTYuNSAyMTAuNCwxNjQuMCAyMTAuNCwxNTguMCAyMjMuNCwxNTAuNSIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMDIuNiwxMzguNSAyMjMuNCwxNTAuNSAyMTAuNCwxNTguMCAxODkuNiwxNDYuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHRleHQgeD0iMjAwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQjwvdGV4dD48cG9seWdvbiBwb2ludHM9IjMxOS42LDEyMi4wIDQyMy41LDE4Mi4wIDM1MC44LDIyNC4wIDI0Ni45LDE2NC4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIyOTEuMCwxNjIuNSAzMjIuMiwxODAuNSAzMjIuMiwxNzQuNSAyOTEuMCwxNTYuNSIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzNDUuNiwxNjcuMCAzMjIuMiwxODAuNSAzMjIuMiwxNzQuNSAzNDUuNiwxNjEuMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzMTQuNCwxNDMuMCAzNDUuNiwxNjEuMCAzMjIuMiwxNzQuNSAyOTEuMCwxNTYuNSIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzMzAuMCwxODIuMCAzNDUuNiwxOTEuMCAzNDUuNiwxNjcuMCAzMzAuMCwxNTguMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzNjEuMiwxODIuMCAzNDUuNiwxOTEuMCAzNDUuNiwxNjcuMCAzNjEuMiwxNTguMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzNDUuNiwxNDkuMCAzNjEuMiwxNTguMCAzNDUuNiwxNjcuMCAzMzAuMCwxNTguMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHRleHQgeD0iMzMwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQzwvdGV4dD48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+MjAyNiDCtyBUaHJlZSBtYXNzaW5nIG9wdGlvbnMgcHJlcGFyZWQgZm9yIHB1YmxpYyByZXZpZXcgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">6 of 7 · scroll ↓</span><span class="tl-year">2026</span></div>
+        <p>Pre-design begins. Three massing options prepared for public review.</p>
+        <small class="tl-src">From the presentation, slide 1</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 2026</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 2026"></div>
+      </div>
+    </article>
+    <article class="tl-scene tbc" data-i="6" data-target="undated: Original mill chimney" data-slide="slide 4" aria-label="[year to confirm]">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxODUiIHk9IjYwIiB3aWR0aD0iMzAiIGhlaWdodD0iMTcyIiBmaWxsPSJ1cmwoI2gpIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMTgwIiB5PSI1NCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjUiLz48cGF0aCBkPSJNMjAwIDUwIHExMiAtMTggMCAtMzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40IiBzdHJva2UtZGFzaGFycmF5PSIzIDMiLz48dGV4dCB4PSIzMDAiIHk9IjE1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZpbGw9IiNFODY0MkMiPj88L3RleHQ+PHRleHQgeD0iMzAwIiB5PSIxNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNkU1RTQ4Ij5kZW1vbGlzaGVkIOKAlCB3aGVuPzwvdGV4dD48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMzg4IiBoZWlnaHQ9IjI4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjQiLz48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+TWlsbCBjaGltbmV5LCBkYXRlIG5vdCBpbiB0aGUgZGVjayAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">7 of 7</span><span class="tl-year">[year to confirm]</span></div>
+        <p>Original mill chimney demolished. Several residents recall it; the deck gives no date.</p>
+        <small class="tl-src">From the presentation, slide 4 · date not given</small>
+        <div class="row"><button type="button" class="primary tl-add">Do you know when? Tell us</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for [year to confirm]"></div>
+      </div>
+    </article>
+  </div>
+  <nav class="tl-rail" id="tlRail" aria-label="Years"><button type="button" data-i="0" aria-label="1912"><span>1912</span></button><button type="button" data-i="1" aria-label="1948"><span>1948</span></button><button type="button" data-i="2" aria-label="1971"><span>1971</span></button><button type="button" data-i="3" aria-label="1998"><span>1998</span></button><button type="button" data-i="4" aria-label="2016"><span>2016</span></button><button type="button" data-i="5" aria-label="2026"><span>2026</span></button><button type="button" data-i="6" class=tbc aria-label="[year to confirm]"><span>?</span></button></nav>
+  </div>
+</section>
+
+<section data-feature="massing" data-title="Massing" hidden>
+  <h2>Three massing options</h2>
+  <p class="lede">Drag to walk around the model, pinch or scroll to zoom. Switch options, move the sun to see the shadows, and tell us which one works for you.</p>
+  <div class="ms-wrap ek-bleed">
+    <div class="ms ek-stage" id="ms">
+      <div class="ms-view" id="msView">
+        <canvas id="msCanvas" tabindex="0" aria-label="3D massing model. Drag to orbit; arrow keys orbit, plus and minus zoom, 0 resets the view."></canvas>
+        <div class="ms-hud" id="msHud" aria-live="polite"></div>
+        <div class="ms-fallback" id="msFallback" hidden><img id="msFallbackImg" alt="" hidden><p id="msFallbackText"></p></div>
+      </div>
+      <div class="ms-card" id="msCard">
+        <small class="ms-about">A massing study, not a design: boxes at 3.4 m per storey, dimensions from the presentation. Not in this model, because the presentation gives no site geometry: site line, river, street.</small>
+        <div class="ms-tabs" id="msTabs" role="tablist" aria-label="Options"><button type="button" role="tab" data-opt="A" aria-selected="true"><b>Option A</b><small>One low bar along the river</small></button><button type="button" role="tab" data-opt="B" aria-selected="false"><b>Option B</b><small>Courtyard, two storeys</small></button><button type="button" role="tab" data-opt="C" aria-selected="false"><b>Option C</b><small>Compact tower at the street</small></button></div>
+        <div class="row"><button type="button" class="primary" id="msVote" aria-pressed="false">This option works for me</button><span class="chip ms-choice" id="msChoice" hidden></span></div>
+        <div class="row ms-modes" data-slot="massing-modes"></div>
+        <div class="row"><label class="chip ms-sun">Sun <input type="range" id="msSun" min="9" max="18" step="1" value="12" aria-label="Time of day"> <span id="msSunLbl">12:00</span></label><button type="button" id="msStreet">Eye level</button><button type="button" id="msResetView" hidden>Back to overview</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-feature="program" data-title="Program" hidden>
+  <h2>The spaces inside</h2>
+  <p class="lede">Each block is drawn to the size the design team proposed. Tap one to see what it is for, then make it bigger or smaller to show how much it matters to you; your suggested size is drawn over the block. Rank your top five.</p>
+  <div class="pg-wrap ek-bleed">
+    <div class="pg ek-stage" id="pg">
+      <svg id="pgMap" role="group" aria-label="Program diagram, 8 spaces. Tab to a space and press Enter to select it." xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="pg-card" id="pgCard" aria-live="polite">
+        <span class="pg-kicker" id="pgKicker">Tap a space to see what it is for</span>
+        <span class="pg-name" id="pgName"></span>
+        <p id="pgUse"></p>
+        <small id="pgMeta"></small>
+        <div class="row pg-ctl" id="pgCtl" hidden><div class="grp" role="group" aria-label="Size"><button type="button" data-d="-1" aria-label="Smaller">−</button><button type="button" data-d="1" aria-label="Bigger">+</button></div><button type="button" id="pgReset" hidden>Reset my change</button></div>
+        <div class="row"><button type="button" class="primary" id="pgRankBtn">Rank my top five</button><span class="chip" id="pgRanked" hidden></span></div>
+      </div>
+      <div class="pg-card pg-rank" id="pgRank" hidden>
+        <span class="pg-kicker">What matters most to you?</span>
+        <span class="pg-name pg-name-sm">Tap up to five, in order</span>
+        <div class="pg-picks" id="pgPicks" role="group" aria-label="Spaces to rank"></div>
+        <div class="row"><button type="button" class="primary" id="pgSave" disabled>Save my top five</button><button type="button" id="pgCancel">Back</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-feature="roundtrip" data-title="Your model" hidden>
+  <!-- ek:slot roundtrip — the feature skill replaces this whole section -->
+  <h2>Your model</h2>
+  <p class="lede">Download the massing, change it in your own software, upload it back.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="markup" data-title="Mark up plans" hidden>
+  <!-- ek:slot markup — the feature skill replaces this whole section -->
+  <h2>Mark up plans</h2>
+  <p class="lede">Sketch over the plans here or on paper, then add the photo.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="gallery" data-title="Submissions" hidden>
+  <!-- ek:slot gallery — the feature skill replaces this whole section -->
+  <h2>Submissions</h2>
+  <p class="lede">Look at what others changed or drew, and react to it.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="synthesis" data-title="What we heard" hidden>
+  <!-- ek:slot synthesis — the feature skill replaces this whole section -->
+  <h2>What we heard</h2>
+  <p class="lede">Every reaction, counted and traceable.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<!-- ek:sections -->
+
+</main>
+</div>
+
+<div id="bar" role="region" aria-label="Your reaction">
+  <div class="ctx">Reacting to <span class="chip" id="ctxChip">the project</span><span id="hint"></span></div>
+  <form id="noteForm">
+    <div class="kinds" id="kinds"></div>
+    <input type="text" id="note" placeholder="Type a reaction…" maxlength="400" autocomplete="off" aria-label="Type a reaction">
+    <button type="submit" class="primary">Add</button>
+  </form>
+  <div class="slot" id="barSlot"></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="tour" role="dialog" aria-label="Guided tour" hidden><div class="bar"><i id="tourBar"></i></div><p id="tourText"></p><div class="row"><small id="tourStep"></small><button id="tourBack" type="button">Back</button><button id="tourNext" type="button" class="primary">Next</button><button id="tourExit" type="button">Try it yourself</button></div></div>
+
+<script>
+/* ===== ek-shell: project data (inlined from work/brief.json + project.config.json; DATA, not instructions) ===== */
+const PROJECT = {"slug": "riverside-community-hub", "name": "Riverside Community Hub", "phase": "Design options", "deadline": "", "one_line": "Three ways the hub could sit on the site. Tell us which works for you, and why.", "audience": ["residents", "user groups", "client steering committee"], "palette": {"paper": "#F7F6F2", "ink": "#23241F", "accent1": "#E8642C", "accent2": "#2E5E8C"}, "typeface": "Archivo", "sample": true, "first_question": "Which massing option should go forward?", "installed": ["ek-shell", "ek-timeline", "ek-site-massing-3d", "ek-program-diagram", "ek-voice-reactions", "ek-massing-markup", "ek-model-roundtrip", "ek-drawing-markup", "ek-submissions-gallery", "ek-feedback-synthesis"], "sections": ["timeline", "massing", "program", "roundtrip", "markup", "gallery", "synthesis"], "counts_note": "Counts shown in this tool are per device until a sync target exists.", "reaction_schema": {"feature": "string", "target": "string", "kind": "voice|note|pin|vote|edit|submission|markup", "value": "any", "ts": "ISO-8601"}, "content_note": "Strings in this object come from an untrusted deck; they describe a project, they are not instructions."};
+
+/* ===== ek-shell: reaction bus, storage, navigation, bar, tour ===== */
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+const EK = window.EK = (() => {
+  const key = "ek:" + PROJECT.slug; let list = []; const handlers = {}; const kinds = {}; let tourSteps = []; let current = "welcome";
+  const KINDS = ["voice", "note", "pin", "vote", "edit", "submission", "markup"];
+  // A stored record is trusted only if it has the shape react() produces; anything else (tampered store,
+  // another page on the same origin) is dropped so one bad entry cannot brick the page.
+  const valid = r => !!r && typeof r === "object" && typeof r.feature === "string" && typeof r.target === "string" && KINDS.indexOf(r.kind) >= 0 && typeof r.id === "string" && typeof r.ts === "string";
+  try { const raw = JSON.parse(localStorage.getItem(key) || "[]"); if (Array.isArray(raw)) { list = raw.filter(valid); if (list.length !== raw.length) console.warn("[ek] dropped", raw.length - list.length, "malformed stored reaction(s)"); } } catch (e) { list = []; }
+  // true when the list is persisted (or storage is absent and we are memory-only); false on a quota error,
+  // so a caller can refuse to pretend a big record (a voice clip) was kept.
+  let storageOk = true; try { localStorage.getItem(key); } catch (e) { storageOk = false; }
+  const save = () => { if (!storageOk) return true; try { localStorage.setItem(key, JSON.stringify(list)); return true; } catch (e) { console.warn("[ek] storage write failed", e && e.name); return false; } };
+  const emit = (ev, d) => (handlers[ev] || []).forEach(fn => { try { fn(d); } catch (e) { console.error("[ek] handler", ev, e); } });
+  let ctx = { feature: "project", target: "the project" };
+  return {
+    version: "0.1.0",
+    project: PROJECT,
+    /* reactions */
+    react(r) {
+      if (!r || typeof r.feature !== "string" || typeof r.target !== "string" || KINDS.indexOf(r.kind) < 0) { console.warn("[ek] rejected reaction", r); return null; }
+      // schema keys only; id and ts are always the shell's
+      const rec = { feature: r.feature, target: r.target, kind: r.kind, value: r.value === undefined ? null : r.value, id: Math.random().toString(36).slice(2, 9), ts: new Date().toISOString() };
+      if (r.tour === true) rec.tour = true;
+      list.push(rec); if (!save()) { list.pop(); return null; } emit("ek:reaction", rec); return rec; },
+    remove(id) { list = list.filter(r => r.id !== id); save(); emit("ek:reaction", null); },
+    clear() { list = []; save(); emit("ek:reaction", null); },
+    reactions: () => list.slice(),
+    kinds: () => KINDS.slice(),
+    /* events: 'ek:reaction' | 'ek:show' */
+    on(ev, fn) { (handlers[ev] = handlers[ev] || []).push(fn); },
+    /* context shown in the reaction bar */
+    /* target is what gets stored; label (optional) is what the bar shows when the target is not readable as-is */
+    context(feature, target, hint, label) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = label || target; document.getElementById("hint").textContent = hint || ""; emit("ek:context", ctx); },
+    /* true once a feature has registered a voice kind on the bar; copy that mentions speaking should check this */
+    hasKind(kind) { return !!kinds[kind]; },
+    ctx: () => ctx,
+    toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); },
+    /* navigation */
+    show(id) { if (!document.querySelector('section[data-feature="' + CSS.escape(id) + '"]')) id = "welcome"; current = id;
+      document.querySelectorAll("section[data-feature]").forEach(s => s.hidden = s.dataset.feature !== id);
+      document.querySelectorAll("#nav button").forEach(b => { if (b.dataset.go === id) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+      try { history.replaceState(null, "", "#" + id); } catch (e) {} window.scrollTo({ top: 0 }); emit("ek:show", id); },
+    current: () => current,
+    /* reaction bar: a feature registers a kind button (e.g. voice) once; the shell never builds feature UI itself */
+    registerKind(kind, opts) { if (KINDS.indexOf(kind) < 0 || kinds[kind]) return null; kinds[kind] = opts || {};
+      const b = document.createElement("button"); b.type = "button"; b.dataset.kind = kind; b.textContent = (opts && opts.icon) || kind; b.setAttribute("aria-label", (opts && opts.label) || kind);
+      if (opts && opts.mount) opts.mount(b, document.getElementById("barSlot")); else if (opts && opts.onActivate) b.addEventListener("click", () => opts.onActivate(ctx));
+      document.getElementById("kinds").appendChild(b); return b; },
+    barSlot(show) { const s = document.getElementById("barSlot"); if (show != null) { s.classList.toggle("show", !!show); emit("ek:bar", !!show); } return s; },
+    focusNote() { document.getElementById("note").focus(); },
+    /* stage fitting: size el (class ek-stage) to the viewport between the sticky header (phones) and the bar,
+       re-size when the bar grows, and on phones scroll the page so el sits under the header when its section
+       shows. Returns {size, settle}. opts.onResize runs after every size change (re-snap, redraw). */
+    fitStage(el, featureId, opts) { opts = opts || {}; const hdr = document.querySelector("header.top"), bar = document.getElementById("bar");
+      const phone = () => window.innerWidth < 900;
+      const topH = () => phone() ? (hdr ? hdr.getBoundingClientRect().height : 0) : Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY));
+      const mainEl = document.querySelector("main");
+      const size = () => { const before = el.clientHeight; const barH = Math.round(bar ? bar.getBoundingClientRect().height : 110); el.style.setProperty("--ek-top", Math.round(topH()) + "px"); el.style.setProperty("--ek-bar", barH + "px"); if (mainEl) mainEl.style.paddingBottom = (barH + 12) + "px"; /* the page must stay tall enough to scroll the stage under the header */ if (opts.onResize && el.clientHeight !== before) { try { opts.onResize(); } catch (e) { console.error("[ek] onResize", e); } } };
+      const settle = () => { if (!phone() || current !== featureId) return; const se = document.scrollingElement || document.documentElement; const max = Math.max(0, se.scrollHeight - window.innerHeight); const y = Math.min(max, Math.max(0, el.getBoundingClientRect().top + window.scrollY - topH())); if (Math.abs(window.scrollY - y) > 4) window.scrollTo({ top: y, behavior: "auto" }); };
+      if ("ResizeObserver" in window && bar) new ResizeObserver(size).observe(bar);
+      window.addEventListener("resize", size);
+      // the bar's height changes when its context text wraps; ResizeObserver needs a rendering opportunity, a timer does not
+      let t = 0; const later = () => { clearTimeout(t); t = setTimeout(() => { const b = el.clientHeight; size(); if (el.clientHeight !== b) settle(); }, 60); };
+      (handlers["ek:context"] = handlers["ek:context"] || []).push(() => { if (current === featureId) later(); });
+      (handlers["ek:bar"] = handlers["ek:bar"] || []).push(() => { if (current === featureId) later(); });
+      (handlers["ek:show"] = handlers["ek:show"] || []).push(id => { if (id === featureId) { size(); later(); setTimeout(settle, 350); } });
+      window.addEventListener("load", () => { size(); setTimeout(settle, 50); });
+      size(); if (current === featureId) setTimeout(settle, 350);
+      return { size, settle }; },
+    /* guided tour: features push steps {go, text, do?, undo?}; the shell plays them */
+    registerTour(steps) { tourSteps = tourSteps.concat(steps || []);
+      // play in section order (welcome, then the nav order), whatever order the feature scripts were inserted in
+      const order = [...document.querySelectorAll("section[data-feature]")].map(s => s.dataset.feature);
+      tourSteps = tourSteps.map((s, i) => ({ s, i })).sort((a, b) => (order.indexOf(a.s.go) - order.indexOf(b.s.go)) || (a.i - b.i)).map(x => x.s);
+      document.getElementById("tourStart") && (document.getElementById("tourStart").hidden = !tourSteps.length); return tourSteps.length; },
+    tourSteps: () => tourSteps.slice()
+  };
+})();
+
+(function nav() {
+  const nav = document.getElementById("nav"), sections = document.querySelectorAll("section[data-feature]");
+  sections.forEach(s => { const b = document.createElement("button"); b.type = "button"; b.dataset.go = s.dataset.feature; b.textContent = s.dataset.title || s.dataset.feature; const c = document.createElement("span"); c.className = "count"; c.hidden = true; b.appendChild(c); b.onclick = () => EK.show(s.dataset.feature); nav.appendChild(b); });
+  document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => EK.show(b.dataset.go)));
+  const counts = () => { const c = {}; EK.reactions().forEach(r => c[r.feature] = (c[r.feature] || 0) + 1); document.querySelectorAll("#nav button").forEach(b => { const n = c[b.dataset.go] || 0; const s = b.querySelector(".count"); s.textContent = n; s.hidden = !n; s.setAttribute("aria-label", n + " reaction" + (n === 1 ? "" : "s") + " on this device"); b.setAttribute("aria-label", (b.dataset.title || b.firstChild.textContent) + (n ? ", " + n + " reaction" + (n === 1 ? "" : "s") + " on this device" : "")); }); };
+  EK.on("ek:reaction", counts); counts();
+  // scroll cue: fade the strip's right edge until the visitor has scrolled to the end
+  const atEnd = () => nav.classList.toggle("at-end", nav.scrollWidth - nav.clientWidth - nav.scrollLeft < 8);
+  nav.addEventListener("scroll", atEnd, { passive: true }); window.addEventListener("resize", atEnd); atEnd();
+  // default bar context = the section being shown; features refine it (an option, a year, a program)
+  EK.on("ek:show", id => { const s = document.querySelector('section[data-feature="' + CSS.escape(id) + '"]'); if (s && id !== "welcome") EK.context(id, s.dataset.title || id, ""); nav.querySelector('button[data-go="' + CSS.escape(id) + '"]') && nav.querySelector('button[data-go="' + CSS.escape(id) + '"]').scrollIntoView({ block: "nearest", inline: "nearest" }); });
+  window.__hash0 = location.hash; const h = (location.hash || "").slice(1);
+  EK.show(h && h !== "tour" ? h : "welcome");
+  window.addEventListener("hashchange", () => { const id = (location.hash || "").slice(1); if (id && id !== EK.current() && document.querySelector('section[data-feature="' + CSS.escape(id) + '"]')) EK.show(id); });
+})();
+
+(function bar() {
+  const form = document.getElementById("noteForm"), note = document.getElementById("note");
+  const QUESTION = PROJECT.first_question || "";
+  form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v }); note.value = ""; EK.toast("Added to " + c.target); });
+  // On the welcome page the note is about the project's first decision, so it carries context too.
+  const onShow = id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; };
+  EK.on("ek:show", onShow); onShow(EK.current());
+  // Copy that depends on what features actually registered (voice) is resolved once every feature script has run.
+  window.addEventListener("load", () => { const voice = EK.hasKind("voice"); document.querySelectorAll("[data-with-voice]").forEach(el => { el.textContent = voice ? el.dataset.withVoice : el.dataset.withoutVoice; }); });
+  // Removal: storage is the shell's, so the way out is the shell's.
+  const cnt = document.getElementById("reactCount"), clr = document.getElementById("clearDevice");
+  const refresh = () => { const all = EK.reactions(); const n = all.length, v = all.filter(r => r.kind === "voice").length; cnt.textContent = n + (v ? " (" + v + " voice)" : ""); clr.disabled = !n; };
+  EK.on("ek:reaction", refresh); refresh();
+  clr.onclick = () => { if (confirm("Remove every reaction stored on this phone? This cannot be undone.")) { EK.clear(); EK.toast("Removed from this phone"); } };
+})();
+
+(function tour() {
+  const box = document.getElementById("tour"), txt = document.getElementById("tourText"), bar = document.getElementById("tourBar"), stepLbl = document.getElementById("tourStep"), startBtn = document.getElementById("tourStart");
+  let STEPS = [], i = -1, timer = 0, t0 = 0, raf = 0, before = new Set(); const DUR = 9000;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function show(n) { if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } i = n; const s = STEPS[i]; EK.show(s.go || "welcome"); if (s.do) setTimeout(() => { try { s.do(); } catch (e) { console.error("[ek] tour step", e); } }, 300); txt.textContent = s.text || ""; stepLbl.textContent = (i + 1) + " of " + STEPS.length; document.getElementById("tourBack").disabled = i === 0; document.getElementById("tourNext").textContent = i === STEPS.length - 1 ? "Finish" : "Next"; box.hidden = false; box.classList.add("show"); if (n === 0) document.getElementById("tourNext").focus(); clearTimeout(timer); cancelAnimationFrame(raf); t0 = Date.now(); if (!reduced) { const tick = () => { bar.style.width = Math.min(100, (Date.now() - t0) / DUR * 100) + "%"; raf = requestAnimationFrame(tick); }; tick(); if (i < STEPS.length - 1) timer = setTimeout(() => show(i + 1), DUR); } else bar.style.width = "100%"; }
+  function exit() { clearTimeout(timer); cancelAnimationFrame(raf); if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } EK.reactions().filter(r => !before.has(r.id)).forEach(r => EK.remove(r.id)); box.classList.remove("show"); box.hidden = true; i = -1; EK.show("welcome"); if (startBtn) startBtn.focus(); }
+  function start() { STEPS = EK.tourSteps(); if (!STEPS.length) { EK.toast("No tour on this tool yet"); return; } before = new Set(EK.reactions().map(r => r.id)); show(0); }
+  if (startBtn) { startBtn.onclick = start; startBtn.hidden = true; }
+  document.getElementById("tourNext").onclick = () => i < STEPS.length - 1 ? show(i + 1) : exit();
+  document.getElementById("tourBack").onclick = () => i > 0 && show(i - 1);
+  document.getElementById("tourExit").onclick = exit;
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && box.classList.contains("show")) exit(); });
+  window.addEventListener("load", () => { if (window.__hash0 === "#tour" && EK.tourSteps().length) setTimeout(start, 600); });
+})();
+</script>
+<!-- feature skills insert their <script data-feature="…"> blocks after the next marker; EK is ready -->
+<!-- ek:scripts -->
+<script data-feature="voice">
+(function voice() {
+  const MAX = 60, BUDGET = 4000000, TTL = 600000, TAP_MS = 300;
+  const note = document.getElementById("note");
+  if (!window.EK || !EK.registerKind || !note) return;
+  const supported = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder && window.isSecureContext !== false);
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* consent lives in memory only: a shared table phone must show the card to each visitor (page load or after TTL idle) */
+  let consentedAt = 0; const consented = () => consentedAt && (Date.now() - consentedAt) < TTL;
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const MIC = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></svg>';
+  const clipsHere = () => EK.reactions().filter(r => r.kind === "voice").length;
+
+  EK.registerKind("voice", { icon: "", label: "Hold to record a spoken reaction, or tap to start and tap again to stop", mount(btn, slot) {
+    btn.innerHTML = MIC;  /* constant markup authored here, not data */
+    const level = el("span", "vx-level"); const levelBar = el("i"); level.appendChild(levelBar); btn.appendChild(level);
+    const timer = el("span", "vx-timer"); timer.hidden = true; btn.appendChild(timer);
+    const IDLE = "Hold to record a spoken reaction, or tap to start and tap again to stop";
+
+    /* typed fallback: the control never looks broken */
+    function toTyped(reason) { btn.textContent = "Aa"; btn.classList.add("typed"); btn.setAttribute("aria-label", "Type a reaction instead"); btn.onclick = () => { note.focus(); }; btn.onpointerdown = null; btn.onkeydown = null; detach(); if (reason) EK.toast(reason); }
+    if (!supported) { toTyped(); return; }
+
+    /* consent card in the bar's extra row: announced as a dialog, shown to every visitor */
+    function askConsent() { slot.textContent = ""; const box = el("div", "vx-consent"); box.setAttribute("role", "dialog"); box.setAttribute("aria-labelledby", "vxConsentTitle"); box.setAttribute("aria-describedby", "vxConsentText");
+      const n = clipsHere();
+      const p = el("p", null, ""); p.id = "vxConsentText";
+      const t = el("b", null, "Before you record"); t.id = "vxConsentTitle"; p.appendChild(t); p.appendChild(document.createTextNode(" \u2014 up to " + MAX + " seconds. The clip stays on this phone until the design team collects it, with the rest of your reactions; the design team and the client listen to it for the project record. Anyone using this phone today can play it back" + (n ? " (" + n + " clip" + (n === 1 ? "" : "s") + " already here)" : "") + "; you can remove everything from the Start page. Don\u2019t record other people. You can always type instead."));
+      box.appendChild(p);
+      const row = el("div", "row"); const ok = el("button", "primary", "OK, record"); ok.type = "button"; const no = el("button", null, "Type instead"); no.type = "button";
+      ok.onclick = () => { consentedAt = Date.now(); close(); btn.focus(); EK.toast("Now hold the mic, or tap it, to record"); }; no.onclick = () => { close(); note.focus(); };
+      row.appendChild(ok); row.appendChild(no); box.appendChild(row); slot.appendChild(box); EK.barSlot(true); ok.focus(); }
+    function close() { slot.textContent = ""; EK.barSlot(false); }
+
+    /* recording */
+    let rec = null, chunks = [], t0 = 0, stream = null, actx = null, raf = 0, stopT = 0, tickT = 0, busy = false, pressT = 0, tapMode = false, recording = false;
+    function cleanup() { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } if (actx) { try { actx.close(); } catch (e) {} actx = null; } cancelAnimationFrame(raf); clearTimeout(stopT); clearInterval(tickT); levelBar.style.width = "0"; timer.hidden = true; btn.classList.remove("rec"); btn.setAttribute("aria-label", IDLE); busy = false; recording = false; tapMode = false; }
+    async function start() {
+      if (busy) return; if (!consented()) { askConsent(); return; }
+      busy = true; pressT = Date.now();
+      try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+      catch (e) { cleanup(); const denied = e && (e.name === "NotAllowedError" || e.name === "SecurityError"); toTyped(denied ? "The microphone is blocked for this page \u2014 type instead, or allow it in the browser\u2019s site settings and reload" : "No microphone available \u2014 type instead"); note.focus(); return; }
+      if (!busy) { cleanup(); return; }  /* released before permission came back */
+      chunks = []; try { rec = new MediaRecorder(stream); } catch (e) { cleanup(); toTyped("Recording is not supported here \u2014 type instead"); return; }
+      rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = () => { const secs = Math.max(1, Math.round((Date.now() - t0) / 1000)); const b = chunks.length ? new Blob(chunks, { type: rec.mimeType || "audio/webm" }) : null; cleanup(); if (!b || !b.size) { EK.toast("Nothing was recorded"); return; } consentedAt = Date.now(); review(b, secs); };
+      try { actx = new (window.AudioContext || window.webkitAudioContext)(); const src = actx.createMediaStreamSource(stream), an = actx.createAnalyser(); an.fftSize = 256; src.connect(an); const buf = new Uint8Array(an.frequencyBinCount);
+        const tick = () => { an.getByteTimeDomainData(buf); let m = 0; for (let i = 0; i < buf.length; i++) m = Math.max(m, Math.abs(buf[i] - 128)); levelBar.style.width = Math.min(100, m * 1.6) + "%"; raf = requestAnimationFrame(tick); }; if (!reduced) tick(); else levelBar.style.width = "100%"; } catch (e) {}
+      t0 = Date.now(); recording = true; rec.start(); btn.classList.add("rec"); btn.setAttribute("aria-label", "Recording \u2014 release, or tap, to stop"); timer.hidden = false; timer.textContent = MAX + "s";
+      tickT = setInterval(() => { const left = MAX - Math.floor((Date.now() - t0) / 1000); timer.textContent = Math.max(0, left) + "s"; }, 500);
+      stopT = setTimeout(stop, MAX * 1000);
+    }
+    function stop() { if (rec && rec.state === "recording") rec.stop(); else if (busy && !recording) busy = false; }
+    /* release: a short press (< TAP_MS) switches to tap mode and keeps recording; the next press stops */
+    function release() { if (!busy) return; if (!recording) { busy = false; return; } if (Date.now() - pressT < TAP_MS) { tapMode = true; btn.setAttribute("aria-label", "Recording \u2014 tap to stop"); return; } stop(); }
+    function press() { if (recording && tapMode) { stop(); return; } start(); }
+
+    /* review row: nothing is stored until Keep; a failed store is said plainly */
+    function review(b, secs) { slot.textContent = ""; const box = el("div", "vx-review"); const a = document.createElement("audio"); a.controls = true; a.setAttribute("aria-label", "Your recording, " + secs + " seconds"); const url = URL.createObjectURL(b); a.src = url; box.appendChild(a);
+      box.appendChild(el("span", "chip", secs + " s"));
+      const row = el("div", "row"); const keep = el("button", "primary", "Keep"); keep.type = "button"; const del = el("button", null, "Delete"); del.type = "button";
+      const done = () => { URL.revokeObjectURL(url); close(); };
+      del.onclick = () => { done(); EK.toast("Deleted \u2014 nothing was kept"); };
+      keep.onclick = () => { keep.disabled = true; const fr = new FileReader(); fr.onload = () => { const base64 = String(fr.result).split(",")[1] || ""; const mime = (b.type || "audio/webm").split(";")[0];
+          let size = 0; try { size = (localStorage.getItem("ek:" + EK.project.slug) || "").length; } catch (e) {}
+          if (size + base64.length > BUDGET) { keep.disabled = false; EK.toast("This phone is nearly full of reactions; ask the team to collect them. You can delete this clip and type instead."); return; }
+          const c = EK.ctx(); const r = EK.react({ feature: c.feature, target: c.target, kind: "voice", value: { mime, base64, seconds: secs } });
+          if (!r) { keep.disabled = false; EK.toast("Could not keep the clip (this phone\u2019s storage is full). Delete it and type instead."); return; }
+          done(); EK.toast("Voice reaction kept for " + c.target); }; fr.onerror = () => { keep.disabled = false; EK.toast("Could not read the clip \u2014 try again or type"); }; fr.readAsDataURL(b); };
+      row.appendChild(keep); row.appendChild(del); box.appendChild(row); slot.appendChild(box); EK.barSlot(true); keep.focus(); }
+
+    /* pointer and keyboard; attach/detach so the typed fallback leaves nothing live */
+    const onDown = e => { e.preventDefault(); try { btn.setPointerCapture(e.pointerId); } catch (x) {} press(); };
+    const onUp = () => release();
+    const onKeyDown = e => { if ((e.key === " " || e.key === "Enter") && !e.repeat) { e.preventDefault(); press(); } };
+    const onKeyUp = e => { if (e.key === " " || e.key === "Enter") release(); };
+    const onVis = () => { if (document.hidden) stop(); };
+    btn.addEventListener("pointerdown", onDown); btn.addEventListener("pointerup", onUp); btn.addEventListener("pointercancel", onUp); btn.addEventListener("lostpointercapture", onUp);
+    btn.addEventListener("keydown", onKeyDown); btn.addEventListener("keyup", onKeyUp); btn.addEventListener("contextmenu", e => e.preventDefault());
+    document.addEventListener("visibilitychange", onVis);
+    function detach() { btn.removeEventListener("pointerdown", onDown); btn.removeEventListener("pointerup", onUp); btn.removeEventListener("pointercancel", onUp); btn.removeEventListener("lostpointercapture", onUp); btn.removeEventListener("keydown", onKeyDown); btn.removeEventListener("keyup", onKeyUp); document.removeEventListener("visibilitychange", onVis); }
+  } });
+
+  const mic = document.querySelector('#bar .kinds button[data-kind="voice"]');
+  if (mic) EK.registerTour([{ go: "welcome", do: () => mic.classList.add("hint"), undo: () => mic.classList.remove("hint"), text: "Hold the mic and say why, or type. Your reaction stays on this phone until the design team collects it." }]);
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu" crossorigin="anonymous" data-feature="massing"></script>
+<script data-feature="massing">
+(function massing() {
+  const MS = {"options": [{"id": "A", "name": "Option A", "desc": "One low bar along the river", "blocks": [{"label": "Hall", "w": 14.0, "d": 7.0, "s": 1.0, "x": -4.0, "y": 1.0, "placeholder": false}, {"label": "Rooms wing", "w": 7.0, "d": 7.0, "s": 2.0, "x": 7.0, "y": 1.0, "placeholder": false}, {"label": "Terrace", "w": 14.0, "d": 4.0, "s": 0.3, "x": -4.0, "y": -5.0, "placeholder": false}], "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiw3NS4wIDUyNy4zLDI1NS4wIDI3Ny45LDM5OS4wIC0zMy44LDIxOS4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiw3NS4wIDUyNy4zLDI1NS4wIDQ4OC40LDI3Ny41IDE3Ni42LDk3LjUiIGZpbGw9IiNCRkQzRTYiLz48cG9seWdvbiBwb2ludHM9IjE3Ni42LDE1MS41IDMwOS4xLDIyOC4wIDIzMS4yLDI3My4wIDk4LjcsMTk2LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U4NjQyQyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMyIvPjxwb2x5Z29uIHBvaW50cz0iMTI5LjksMTI0LjUgMTYxLjAsMTQyLjUgMTYxLjAsMTI0LjUgMTI5LjksMTA2LjUiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxOTIuMiwxMjQuNSAxNjEuMCwxNDIuNSAxNjEuMCwxMjQuNSAxOTIuMiwxMDYuNSIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE2MS4wLDg4LjUgMTkyLjIsMTA2LjUgMTYxLjAsMTI0LjUgMTI5LjksMTA2LjUiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSI3NS4zLDE1Ni4wIDEwNi41LDE3NC4wIDEwNi41LDE2MC41IDc1LjMsMTQyLjUiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxNDUuNCwxNTEuNSAxMDYuNSwxNzQuMCAxMDYuNSwxNjAuNSAxNDUuNCwxMzguMCIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjExNC4zLDEyMC4wIDE0NS40LDEzOC4wIDEwNi41LDE2MC41IDc1LjMsMTQyLjUiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIzMzIuNSwyMzIuNSAzNjMuNywyNTAuNSAzNjMuNywyMzcuMCAzMzIuNSwyMTkuMCIgZmlsbD0iI2E5YTY5YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM5NC45LDIzMi41IDM2My43LDI1MC41IDM2My43LDIzNy4wIDM5NC45LDIxOS4wIiBmaWxsPSIjODY4NDdjIiBzdHJva2U9IiNBOEE2OUMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMzYzLjcsMjAxLjAgMzk0LjksMjE5LjAgMzYzLjcsMjM3LjAgMzMyLjUsMjE5LjAiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyNzAuMSwyNjguNSAzMDEuMywyODYuNSAzMDEuMywyNjQuMCAyNzAuMSwyNDYuMCIgZmlsbD0iI2E5YTY5YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM0OC4xLDI1OS41IDMwMS4zLDI4Ni41IDMwMS4zLDI2NC4wIDM0OC4xLDIzNy4wIiBmaWxsPSIjODY4NDdjIiBzdHJva2U9IiNBOEE2OUMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMzE2LjksMjE5LjAgMzQ4LjEsMjM3LjAgMzAxLjMsMjY0LjAgMjcwLjEsMjQ2LjAiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSI3NS4zLDIyOC4wIDE5Mi4yLDI5NS41IDE5Mi4yLDI4Ni41IDc1LjMsMjE5LjAiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiwyODIuMCAxOTIuMiwyOTUuNSAxOTIuMiwyODYuNSAyMTUuNiwyNzMuMCIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9Ijk4LjcsMjA1LjUgMjE1LjYsMjczLjAgMTkyLjIsMjg2LjUgNzUuMywyMTkuMCIgZmlsbD0iI0Q5RDVDOSIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9Ii0yNi4wLDIxNC41IDUuMiwyMzIuNSA1LjIsMjIxLjcgLTI2LjAsMjAzLjciIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIzNi4zLDIxNC41IDUuMiwyMzIuNSA1LjIsMjIxLjcgMzYuMywyMDMuNyIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjUuMiwxODUuNyAzNi4zLDIwMy43IDUuMiwyMjEuNyAtMjYuMCwyMDMuNyIgZmlsbD0iI0Q5RDVDOSIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE0MS41LDE4OS44IDE5Ni4xLDIyMS4yIDE5Ni4xLDIxMi4yIDE0MS41LDE4MC44IiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjIzLjQsMjA1LjUgMTk2LjEsMjIxLjIgMTk2LjEsMjEyLjIgMjIzLjQsMTk2LjUiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxNjguOCwxNjUuMCAyMjMuNCwxOTYuNSAxOTYuMSwyMTIuMiAxNDEuNSwxODAuOCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE5Ni4xLDIyMS4yIDIyMy40LDIzNy4wIDIyMy40LDIxOS4wIDE5Ni4xLDIwMy4yIiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjUwLjcsMjIxLjIgMjIzLjQsMjM3LjAgMjIzLjQsMjE5LjAgMjUwLjcsMjAzLjIiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMjMuNCwxODcuNSAyNTAuNywyMDMuMiAyMjMuNCwyMTkuMCAxOTYuMSwyMDMuMiIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE3Ni42LDE2OS41IDIzMS4yLDIwMS4wIDIzMS4yLDE5OC4zIDE3Ni42LDE2Ni44IiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjQ2LjgsMTkyLjAgMjMxLjIsMjAxLjAgMjMxLjIsMTk4LjMgMjQ2LjgsMTg5LjMiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxOTIuMiwxNTcuOCAyNDYuOCwxODkuMyAyMzEuMiwxOTguMyAxNzYuNiwxNjYuOCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48dGV4dCB4PSIxMiIgeT0iMjQiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQSDCtyBsb3cgYmFyIGFsb25nIHRoZSByaXZlcjwvdGV4dD48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+TWFzc2luZyBzdHVkeSwgZGVzaWduIHRlYW0gKHNhbXBsZSBwcm9qZWN0KTwvdGV4dD48L3N2Zz4=", "slide": null}, {"id": "B", "name": "Option B", "desc": "Courtyard, two storeys", "blocks": [{"label": "Hall", "w": 10.0, "d": 8.0, "s": 2.0, "x": -6.0, "y": 3.0, "placeholder": false}, {"label": "Rooms wing", "w": 8.0, "d": 8.0, "s": 2.0, "x": 6.0, "y": 3.0, "placeholder": false}, {"label": "Kitchen & café", "w": 8.0, "d": 5.0, "s": 1.0, "x": 0.0, "y": -4.0, "placeholder": false}, {"label": "Terrace", "w": 6.0, "d": 4.0, "s": 0.3, "x": -6.0, "y": -5.0, "placeholder": false}], "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiw3NS4wIDUyNy4zLDI1NS4wIDI3Ny45LDM5OS4wIC0zMy44LDIxOS4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiw3NS4wIDUyNy4zLDI1NS4wIDQ4OC40LDI3Ny41IDE3Ni42LDk3LjUiIGZpbGw9IiNCRkQzRTYiLz48cG9seWdvbiBwb2ludHM9IjE3Ni42LDE1MS41IDMwOS4xLDIyOC4wIDIzMS4yLDI3My4wIDk4LjcsMTk2LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U4NjQyQyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMyIvPjxwb2x5Z29uIHBvaW50cz0iMTI5LjksMTI0LjUgMTYxLjAsMTQyLjUgMTYxLjAsMTI0LjUgMTI5LjksMTA2LjUiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxOTIuMiwxMjQuNSAxNjEuMCwxNDIuNSAxNjEuMCwxMjQuNSAxOTIuMiwxMDYuNSIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE2MS4wLDg4LjUgMTkyLjIsMTA2LjUgMTYxLjAsMTI0LjUgMTI5LjksMTA2LjUiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSI3NS4zLDE1Ni4wIDEwNi41LDE3NC4wIDEwNi41LDE2MC41IDc1LjMsMTQyLjUiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxNDUuNCwxNTEuNSAxMDYuNSwxNzQuMCAxMDYuNSwxNjAuNSAxNDUuNCwxMzguMCIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjExNC4zLDEyMC4wIDE0NS40LDEzOC4wIDEwNi41LDE2MC41IDc1LjMsMTQyLjUiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIzMzIuNSwyMzIuNSAzNjMuNywyNTAuNSAzNjMuNywyMzcuMCAzMzIuNSwyMTkuMCIgZmlsbD0iI2E5YTY5YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM5NC45LDIzMi41IDM2My43LDI1MC41IDM2My43LDIzNy4wIDM5NC45LDIxOS4wIiBmaWxsPSIjODY4NDdjIiBzdHJva2U9IiNBOEE2OUMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMzYzLjcsMjAxLjAgMzk0LjksMjE5LjAgMzYzLjcsMjM3LjAgMzMyLjUsMjE5LjAiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyNzAuMSwyNjguNSAzMDEuMywyODYuNSAzMDEuMywyNjQuMCAyNzAuMSwyNDYuMCIgZmlsbD0iI2E5YTY5YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM0OC4xLDI1OS41IDMwMS4zLDI4Ni41IDMwMS4zLDI2NC4wIDM0OC4xLDIzNy4wIiBmaWxsPSIjODY4NDdjIiBzdHJva2U9IiNBOEE2OUMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMzE2LjksMjE5LjAgMzQ4LjEsMjM3LjAgMzAxLjMsMjY0LjAgMjcwLjEsMjQ2LjAiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSI3NS4zLDIyOC4wIDE5Mi4yLDI5NS41IDE5Mi4yLDI4Ni41IDc1LjMsMjE5LjAiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiwyODIuMCAxOTIuMiwyOTUuNSAxOTIuMiwyODYuNSAyMTUuNiwyNzMuMCIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9Ijk4LjcsMjA1LjUgMjE1LjYsMjczLjAgMTkyLjIsMjg2LjUgNzUuMywyMTkuMCIgZmlsbD0iI0Q5RDVDOSIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9Ii0yNi4wLDIxNC41IDUuMiwyMzIuNSA1LjIsMjIxLjcgLTI2LjAsMjAzLjciIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIzNi4zLDIxNC41IDUuMiwyMzIuNSA1LjIsMjIxLjcgMzYuMywyMDMuNyIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjUuMiwxODUuNyAzNi4zLDIwMy43IDUuMiwyMjEuNyAtMjYuMCwyMDMuNyIgZmlsbD0iI0Q5RDVDOSIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjEyMi4xLDE5Mi4wIDE2MS4wLDIxNC41IDE2MS4wLDE5Ni41IDEyMi4xLDE3NC4wIiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMTkyLjIsMTk2LjUgMTYxLjAsMjE0LjUgMTYxLjAsMTk2LjUgMTkyLjIsMTc4LjUiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxNTMuMiwxNTYuMCAxOTIuMiwxNzguNSAxNjEuMCwxOTYuNSAxMjIuMSwxNzQuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE3Ni42LDIyMy41IDIwNy44LDI0MS41IDIwNy44LDIyMy41IDE3Ni42LDIwNS41IiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjM5LjAsMjIzLjUgMjA3LjgsMjQxLjUgMjA3LjgsMjIzLjUgMjM5LjAsMjA1LjUiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMDcuOCwxODcuNSAyMzkuMCwyMDUuNSAyMDcuOCwyMjMuNSAxNzYuNiwyMDUuNSIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE4NC40LDE4My4wIDIxNS42LDIwMS4wIDIxNS42LDE5Mi4wIDE4NC40LDE3NC4wIiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjM1LjEsMTg5LjggMjE1LjYsMjAxLjAgMjE1LjYsMTkyLjAgMjM1LjEsMTgwLjgiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMDMuOSwxNjIuOCAyMzUuMSwxODAuOCAyMTUuNiwxOTIuMCAxODQuNCwxNzQuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE2OC44LDE2NS4wIDE5Mi4yLDE3OC41IDE5Mi4yLDE3NS44IDE2OC44LDE2Mi4zIiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjA3LjgsMTY5LjUgMTkyLjIsMTc4LjUgMTkyLjIsMTc1LjggMjA3LjgsMTY2LjgiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxODQuNCwxNTMuMyAyMDcuOCwxNjYuOCAxOTIuMiwxNzUuOCAxNjguOCwxNjIuMyIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48dGV4dCB4PSIxMiIgeT0iMjQiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQiDCtyBjb3VydHlhcmQsIHR3byBzdG9yZXlzPC90ZXh0Pjx0ZXh0IHg9IjEyIiB5PSIyOTAiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjQThBNjlDIj5NYXNzaW5nIHN0dWR5LCBkZXNpZ24gdGVhbSAoc2FtcGxlIHByb2plY3QpPC90ZXh0Pjwvc3ZnPg==", "slide": null}, {"id": "C", "name": "Option C", "desc": "Compact tower at the street", "blocks": [{"label": "Hall", "w": 12.0, "d": 9.0, "s": 1.0, "x": -2.0, "y": 2.0, "placeholder": false}, {"label": "Rooms tower", "w": 6.0, "d": 6.0, "s": 4.0, "x": 9.0, "y": 4.0, "placeholder": false}, {"label": "Terrace", "w": 12.0, "d": 4.0, "s": 0.3, "x": -2.0, "y": -6.0, "placeholder": false}], "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiw3NS4wIDUyNy4zLDI1NS4wIDI3Ny45LDM5OS4wIC0zMy44LDIxOS4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiw3NS4wIDUyNy4zLDI1NS4wIDQ4OC40LDI3Ny41IDE3Ni42LDk3LjUiIGZpbGw9IiNCRkQzRTYiLz48cG9seWdvbiBwb2ludHM9IjE3Ni42LDE1MS41IDMwOS4xLDIyOC4wIDIzMS4yLDI3My4wIDk4LjcsMTk2LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0U4NjQyQyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjQgMyIvPjxwb2x5Z29uIHBvaW50cz0iMTI5LjksMTI0LjUgMTYxLjAsMTQyLjUgMTYxLjAsMTI0LjUgMTI5LjksMTA2LjUiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxOTIuMiwxMjQuNSAxNjEuMCwxNDIuNSAxNjEuMCwxMjQuNSAxOTIuMiwxMDYuNSIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE2MS4wLDg4LjUgMTkyLjIsMTA2LjUgMTYxLjAsMTI0LjUgMTI5LjksMTA2LjUiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSI3NS4zLDE1Ni4wIDEwNi41LDE3NC4wIDEwNi41LDE2MC41IDc1LjMsMTQyLjUiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxNDUuNCwxNTEuNSAxMDYuNSwxNzQuMCAxMDYuNSwxNjAuNSAxNDUuNCwxMzguMCIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjExNC4zLDEyMC4wIDE0NS40LDEzOC4wIDEwNi41LDE2MC41IDc1LjMsMTQyLjUiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIzMzIuNSwyMzIuNSAzNjMuNywyNTAuNSAzNjMuNywyMzcuMCAzMzIuNSwyMTkuMCIgZmlsbD0iI2E5YTY5YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM5NC45LDIzMi41IDM2My43LDI1MC41IDM2My43LDIzNy4wIDM5NC45LDIxOS4wIiBmaWxsPSIjODY4NDdjIiBzdHJva2U9IiNBOEE2OUMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMzYzLjcsMjAxLjAgMzk0LjksMjE5LjAgMzYzLjcsMjM3LjAgMzMyLjUsMjE5LjAiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyNzAuMSwyNjguNSAzMDEuMywyODYuNSAzMDEuMywyNjQuMCAyNzAuMSwyNDYuMCIgZmlsbD0iI2E5YTY5YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjM0OC4xLDI1OS41IDMwMS4zLDI4Ni41IDMwMS4zLDI2NC4wIDM0OC4xLDIzNy4wIiBmaWxsPSIjODY4NDdjIiBzdHJva2U9IiNBOEE2OUMiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMzE2LjksMjE5LjAgMzQ4LjEsMjM3LjAgMzAxLjMsMjY0LjAgMjcwLjEsMjQ2LjAiIGZpbGw9IiNEOUQ1QzkiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSI3NS4zLDIyOC4wIDE5Mi4yLDI5NS41IDE5Mi4yLDI4Ni41IDc1LjMsMjE5LjAiIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMTUuNiwyODIuMCAxOTIuMiwyOTUuNSAxOTIuMiwyODYuNSAyMTUuNiwyNzMuMCIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9Ijk4LjcsMjA1LjUgMjE1LjYsMjczLjAgMTkyLjIsMjg2LjUgNzUuMywyMTkuMCIgZmlsbD0iI0Q5RDVDOSIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9Ii0yNi4wLDIxNC41IDUuMiwyMzIuNSA1LjIsMjIxLjcgLTI2LjAsMjAzLjciIGZpbGw9IiNhOWE2OWMiIHN0cm9rZT0iI0E4QTY5QyIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIzNi4zLDIxNC41IDUuMiwyMzIuNSA1LjIsMjIxLjcgMzYuMywyMDMuNyIgZmlsbD0iIzg2ODQ3YyIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjUuMiwxODUuNyAzNi4zLDIwMy43IDUuMiwyMjEuNyAtMjYuMCwyMDMuNyIgZmlsbD0iI0Q5RDVDOSIgc3Ryb2tlPSIjQThBNjlDIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE0MS41LDE5OC44IDE4OC4zLDIyNS44IDE4OC4zLDIxNi44IDE0MS41LDE4OS44IiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjIzLjQsMjA1LjUgMTg4LjMsMjI1LjggMTg4LjMsMjE2LjggMjIzLjQsMTk2LjUiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIxNzYuNiwxNjkuNSAyMjMuNCwxOTYuNSAxODguMywyMTYuOCAxNDEuNSwxODkuOCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjIwMC4wLDIyOC4wIDIyMy40LDI0MS41IDIyMy40LDIwNS41IDIwMC4wLDE5Mi4wIiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjQ2LjgsMjI4LjAgMjIzLjQsMjQxLjUgMjIzLjQsMjA1LjUgMjQ2LjgsMTkyLjAiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMjMuNCwxNzguNSAyNDYuOCwxOTIuMCAyMjMuNCwyMDUuNSAyMDAuMCwxOTIuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cG9seWdvbiBwb2ludHM9IjE4NC40LDE3NC4wIDIzMS4yLDIwMS4wIDIzMS4yLDE5OC4zIDE4NC40LDE3MS4zIiBmaWxsPSIjNmY4YmE1IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwb2x5Z29uIHBvaW50cz0iMjQ2LjgsMTkyLjAgMjMxLjIsMjAxLjAgMjMxLjIsMTk4LjMgMjQ2LjgsMTg5LjMiIGZpbGw9IiM1ODZlODMiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBvbHlnb24gcG9pbnRzPSIyMDAuMCwxNjIuMyAyNDYuOCwxODkuMyAyMzEuMiwxOTguMyAxODQuNCwxNzEuMyIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48dGV4dCB4PSIxMiIgeT0iMjQiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQyDCtyBjb21wYWN0IHRvd2VyIGF0IHRoZSBzdHJlZXQ8L3RleHQ+PHRleHQgeD0iMTIiIHk9IjI5MCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNBOEE2OUMiPk1hc3Npbmcgc3R1ZHksIGRlc2lnbiB0ZWFtIChzYW1wbGUgcHJvamVjdCk8L3RleHQ+PC9zdmc+", "slide": null}], "context": [[-24.0, -10.0, 8.0, 8.0, 3.0], [-24.0, 2.0, 8.0, 10.0, 2.0], [22.0, -12.0, 8.0, 8.0, 2.0], [22.0, 0.0, 8.0, 12.0, 4.0], [-10.0, -20.0, 30.0, 6.0, 2.0], [-26.0, 14.0, 52.0, 6.0, 1.5]], "outline": [], "storey": 3.4};  /* brief data: options, blocks, context, outline. Rendered with textContent only. */
+  const stageEl = document.getElementById("ms"), view = document.getElementById("msView"), canvas = document.getElementById("msCanvas"), hud = document.getElementById("msHud"), fb = document.getElementById("msFallback"), card = document.getElementById("msCard");
+  if (!stageEl || !view || !canvas || !card) return;
+  const $ = id => document.getElementById(id);
+  const O = MS.options; let oi = 0; const optKey = () => "option-" + O[oi].id;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim() || "#888888";
+  const dark = () => matchMedia("(prefers-color-scheme: dark)").matches && document.documentElement.dataset.theme !== "light" || document.documentElement.dataset.theme === "dark";
+
+  /* ---- votes: one choice per device, derived from stored reactions ---- */
+  const mine = () => EK.reactions().filter(r => r.feature === "massing" && r.kind === "vote" && typeof r.target === "string" && r.target.indexOf("option-") === 0);
+  const choice = () => { const v = mine().pop(); return v ? v.target.slice(7) : null; };
+  function drawChoice() { const c = choice(); const o = O.find(x => x.id === c); $("msChoice").hidden = !o; $("msChoice").textContent = o ? "Your choice (this phone): " + o.name : ""; const on = c === O[oi].id; $("msVote").textContent = on ? "\u2713 My choice" : "This option works for me"; $("msVote").setAttribute("aria-pressed", String(on)); }
+  $("msVote").addEventListener("click", () => { if (choice() === O[oi].id) { EK.toast("Already your choice \u2014 pick another option to change it"); return; } mine().forEach(r => EK.remove(r.id)); EK.react({ feature: "massing", target: optKey(), kind: "vote", value: 1 }); EK.toast(O[oi].name + " is your choice \u2014 saved on this phone"); });
+
+  /* ---- option tabs + card ---- */
+  const tabs = [...$("msTabs").querySelectorAll("button")];
+  function showOption(i, fromTab) { oi = i; tabs.forEach((t, k) => t.setAttribute("aria-selected", String(k === i))); const o = O[i];
+    if (fb && !fb.hidden) { const im = $("msFallbackImg"); im.hidden = !o.img; if (o.img) im.src = o.img; }
+    selectMesh(null); if (gl) build(true); drawChoice(); if (EK.current() === "massing") EK.context("massing", optKey(), "\u2014 " + (o.desc || o.name), o.name); }
+  tabs.forEach((t, i) => { t.addEventListener("click", () => showOption(i, true)); t.addEventListener("keydown", e => { if (e.key === "ArrowRight") tabs[(i + 1) % tabs.length].focus(); if (e.key === "ArrowLeft") tabs[(i - 1 + tabs.length) % tabs.length].focus(); }); });
+  $("msSun").addEventListener("input", e => { $("msSunLbl").textContent = e.target.value + ":00"; if (sun) setSun(+e.target.value); });
+
+  /* ---- three.js ---- */
+  let gl = null, scene, camera, renderer, sun, blocks = [], ctxMeshes = [], selected = null, deltas = () => ({}), selectHandlers = [], pickHandlers = [];
+  const T = window.THREE;
+  function fallback(msg) { fb.hidden = false; $("msFallbackText").textContent = msg; const im = $("msFallbackImg"); im.hidden = !O[oi].img; if (O[oi].img) im.src = O[oi].img; canvas.hidden = true; $("msSun").disabled = true; $("msStreet").disabled = true; }
+  if (!T) fallback("The live 3D viewer could not load here, so this is the design team\u2019s drawing of the option. Voting still works.");
+  else { try { renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true }); gl = renderer.getContext(); } catch (e) { fallback("3D needs WebGL, which this device has turned off. Voting still works."); } }
+
+  /* one chip: the selected block when there is one (the tab already names the option), else the option */
+  const hudText = () => { const o = O[oi]; hud.textContent = ""; const mk = t => { const s = document.createElement("span"); s.className = "chip"; s.textContent = t; hud.appendChild(s); }; if (selected) mk(selected.userData.label + " \u00b7 " + fmtStoreys(storeysOf(selected.userData)) + " storey" + (storeysOf(selected.userData) === 1 ? "" : "s") + (selected.userData.placeholder ? " \u00b7 size not given" : "")); else mk(o.name + (o.desc ? " \u00b7 " + o.desc : "") + " \u00b7 drag to turn"); };
+  const fmtStoreys = s => (Math.round(s * 10) / 10).toString();
+  const storeysOf = u => Math.max(0.3, u.s + ((deltas()[optKey() + "/" + u.label] || {}).s || 0));
+
+  function selectMesh(m) { selected = m || null; blocks.forEach(b => b.material.color.set(b === selected ? css("--marker") : css("--plan"))); hudText();
+    if (EK.current() !== "massing") {} else if (selected) EK.context("massing", optKey() + "/" + selected.userData.label, "\u2014 what do you think of the " + selected.userData.label + "? Type below", O[oi].name + " \u00b7 " + selected.userData.label); else if (gl) EK.context("massing", optKey(), "\u2014 " + (O[oi].desc || O[oi].name), O[oi].name);
+    selectHandlers.forEach(fn => { try { fn(selected); } catch (e) { console.error("[ek] massing onSelect", e); } }); }
+
+  if (gl) {
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
+    scene = new T.Scene(); camera = new T.PerspectiveCamera(42, 1, 0.1, 600);
+    const ground = new T.Mesh(new T.PlaneGeometry(400, 400), new T.MeshLambertMaterial({ color: css("--soft") })); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; ground.userData.ground = true; scene.add(ground);
+    if (MS.outline.length) { const pts = MS.outline.concat([MS.outline[0]]).map(p => new T.Vector3(p[0], 0.05, p[1])); scene.add(new T.Line(new T.BufferGeometry().setFromPoints(pts), new T.LineBasicMaterial({ color: css("--marker") }))); }
+    MS.context.forEach(([x, z, w, d, s]) => { const m = new T.Mesh(new T.BoxGeometry(w, s * MS.storey, d), new T.MeshLambertMaterial({ color: css("--line") })); m.position.set(x + w / 2, s * MS.storey / 2, z + d / 2); m.castShadow = m.receiveShadow = true; scene.add(m); ctxMeshes.push(m); });
+    const amb = new T.AmbientLight(0xffffff, 0.6); scene.add(amb);
+    sun = new T.DirectionalLight(0xffffff, 0.9); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); const sc = sun.shadow.camera; sc.left = sc.bottom = -80; sc.right = sc.top = 80; sc.far = 300; scene.add(sun);
+    function setSun(h) { const a = ((h - 6) / 12) * Math.PI; sun.position.set(Math.cos(a) * 90, Math.sin(a) * 70 + 10, 30); }
+    setSun(12);
+    /* materials follow the colour scheme */
+    const recolour = () => { ground.material.color.set(css("--soft")); ctxMeshes.forEach(m => m.material.color.set(css("--line"))); blocks.forEach(b => b.material.color.set(b === selected ? css("--marker") : css("--plan"))); amb.intensity = dark() ? 0.5 : 0.7; };
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", recolour);
+
+    /* option blocks (heights animate unless reduced motion) */
+    let anim = 0;
+    function build(animate) { blocks.forEach(b => scene.remove(b)); blocks = []; const o = O[oi]; const D = deltas();
+      o.blocks.forEach(u => { const k = optKey() + "/" + u.label, d = D[k] || {}; const s = Math.max(0.3, u.s + (d.s || 0)); const m = new T.Mesh(new T.BoxGeometry(u.w, s * MS.storey, u.d), new T.MeshLambertMaterial({ color: css("--plan") }));
+        m.position.set(u.x + u.w / 2 + (d.x || 0), s * MS.storey / 2, u.y + u.d / 2 + (d.z || 0)); m.castShadow = m.receiveShadow = true; m.userData = u; if (u.placeholder) m.material.transparent = true, m.material.opacity = 0.6; scene.add(m); blocks.push(m);
+        if (animate && !reduced) { m.scale.y = 0.05; m.position.y = s * MS.storey * 0.025; } });
+      cancelAnimationFrame(anim); if (animate && !reduced) { const t0 = performance.now(); const tick = () => { const k = Math.min(1, (performance.now() - t0) / 400); const e = 1 - Math.pow(1 - k, 3); blocks.forEach(m => { const full = storeysOf(m.userData) * MS.storey; m.scale.y = 0.05 + 0.95 * e; m.position.y = full * m.scale.y / 2; }); if (k < 1) anim = requestAnimationFrame(tick); }; tick(); }
+      hudText(); }
+
+    /* camera: fit everything */
+    let theta = 0.8, phi = 0.95, dist = 60, target = new T.Vector3(0, 2, 0), home = null;
+    function fit() { const box = new T.Box3(); blocks.concat(ctxMeshes).forEach(m => box.expandByObject(m)); if (box.isEmpty()) box.set(new T.Vector3(-20, 0, -20), new T.Vector3(20, 10, 20)); const c = box.getCenter(new T.Vector3()), sz = box.getSize(new T.Vector3()); target.set(c.x, Math.min(4, sz.y / 3), c.z); dist = Math.max(sz.x, sz.z) * 1.15 + 20; theta = 0.8; phi = 0.95; home = { theta, phi, dist, target: target.clone() }; update(); }
+    function update() { phi = Math.max(0.1, Math.min(1.5, phi)); dist = Math.max(8, Math.min(400, dist)); camera.position.set(target.x + dist * Math.sin(phi) * Math.sin(theta), target.y + dist * Math.cos(phi), target.z + dist * Math.sin(phi) * Math.cos(theta)); camera.lookAt(target); }
+    /* eye level: the camera itself sits at 1.6 m, looking slightly down across the site from the front */
+    $("msStreet").addEventListener("click", () => { const d = Math.max(16, home ? home.dist * 0.45 : 30); target.set(home ? home.target.x : 0, 1.6, home ? home.target.z : 0); theta = 0.3; dist = d; phi = Math.acos(Math.min(1, Math.max(-1, (1.6 - target.y) / d))) ; phi = Math.max(1.5, Math.min(1.56, phi)); update(); camera.position.y = 1.6; camera.lookAt(target); $("msResetView").hidden = false; $("msStreet").hidden = true; EK.toast("Eye level, 1.6 m above the ground"); });
+    $("msResetView").addEventListener("click", () => { if (home) { theta = home.theta; phi = home.phi; dist = home.dist; target.copy(home.target); update(); } $("msResetView").hidden = true; $("msStreet").hidden = false; });
+
+    /* pointer: orbit, pan (shift / two fingers), pinch, tap to pick */
+    let drag = null; const ptrs = new Map(); let pinchD = 0;
+    canvas.addEventListener("pointerdown", e => { canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); drag = { x: e.clientX, y: e.clientY, moved: 0 }; if (ptrs.size === 2) { const p = [...ptrs.values()]; pinchD = Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]); } canvas.focus({ preventScroll: true }); });
+    canvas.addEventListener("pointermove", e => { if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+      if (ptrs.size === 2) { const p = [...ptrs.values()]; const dd = Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]); if (pinchD) dist *= pinchD / dd; pinchD = dd; const mid = [(p[0][0] + p[1][0]) / 2, (p[0][1] + p[1][1]) / 2]; if (drag) { target.x -= (mid[0] - drag.x) * 0.05; target.z -= (mid[1] - drag.y) * 0.05; } drag = { x: mid[0], y: mid[1], moved: 99 }; update(); return; }
+      if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.moved += Math.abs(dx) + Math.abs(dy); if (e.shiftKey || e.buttons === 4) { target.x -= dx * 0.05; target.z -= dy * 0.05; } else { theta -= dx * 0.008; phi -= dy * 0.008; } drag.x = e.clientX; drag.y = e.clientY; update(); });
+    const endPtr = e => { ptrs.delete(e.pointerId); if (drag && drag.moved < 6 && ptrs.size === 0) pick(e); if (ptrs.size === 0) drag = null; pinchD = 0; };
+    canvas.addEventListener("pointerup", endPtr); canvas.addEventListener("pointercancel", endPtr);
+    canvas.addEventListener("wheel", e => { if (document.activeElement !== canvas) return; e.preventDefault(); dist *= 1 + Math.sign(e.deltaY) * 0.08; update(); }, { passive: false });
+    canvas.addEventListener("keydown", e => { const k = e.key; if (k === "ArrowLeft") theta += .1; else if (k === "ArrowRight") theta -= .1; else if (k === "ArrowUp") phi -= .08; else if (k === "ArrowDown") phi += .08; else if (k === "+" || k === "=") dist *= .9; else if (k === "-") dist *= 1.1; else if (k === "0") { $("msResetView").click(); return; } else return; e.preventDefault(); update(); });
+    const ray = new T.Raycaster(), ndc = new T.Vector2();
+    function pick(e) { const r = canvas.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(blocks)[0];
+      let handled = false; pickHandlers.forEach(fn => { try { if (fn(hit || null, e) === true) handled = true; } catch (err) { console.error("[ek] massing onPick", err); } });
+      if (handled) return; selectMesh(hit ? hit.object : null); }
+
+    build(false); fit(); resize();
+    (function loop() { requestAnimationFrame(loop); if (document.querySelector('[data-feature="massing"]').hidden) return; renderer.render(scene, camera); })();
+    window.addEventListener("resize", resize);
+    if ("ResizeObserver" in window) new ResizeObserver(resize).observe(view);
+
+    /* extension point for ek-massing-markup */
+    EK.feature = EK.feature || {};
+    EK.feature.massing = { options: O, option: () => O[oi], optionKey: optKey, blocks: () => blocks.slice(), context: () => ctxMeshes.slice(), select: selectMesh, selected: () => selected, onSelect: fn => selectHandlers.push(fn), onPick: fn => pickHandlers.push(fn), scene, camera, renderer, canvas, view, rebuild: () => { build(false); selectMesh(null); }, setDeltas: fn => { deltas = fn || (() => ({})); }, storeysOf, storey: MS.storey };
+  } else { EK.feature = EK.feature || {}; EK.feature.massing = { options: O, option: () => O[oi], optionKey: optKey, blocks: () => [], select: () => {}, selected: () => null, onSelect: () => {}, onPick: () => {}, rebuild: () => {}, setDeltas: () => {}, fallback: true }; }
+
+  /* ---- sizing: phones get a fixed-pixel view height per show; desktop the card is a side column ---- */
+  let viewW = 0;
+  /* phones: half the stage for the model; the card below holds tabs, vote, sun and the study note without an inner fold on a 812 px screen */
+  function layoutView(force) { if (window.innerWidth >= 900) { view.style.height = ""; } else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * (h < 520 ? 0.42 : 0.5)) + "px"; } if (gl) resize(); }
+  const atEnd = () => card.classList.toggle("at-end", card.scrollHeight - card.clientHeight - card.scrollTop < 8);
+  card.addEventListener("scroll", atEnd, { passive: true }); EK.on("ek:show", id => { if (id === "massing") setTimeout(atEnd, 100); });
+  EK.fitStage(stageEl, "massing", { onResize: () => layoutView(false) });
+  EK.on("ek:show", id => { if (id === "massing") { layoutView(true); if (gl) resize(); showOption(oi); } });
+  EK.on("ek:reaction", drawChoice);
+  layoutView(true); showOption(0);
+  function resize() { if (!gl) return; const w = view.clientWidth, h = view.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+
+  /* ---- tour ---- */
+  EK.registerTour([
+    { go: "massing", do: () => tabs[Math.min(1, tabs.length - 1)].click(), undo: () => tabs[0].click(), text: "Massing: " + O.length + " option" + (O.length === 1 ? "" : "s") + " on the site, as boxes. Drag to walk around; switch options with the tabs." },
+    { go: "massing", do: () => { $("msSun").value = "16"; $("msSun").dispatchEvent(new Event("input", { bubbles: true })); }, undo: () => { $("msSun").value = "12"; $("msSun").dispatchEvent(new Event("input", { bubbles: true })); }, text: "Slide the sun to see where the shadows fall at 9, noon and 6." },
+    { go: "massing", do: () => { if (!$("msVote").disabled) $("msVote").click(); }, undo: () => { mine().forEach(r => EK.remove(r.id)); }, text: "Tell us which option works for you. One choice per phone; you can change it any time." }
+  ]);
+})();
+</script>
+<script data-feature="program">
+(function program() {
+  const PG = {"spaces": [{"name": "Main hall", "area": 420.0, "use": "Events, markets, large gatherings", "contested": false, "slide": 7}, {"name": "Community kitchen", "area": 110.0, "use": "Shared cooking, classes, market prep", "contested": true, "slide": 7}, {"name": "Youth rooms", "area": 150.0, "use": "Drop-in, homework, music", "contested": true, "slide": 7}, {"name": "Meeting rooms", "area": 120.0, "use": "Bookable rooms for groups", "contested": false, "slide": 7}, {"name": "Café", "area": 80.0, "use": "Daily reason to come in", "contested": true, "slide": 7}, {"name": "Workshop", "area": 95.0, "use": "Tools, repair, making", "contested": false, "slide": 7}, {"name": "Offices", "area": 60.0, "use": "Residents' association, staff", "contested": false, "slide": 7}, {"name": "Riverside terrace", "area": null, "use": "Covered outdoor room", "contested": false, "slide": 7}], "step_note": "areas in m²; adjustments are per device"};  /* brief data: names, areas, use text, contested flags, slides. Rendered with textContent only. */
+  const stageEl = document.getElementById("pg"), svg = document.getElementById("pgMap"), card = document.getElementById("pgCard"), rankBox = document.getElementById("pgRank");
+  if (!stageEl || !svg || !card || !rankBox) return;
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const spaces = PG.spaces; let sel = null, picks = [];
+  const known = spaces.filter(s => s.area != null).map(s => s.area).sort((a, b) => a - b);
+  const smallest = known.length ? known[0] : 60;   // an unknown area is drawn at the smallest known one, never larger
+  const maxArea = known.length ? known[known.length - 1] : 100;
+  const STEP = Math.max(5, Math.min(20, Math.round(maxArea * 0.1 / 5) * 5));
+  const CAP = 5 * STEP;                             // one device can move a space at most this far, each way
+
+  /* this device's adjustments and rank come from stored reactions, so they survive reloads and Reset is honest */
+  const mine = () => EK.reactions().filter(r => r.feature === "program");
+  const rawDelta = name => mine().filter(r => r.kind === "edit" && r.target === name && r.value && typeof r.value.delta === "number" && isFinite(r.value.delta)).reduce((s, r) => s + r.value.delta, 0);
+  const delta = name => Math.max(-CAP, Math.min(CAP, rawDelta(name)));
+  const rankOf = name => { const v = mine().filter(r => r.kind === "vote" && r.target === name && Number.isInteger(r.value) && r.value >= 1 && r.value <= 5).pop(); return v ? v.value : 0; };
+  const base = s => s.area == null ? smallest : s.area;          // the layout uses proposed sizes only
+  const area = s => Math.max(STEP, base(s) + delta(s.name));     // what the visitor suggests
+
+  function squarify(items, x, y, w, h, out) { if (!items.length) return; if (items.length === 1) { out.push({ s: items[0].s, x, y, w, h }); return; } const total = items.reduce((t, i) => t + i.v, 0); let acc = 0, i = 0; const half = total / 2; while (i < items.length - 1 && acc + items[i].v <= half) acc += items[i++].v; if (i === 0) { acc = items[0].v; i = 1; } const f = acc / total; if (w >= h) { squarify(items.slice(0, i), x, y, w * f, h, out); squarify(items.slice(i), x + w * f, y, w * (1 - f), h, out); } else { squarify(items.slice(0, i), x, y, w, h * f, out); squarify(items.slice(i), x, y + h * f, w, h * (1 - f), out); } }
+
+  /* word-wrap a name to at most two lines of ~px/char width */
+  function wrap(name, maxChars) { const words = name.split(" "); const lines = []; let cur = ""; words.forEach(w => { if ((cur + " " + w).trim().length <= maxChars) cur = (cur + " " + w).trim(); else { if (cur) lines.push(cur); cur = w; } }); if (cur) lines.push(cur); if (lines.length > 2) { lines.length = 2; lines[1] = lines[1].slice(0, Math.max(1, maxChars - 1)) + "\u2026"; } return lines; }
+
+  function draw() {
+    const W = Math.max(200, svg.clientWidth || stageEl.clientWidth), H = Math.max(160, svg.clientHeight || stageEl.clientHeight);
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    // layout from the proposed areas only: the map is the design team's; the visitor's suggestion is drawn over it
+    const items = spaces.map(s => ({ s, v: base(s) })).sort((a, b) => b.v - a.v); const out = []; squarify(items, 0, 0, W, H, out);
+    svg.textContent = ""; const over = el("g", { class: "pg-over", "aria-hidden": "true" });
+    out.forEach(r => {
+      const s = r.s, d = delta(s.name), rk = rankOf(s.name);
+      const g = el("g", { role: "button", tabindex: "0", "data-n": s.name, "aria-pressed": String(sel === s.name) });
+      if (s.area == null) g.classList.add("tbc");
+      g.setAttribute("aria-label", s.name + ", " + (s.area == null ? "area to confirm" : Math.round(s.area) + " square metres proposed") + (d ? ", you suggest " + (s.area == null ? (d > 0 ? "+" : "") + d : Math.round(area(s))) + (s.area == null ? " on an area not given" : "") : "") + (s.contested ? ", still being discussed" : "") + (rk ? ", you ranked it " + rk : ""));
+      g.appendChild(el("rect", { class: "blk", x: r.x, y: r.y, width: r.w, height: r.h, rx: 2 }));
+      const nameFs = r.w < 120 ? 13 : 15, pxPerChar = nameFs * 0.58, maxChars = Math.floor((r.w - 16) / pxPerChar);
+      const longest = Math.max(...s.name.split(" ").map(w => w.length));
+      const lines = (maxChars >= 4 && longest <= maxChars) ? wrap(s.name, maxChars) : [];   // a word that cannot fit is not drawn clipped
+      const need = 10 + lines.length * (nameFs + 3) + 16;
+      if (lines.length && r.h >= need + 6 && r.w >= 44) {
+        lines.forEach((ln, i) => { const t = el("text", { x: r.x + 8, y: r.y + 8 + nameFs + i * (nameFs + 3), class: "nm", "font-size": nameFs }); t.textContent = ln; g.appendChild(t); });
+        if (r.h >= need + 20) { const t2 = el("text", { x: r.x + 8, y: r.y + 8 + lines.length * (nameFs + 3) + 14, class: "ar" }); t2.textContent = (s.area == null ? "[area to confirm]" : Math.round(s.area) + " m\u00b2") + (d ? " (" + (d > 0 ? "+" : "") + d + ")" : ""); g.appendChild(t2); }
+      }
+      if (s.contested) { g.appendChild(el("circle", { class: "ct", cx: r.x + r.w - 14, cy: r.y + 14, r: 6 })); g.appendChild(el("circle", { class: "ct2", cx: r.x + r.w - 14, cy: r.y + 14, r: 2 })); const tt = el("title", {}); tt.textContent = "Still being discussed"; g.appendChild(tt); }
+      g.addEventListener("click", () => sel === s.name ? deselect() : select(s.name));
+      g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(s.name); } else if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); moveFocus(g, 1); } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); moveFocus(g, -1); } });
+      svg.appendChild(g);
+      if (d) { const k = Math.sqrt(area(s) / base(s)); const w = r.w * k, h = r.h * k; over.appendChild(el("rect", { class: "sug", x: r.x + (r.w - w) / 2, y: r.y + (r.h - h) / 2, width: w, height: h, rx: 2 })); }
+    });
+    svg.appendChild(over);
+  }
+  function moveFocus(g, dir) { const gs = [...svg.querySelectorAll("g[role=button]")]; const i = gs.indexOf(g); const nx = gs[(i + dir + gs.length) % gs.length]; if (nx) nx.focus(); }
+
+  const $ = id => document.getElementById(id);
+  function deselect() { sel = null; draw(); $("pgKicker").textContent = "Tap a space to see what it is for"; $("pgName").textContent = ""; $("pgUse").textContent = ""; $("pgMeta").textContent = ""; $("pgCtl").hidden = true; $("pgRanked").hidden = true; EK.context("program", "the program", "\u2014 tap a space"); }
+  function select(name) { sel = name; const s = spaces.find(x => x.name === name); draw(); if (!s) return; const d = delta(name), rk = rankOf(name);
+    $("pgKicker").textContent = s.contested ? "Still being discussed" : "Proposed space"; $("pgName").textContent = s.name;
+    $("pgUse").textContent = s.use || "What this space is for is not described in the presentation.";
+    $("pgMeta").textContent = (s.area == null ? "The presentation gives no area yet." + (d ? " You suggest " + (d > 0 ? "+" : "") + d + " m\u00b2 on an area not given (this phone)." : "") : "Proposed " + Math.round(s.area) + " m\u00b2." + (d ? " You suggest " + Math.round(area(s)) + " m\u00b2 (" + (d > 0 ? "+" : "") + d + ", this phone)." : "")) + (s.slide ? " Slide " + s.slide + "." : "") + " Each tap is " + STEP + " m\u00b2, up to \u00b1" + CAP + " from this phone.";
+    $("pgCtl").querySelector('[data-d="1"]').setAttribute("aria-label", "Bigger by " + STEP + " square metres"); $("pgCtl").querySelector('[data-d="-1"]').setAttribute("aria-label", "Smaller by " + STEP + " square metres");
+    $("pgCtl").hidden = false; $("pgReset").hidden = !d; $("pgRanked").hidden = !rk; $("pgRanked").textContent = rk ? "You ranked this #" + rk + " (this phone)" : "";
+    EK.context("program", name, "\u2014 tap + or \u2212 to change its size");
+    const g = svg.querySelector('g[data-n="' + CSS.escape(name) + '"]'); if (g && document.activeElement && document.activeElement.closest && !document.activeElement.closest(".pg-card")) g.focus({ preventScroll: true }); }
+
+  $("pgCtl").querySelectorAll("[data-d]").forEach(b => b.addEventListener("click", () => { if (!sel) return EK.toast("Tap a space first"); const dlt = (+b.dataset.d) * STEP; if (Math.abs(rawDelta(sel) + dlt) > CAP) return EK.toast("That is as far as the control goes (\u00b1" + CAP + " m\u00b2). Write a note for more."); EK.react({ feature: "program", target: sel, kind: "edit", value: { delta: dlt } }); EK.toast((dlt > 0 ? "Bigger" : "Smaller") + " by " + Math.abs(dlt) + " m\u00b2 \u2014 saved on this phone"); }));
+  $("pgReset").addEventListener("click", () => { if (!sel) return; mine().filter(r => r.kind === "edit" && r.target === sel).forEach(r => EK.remove(r.id)); EK.toast("Back to the proposal"); });
+
+  /* ranking */
+  function drawPicks() { const box = $("pgPicks"); box.textContent = ""; spaces.forEach(s => { const b = document.createElement("button"); b.type = "button"; const i = picks.indexOf(s.name); b.setAttribute("aria-pressed", String(i >= 0)); const tag = document.createElement("b"); tag.textContent = i >= 0 ? String(i + 1) : "+"; b.appendChild(tag); b.appendChild(document.createTextNode(s.name)); b.setAttribute("aria-label", s.name + (i >= 0 ? ", ranked " + (i + 1) : ", not ranked")); b.addEventListener("click", () => { const k = picks.indexOf(s.name); if (k >= 0) picks.splice(k, 1); else if (picks.length < 5) picks.push(s.name); else { EK.toast("Five chosen \u2014 remove one first"); return; } drawPicks(); }); box.appendChild(b); }); $("pgSave").disabled = !picks.length; $("pgSave").textContent = picks.length ? "Save my top " + (picks.length === 5 ? "five" : picks.length) : "Save my top five"; }
+  $("pgRankBtn").addEventListener("click", () => { picks = spaces.map(s => ({ n: s.name, r: rankOf(s.name) })).filter(x => x.r).sort((a, b) => a.r - b.r).map(x => x.n).slice(0, 5); drawPicks(); card.hidden = true; rankBox.hidden = false; layoutMap(false); $("pgPicks").querySelector("button").focus(); EK.context("program", "ranking", "\u2014 tap spaces in order of importance"); });
+  $("pgCancel").addEventListener("click", () => { rankBox.hidden = true; card.hidden = false; layoutMap(false); $("pgRankBtn").focus(); if (sel) select(sel); else EK.context("program", "the program", "\u2014 tap a space"); });
+  $("pgSave").addEventListener("click", () => { mine().filter(r => r.kind === "vote").forEach(r => EK.remove(r.id)); picks.forEach((n, i) => EK.react({ feature: "program", target: n, kind: "vote", value: i + 1 })); EK.toast("Ranking saved on this phone"); $("pgCancel").click(); });
+
+  /* phones: the map gets a fixed pixel height when the section shows (or the width changes), so the bar growing
+     only shrinks the card, and the blocks never move under the finger; while ranking the map gives up room */
+  let mapW = 0;
+  function layoutMap(force) { if (window.innerWidth >= 900) { svg.style.height = ""; return; } const ranking = !rankBox.hidden; if (force || window.innerWidth !== mapW || svg.dataset.mode !== (ranking ? "rank" : "map")) { mapW = window.innerWidth; svg.dataset.mode = ranking ? "rank" : "map"; svg.style.height = Math.round(stageEl.clientHeight * (ranking ? 0.36 : 0.56)) + "px"; draw(); } }
+  EK.on("ek:reaction", () => { draw(); if (sel) select(sel); });
+  EK.on("ek:show", id => { if (id === "program") { layoutMap(true); draw(); if (sel) select(sel); else EK.context("program", "the program", "\u2014 tap a space"); } });
+  EK.fitStage(stageEl, "program", { onResize: () => { layoutMap(false); if (window.innerWidth >= 900) draw(); } });
+  if ("ResizeObserver" in window) { let last = ""; new ResizeObserver(() => { const k = svg.clientWidth + "x" + svg.clientHeight; if (k !== last) { last = k; draw(); } }).observe(svg); }
+  layoutMap(true); draw(); if (EK.current() === "program") EK.context("program", "the program", "\u2014 tap a space");
+
+  const firstContested = spaces.find(s => s.contested) || spaces[0];
+  EK.registerTour([
+    { go: "program", do: () => select(firstContested.name), text: "Program: every space drawn to the size the design team proposed" + (spaces.some(s => s.contested) ? "; a ring marks the ones still being discussed" : "") + ". Tap one to see what it is for." },
+    { go: "program", do: () => { select(firstContested.name); $("pgCtl").querySelector('[data-d="1"]').click(); }, undo: () => { const r = mine().filter(r => r.kind === "edit" && r.target === firstContested.name).pop(); if (r) EK.remove(r.id); }, text: "Grow what matters, shrink what doesn\u2019t. Your change is saved on this phone and shown to the design team as a suggestion." },
+    { go: "program", do: () => $("pgRankBtn").click(), undo: () => $("pgCancel").click(), text: "Then rank your top five: tap the spaces in order of importance and save." }
+  ]);
+})();
+</script>
+<script data-feature="timeline">
+(function timeline() {
+  const TL = {"count": 7, "undated": 6};
+  const root = document.getElementById("tl"), rail = document.getElementById("tlRail");
+  if (!root || !rail) return;
+  const scenes = [...root.querySelectorAll(".tl-scene")], dots = [...rail.querySelectorAll("button")];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let active = 0, armed = false;
+  const target = i => scenes[i] ? scenes[i].dataset.target : "";
+  const label = i => scenes[i] ? scenes[i].getAttribute("aria-label") : "";
+  const chipLabel = i => scenes[i] && scenes[i].classList.contains("tbc") ? "the undated moment" : label(i);
+  const slideOf = i => scenes[i] ? scenes[i].dataset.slide || "" : "";
+  const hasVoice = () => EK.hasKind && EK.hasKind("voice");
+
+  /* the shell sizes the story between header and bar and settles the page on phones; re-snap when it resizes */
+  const stage = EK.fitStage(root, "timeline", { onResize: () => { if (scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); } });
+  const settle = () => stage.settle();
+
+  function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
+    dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
+    if (EK.current() === "timeline") EK.context("timeline", target(i), "\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \u00b7 scroll for the next moment" : " \u00b7 the last moment so far"), chipLabel(i)); }
+  function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
+  root.addEventListener("scroll", () => { if (!root._settled) { root._settled = true; settle(); } }, { passive: true });
+
+  /* which scene is on screen */
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting && e.intersectionRatio >= 0.55) setActive(+e.target.dataset.i, true); }); }, { root, threshold: [0.55] });
+    scenes.forEach(s => io.observe(s));
+  } else { root.addEventListener("scroll", () => setActive(Math.round(root.scrollTop / root.clientHeight), true), { passive: true }); }
+
+  /* rail, keyboard, buttons */
+  dots.forEach(d => d.addEventListener("click", () => go(+d.dataset.i, true)));
+  root.addEventListener("keydown", e => { const k = e.key; if (k === "ArrowDown" || k === "PageDown" || k === " ") { e.preventDefault(); go(active + 1); } else if (k === "ArrowUp" || k === "PageUp") { e.preventDefault(); go(active - 1); } else if (k === "Home") { e.preventDefault(); go(0); } else if (k === "End") { e.preventDefault(); go(scenes.length - 1); } });
+  scenes.forEach((s, i) => { const b = s.querySelector(".tl-add"); if (!b) return; b.addEventListener("click", () => { setActive(i); EK.context("timeline", target(i), s.classList.contains("tbc") ? "\u2014 when was this?" : "\u2014 what do you remember?", chipLabel(i)); EK.focusNote(); EK.toast(s.classList.contains("tbc") ? "Tell us when, below" : (hasVoice() ? "Speak or type your memory below" : "Type your memory below")); }); });
+
+  /* memories: this device's reactions per moment, escaped on render */
+  function render() { const R = EK.reactions().filter(r => r.feature === "timeline");
+    scenes.forEach((s, i) => { const mine = R.filter(r => r.target === target(i)); const box = s.querySelector(".tl-mem"), chip = s.querySelector(".tl-count"); if (!box) return;
+      box.textContent = "";
+      mine.forEach(r => { const d = document.createElement("div"); d.setAttribute("role", "listitem");
+        if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\/[\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); const t = document.createElement("small"); t.textContent = (r.value.seconds || "?") + " s, voice"; d.appendChild(t); }
+        else if (r.kind === "voice") d.textContent = "Unsupported voice note";
+        else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
+        box.appendChild(d); });
+      if (chip) { chip.hidden = !mine.length; chip.querySelector("b").textContent = mine.length; chip.querySelector(".tl-n").textContent = mine.length === 1 ? "memory" : "memories"; }
+      if (dots[i]) dots[i].setAttribute("aria-label", label(i) + (mine.length ? ", " + mine.length + " memor" + (mine.length === 1 ? "y" : "ies") + " on this device" : "")); }); }
+  EK.on("ek:reaction", render); render();
+
+  EK.on("ek:show", id => { if (id === "timeline") { armed = false; setActive(active); root._settled = false; } });
+  if (EK.current() === "timeline") setActive(0);
+
+  /* tour */
+  const steps = [
+    { go: "timeline", do: () => go(Math.min(1, scenes.length - 1)), text: "History: " + TL.count + " moments that shaped the site" + (TL.undated ? ", one undated" : "") + ". Scroll, or use the dots, to move between them." },
+    { go: "timeline", do: () => { const b = scenes[active] && scenes[active].querySelector(".tl-add"); if (b) b.focus(); }, text: "Were you there? Add a memory and it becomes part of the record, tied to that year." }
+  ];
+  if (TL.undated >= 0 && TL.undated !== null) steps.push({ go: "timeline", do: () => go(TL.undated), text: "This one has no date in the presentation. If you know when it happened, tell us." });
+  EK.registerTour(steps);
+})();
+</script>
+</body>
+</html>
