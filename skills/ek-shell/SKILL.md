@@ -56,7 +56,7 @@ EK.react({feature, target, kind, value})      // validates (feature+target strin
 EK.reactions()                                // copy of the list, oldest first
 EK.remove(id); EK.clear()                     // emit 'ek:reaction' with null
 EK.kinds()                                    // ['voice','note','pin','vote','edit','submission','markup']
-EK.on('ek:reaction' | 'ek:show', fn)          // handlers are isolated: one throwing does not stop the others
+EK.on('ek:reaction' | 'ek:show' | 'ek:context', fn)  // handlers are isolated: one throwing does not stop the others
 EK.show(id); EK.current()                     // switch section (unknown id → welcome), update nav, hash, scroll, emit 'ek:show'
 EK.context(feature, target, hint, label?)     // what the bar's note (and any registered kind) will be about;
                                               //   label is shown instead of target when target is not readable as-is
@@ -69,6 +69,10 @@ EK.registerKind(kind, {icon, label, onActivate(ctx)} | {icon, label, mount(butto
                                               //   bar's extra row (#barSlot) for its own UI; second registration ignored
 EK.barSlot(show?)                             // the extra row under the note field; show true/false toggles it
 EK.focusNote()                                // put the cursor in the note field (after a pin, say)
+EK.fitStage(el, featureId, {onResize?})       // el gets class ek-stage (height = viewport − sticky header − bar) inside an
+                                              //   ek-bleed wrapper (full width of main); re-sizes when the bar grows; on phones
+                                              //   scrolls the page so el sits under the header when the section shows;
+                                              //   returns {size, settle}. Use it for any full-frame stage (story, map, 3D)
 EK.registerTour([{go, text, do?, undo?}])     // append steps; the shell plays them (9 s each, Next/Back/Finish,
                                               //   Escape exits, reactions made during the tour are removed on exit,
                                               //   auto-start on #tour, reduced motion → no auto-advance)

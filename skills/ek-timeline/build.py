@@ -173,8 +173,8 @@ def section_html(events: list[dict], rest: list[dict], installed_voice: bool) ->
         f'<section data-feature="timeline" data-title="History" hidden>\n'
         f'  <h2>How the site got here</h2>\n'
         f'  <p class="lede" data-with-voice="{html.escape(lede.format(v="speak or type"))}" data-without-voice="{html.escape(lede.format(v="type"))}">{html.escape(lede.format(v="type"))}</p>\n'
-        f'  <div class="tl-wrap">\n'
-        f'  <div class="tl" id="tl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="Site history, {n} moments. Use the arrow keys to move between them.">\n'
+        f'  <div class="tl-wrap ek-bleed">\n'
+        f'  <div class="tl ek-stage" id="tl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="Site history, {n} moments. Use the arrow keys to move between them.">\n'
         + "\n".join(scenes) + "\n"
         f'  </div>\n'
         f'  <nav class="tl-rail" id="tlRail" aria-label="Years">{rail}</nav>\n'
@@ -185,9 +185,8 @@ def section_html(events: list[dict], rest: list[dict], installed_voice: bool) ->
 
 STYLE = """<style data-feature="timeline">
 /* ===== ek-timeline: scroll-driven story ===== */
-.tl-wrap{position:relative;margin:0 -20px;width:calc(100% + 40px)}
-@media(min-width:900px){.tl-wrap{margin:0 -32px;width:calc(100% + 64px)}}
-.tl{position:relative;height:calc(100dvh - var(--tl-top,0px) - var(--tl-bar,110px) - 12px);min-height:320px;max-height:900px;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;background:var(--soft);outline:none;scrollbar-width:none}
+.tl-wrap{position:relative}
+.tl{position:relative;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;background:var(--soft);outline:none;scrollbar-width:none}
 .tl::-webkit-scrollbar{display:none}
 .tl:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
 .tl-scene{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:flex-end;padding:16px 16px 20px;overflow:hidden}
@@ -236,12 +235,9 @@ SCRIPT = """<script data-feature="timeline">
   const slideOf = i => scenes[i] ? scenes[i].dataset.slide || "" : "";
   const hasVoice = () => EK.hasKind && EK.hasKind("voice");
 
-  /* size: the story fills the viewport between the sticky header (phones) and the shell's fixed bar */
-  const hdr = document.querySelector("header.top"), bar = document.getElementById("bar");
-  const stickyH = () => (hdr && window.innerWidth < 900) ? hdr.getBoundingClientRect().height : Math.max(0, Math.round(root.getBoundingClientRect().top + window.scrollY));
-  function size() { root.style.setProperty("--tl-top", Math.round(stickyH()) + "px"); root.style.setProperty("--tl-bar", Math.round(bar ? bar.getBoundingClientRect().height : 110) + "px"); }
-  /* on phones the intro scrolls away so the whole story is on screen: align its top under the header */
-  function settle() { if (window.innerWidth >= 900 || EK.current() !== "timeline") return; const se = document.scrollingElement || document.documentElement; const max = Math.max(0, se.scrollHeight - window.innerHeight); const y = Math.min(max, Math.max(0, root.getBoundingClientRect().top + window.scrollY - stickyH())); if (Math.abs(window.scrollY - y) > 4) window.scrollTo({ top: y, behavior: "auto" }); }
+  /* the shell sizes the story between header and bar and settles the page on phones; re-snap when it resizes */
+  const stage = EK.fitStage(root, "timeline", { onResize: () => { if (scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); } });
+  const settle = () => stage.settle();
 
   function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
     dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
@@ -259,8 +255,6 @@ SCRIPT = """<script data-feature="timeline">
   dots.forEach(d => d.addEventListener("click", () => go(+d.dataset.i, true)));
   root.addEventListener("keydown", e => { const k = e.key; if (k === "ArrowDown" || k === "PageDown" || k === " ") { e.preventDefault(); go(active + 1); } else if (k === "ArrowUp" || k === "PageUp") { e.preventDefault(); go(active - 1); } else if (k === "Home") { e.preventDefault(); go(0); } else if (k === "End") { e.preventDefault(); go(scenes.length - 1); } });
   scenes.forEach((s, i) => { const b = s.querySelector(".tl-add"); if (!b) return; b.addEventListener("click", () => { setActive(i); EK.context("timeline", target(i), s.classList.contains("tbc") ? "\\u2014 when was this?" : "\\u2014 what do you remember?", chipLabel(i)); EK.focusNote(); EK.toast(s.classList.contains("tbc") ? "Tell us when, below" : (hasVoice() ? "Speak or type your memory below" : "Type your memory below")); }); });
-  /* the bar grows when its context wraps; keep the story above it */
-  if ("ResizeObserver" in window && bar) new ResizeObserver(() => { const before = root.clientHeight; size(); if (root.clientHeight !== before && scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); }).observe(bar);
 
   /* memories: this device's reactions per moment, escaped on render */
   function render() { const R = EK.reactions().filter(r => r.feature === "timeline");
@@ -275,10 +269,8 @@ SCRIPT = """<script data-feature="timeline">
       if (dots[i]) dots[i].setAttribute("aria-label", label(i) + (mine.length ? ", " + mine.length + " memor" + (mine.length === 1 ? "y" : "ies") + " on this device" : "")); }); }
   EK.on("ek:reaction", render); render();
 
-  EK.on("ek:show", id => { if (id === "timeline") { size(); armed = false; setActive(active); root._settled = false; setTimeout(settle, 350); } });
-  window.addEventListener("resize", size); size();
-  if (EK.current() === "timeline") { setActive(0); setTimeout(settle, 350); }
-  window.addEventListener("load", () => { size(); setTimeout(settle, 50); });
+  EK.on("ek:show", id => { if (id === "timeline") { armed = false; setActive(active); root._settled = false; } });
+  if (EK.current() === "timeline") setActive(0);
 
   /* tour */
   const steps = [
