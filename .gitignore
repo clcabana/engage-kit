@@ -21,3 +21,8 @@ work/*.pdf
 work/extract.json
 work/brief.skeleton.json
 
+
+# Presentation working files stay local
+*.docx
+*.pptx
+
