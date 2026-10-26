@@ -94,13 +94,13 @@ section[data-feature] > h2:first-child{font-size:28px}
   <div class="hero">
     <div style="display:flex;flex-direction:column;gap:16px">
       <h1>{{HERO_H1}}</h1>
-      <p class="lede">{{HERO_LEDE}}</p>
+      <p class="lede" data-with-voice="{{HERO_LEDE_VOICE}}" data-without-voice="{{HERO_LEDE}}">{{HERO_LEDE}}</p>
       <div class="row">{{HERO_BUTTONS}}</div>
       <div id="welcomeImage" data-slot="welcome-image"></div>
     </div>
     <div class="card privacy" aria-label="About your reactions">
       <h3>What happens to what you add</h3>
-      <p>{{PRIVACY_TEXT}}</p>
+      <p data-with-voice="{{PRIVACY_TEXT_VOICE}}" data-without-voice="{{PRIVACY_TEXT}}">{{PRIVACY_TEXT}}</p>
       <div class="row"><span class="chip">Reactions on this phone: <b id="reactCount">0</b></span><button type="button" id="clearDevice">Remove all</button></div>
       {{SAMPLE_NOTE}}
     </div>
@@ -159,7 +159,10 @@ const EK = window.EK = (() => {
     /* events: 'ek:reaction' | 'ek:show' */
     on(ev, fn) { (handlers[ev] = handlers[ev] || []).push(fn); },
     /* context shown in the reaction bar */
-    context(feature, target, hint) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = target; document.getElementById("hint").textContent = hint || ""; },
+    /* target is what gets stored; label (optional) is what the bar shows when the target is not readable as-is */
+    context(feature, target, hint, label) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = label || target; document.getElementById("hint").textContent = hint || ""; },
+    /* true once a feature has registered a voice kind on the bar; copy that mentions speaking should check this */
+    hasKind(kind) { return !!kinds[kind]; },
     ctx: () => ctx,
     toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); },
     /* navigation */
@@ -202,8 +205,10 @@ const EK = window.EK = (() => {
   const QUESTION = PROJECT.first_question || "";
   form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v }); note.value = ""; EK.toast("Added to " + c.target); });
   // On the welcome page the note is about the project's first decision, so it carries context too.
-  EK.on("ek:show", id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; });
-  EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); if (QUESTION) note.placeholder = QUESTION;
+  const onShow = id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; };
+  EK.on("ek:show", onShow); onShow(EK.current());
+  // Copy that depends on what features actually registered (voice) is resolved once every feature script has run.
+  window.addEventListener("load", () => { const voice = EK.hasKind("voice"); document.querySelectorAll("[data-with-voice]").forEach(el => { el.textContent = voice ? el.dataset.withVoice : el.dataset.withoutVoice; }); });
   // Removal: storage is the shell's, so the way out is the shell's.
   const cnt = document.getElementById("reactCount"), clr = document.getElementById("clearDevice");
   const refresh = () => { const n = EK.reactions().length; cnt.textContent = n; clr.disabled = !n; };
@@ -226,6 +231,7 @@ const EK = window.EK = (() => {
   window.addEventListener("load", () => { if (window.__hash0 === "#tour" && EK.tourSteps().length) setTimeout(start, 600); });
 })();
 </script>
-<!-- ek:scripts — feature skills append their <script data-feature="…"> blocks after this line; EK is ready -->
+<!-- feature skills insert their <script data-feature="…"> blocks after the next marker; EK is ready -->
+<!-- ek:scripts -->
 </body>
 </html>

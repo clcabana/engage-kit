@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Riverside Community Hub — have your say</title>
-<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-10-26T01:50:46+00:00">
+<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-10-26T02:37:24+00:00">
 
 <style>
 /* ===== ek-shell: theme tokens (from the project brief) ===== */
@@ -79,6 +79,43 @@ section[data-feature] > h2:first-child{font-size:28px}
 /* ek:styles — feature skills insert their CSS after this line (keep it inside this one style element) */
 </style>
 <!-- ek:styles -->
+<style data-feature="timeline">
+/* ===== ek-timeline: scroll-driven story ===== */
+.tl-wrap{position:relative;margin:0 -20px;width:calc(100% + 40px)}
+@media(min-width:900px){.tl-wrap{margin:0 -32px;width:calc(100% + 64px)}}
+.tl{position:relative;height:calc(100dvh - var(--tl-top,0px) - var(--tl-bar,110px) - 12px);min-height:320px;max-height:900px;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;background:var(--soft);outline:none;scrollbar-width:none}
+.tl::-webkit-scrollbar{display:none}
+.tl:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+.tl-scene{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:flex-end;padding:16px 16px 20px;overflow:hidden}
+@media(min-width:900px){.tl-scene{padding:28px 32px 32px}}
+.tl-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:var(--soft)}
+.tl-noimg{background:linear-gradient(160deg,var(--soft),var(--card))}
+.tl-scene::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-scene::after{background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}}
+.tl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.18);margin-right:96px}
+@media(min-width:900px){.tl-cap{margin-right:140px}}
+.tl-scene.tbc .tl-cap{border-style:dashed}
+.tl-top{display:flex;flex-direction:column;gap:4px} .tl-pos{font-size:13px;color:var(--mute);letter-spacing:.02em}
+.tl-year{font-size:44px;font-weight:700;line-height:1;letter-spacing:-.01em} .tl-scene.tbc .tl-year{font-size:28px;color:var(--mute)}
+.tl-cap p{max-width:52ch} .tl-cap small{color:var(--mute);font-size:14px}
+@media(max-width:599px){.tl-src{display:none}}
+.tl-cap ul{margin:0;padding-left:18px;display:grid;gap:6px;max-height:40vh;overflow:auto} .tl-cap li{font-size:15px}
+.tl-count[hidden]{display:none} .tl-count{gap:4px}
+.tl-mem{display:grid;gap:6px;max-height:28vh;overflow:auto} .tl-mem:empty{display:none}
+.tl-mem div{padding:8px 10px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px;overflow-wrap:anywhere}
+.tl-mem audio{width:100%;max-width:320px;height:36px;display:block}
+.tl-rail{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;gap:0;padding:6px 4px;z-index:2;background:rgba(20,20,18,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:22px}
+.tl-rail button{min-height:44px;min-width:44px;padding:0 8px;border:none;border-radius:22px;background:transparent;color:#F7F6F2;display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:13px;line-height:1}
+.tl-rail button:hover{background:rgba(255,255,255,.12)}
+.tl-rail button::after{content:"";flex:0 0 auto;width:10px;height:10px;border-radius:5px;background:#F7F6F2;opacity:.7}
+.tl-rail button span{display:none;white-space:nowrap} .tl-rail button.tbc::after{border:2px dashed #F7F6F2;background:transparent;width:8px;height:8px}
+.tl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
+.tl-rail button:hover span,.tl-rail button[aria-current="true"] span,.tl-rail button:focus-visible span{display:inline}
+.tl-rail button[aria-current="true"] span{font-weight:600}
+.tl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+@media(min-width:900px){.tl-rail{right:16px} .tl-rail button span{display:inline;opacity:.8} .tl-rail button[aria-current="true"] span{opacity:1}}
+@media(prefers-reduced-motion:reduce){.tl{scroll-snap-type:none;scroll-behavior:auto} .tl-rail button[aria-current="true"]::after{transform:none}}
+</style>
 
 </head>
 <body>
@@ -94,13 +131,13 @@ section[data-feature] > h2:first-child{font-size:28px}
   <div class="hero">
     <div style="display:flex;flex-direction:column;gap:16px">
       <h1>Three ways the hub could sit on the site. Tell us which works for you, and why.</h1>
-      <p class="lede">This is a working tool, not a brochure. Wherever you are in it you can speak, type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.</p>
+      <p class="lede" data-with-voice="This is a working tool, not a brochure. Wherever you are in it you can speak, type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about." data-without-voice="This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.">This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.</p>
       <div class="row"><button class="primary" id="tourStart" type="button" hidden>Watch the tour</button><button type="button" class="primary" data-go="massing">Massing</button></div>
       <div id="welcomeImage" data-slot="welcome-image"></div>
     </div>
     <div class="card privacy" aria-label="About your reactions">
       <h3>What happens to what you add</h3>
-      <p>Everything you add stays on this phone, voice clips included. Nothing is sent anywhere. The design team collects it from the device at the end of the session; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s.</p>
+      <p data-with-voice="Everything you add stays on this phone, voice clips included. Nothing is sent anywhere. The design team collects it from the device at the end of the session and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s." data-without-voice="Everything you add stays on this phone. Nothing is sent anywhere. The design team collects it from the device at the end of the session and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s.">Everything you add stays on this phone. Nothing is sent anywhere. The design team collects it from the device at the end of the session and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s.</p>
       <div class="row"><span class="chip">Reactions on this phone: <b id="reactCount">0</b></span><button type="button" id="clearDevice">Remove all</button></div>
       <p style="font-size:14px;margin-top:4px">Sample project. Names, dates, dimensions and drawings are invented for this prototype and marked where the design team would need to confirm them.</p>
     </div>
@@ -109,10 +146,83 @@ section[data-feature] > h2:first-child{font-size:28px}
 </section>
 
 <section data-feature="timeline" data-title="History" hidden>
-  <!-- ek:slot timeline — the feature skill replaces this whole section -->
-  <h2>History</h2>
-  <p class="lede">See how the site got here. Add a memory the design team missed.</p>
-  <div class="empty">This part of the tool has not been built yet.</div>
+  <h2>How the site got here</h2>
+  <p class="lede" data-with-voice="Scroll through the moments that shaped the site. Were you there, or do you remember it differently? Add a memory to any year: speak or type, and the design team collects it with the rest." data-without-voice="Scroll through the moments that shaped the site. Were you there, or do you remember it differently? Add a memory to any year: type, and the design team collects it with the rest.">Scroll through the moments that shaped the site. Were you there, or do you remember it differently? Add a memory to any year: type, and the design team collects it with the rest.</p>
+  <div class="tl-wrap">
+  <div class="tl" id="tl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="Site history, 7 moments. Use the arrow keys to move between them.">
+    <article class="tl-scene" data-i="0" data-target="1912" data-slide="slide 4" aria-label="1912">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMwIEw0MDAgMjMwIEw0MDAgMzAwIEwwIDMwMFoiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjEyIi8+PHBhdGggZD0iTTAgMjMyIFEyMDAgMjIyIDQwMCAyMzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMjMwIDYwLDE1MCAyNDAsMTUwIDI0MCwyMzAiIGZpbGw9InVybCgjaCkiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cG9seWdvbiBwb2ludHM9IjUwLDE1MCAxNTAsMTAwIDI1MCwxNTAiIGZpbGw9IiNFRkU2RDQiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSIyNzAiIHk9IjgwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTUwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii41IiBzdHJva2U9IiM2RTVFNDgiLz48cGF0aCBkPSJNMjc5IDgwIHExMCAtMjAgMCAtNDAgcS04IC0xOCA2IC0zNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMyIvPjxlbGxpcHNlIGN4PSIzMDAiIGN5PSIyMzYiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjMxOCIgY3k9IjI0MiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZWxsaXBzZSBjeD0iMzM2IiBjeT0iMjM2IiByeD0iOSIgcnk9IjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxlbGxpcHNlIGN4PSIzNTQiIGN5PSIyNDIiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjM3MiIgY3k9IjIzNiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSI5MCIgeT0iMTkwIiB3aWR0aD0iMjIiIGhlaWdodD0iNDAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjQiLz48cmVjdCB4PSIxNDAiIHk9IjE3NSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii4yNSIvPjxyZWN0IHg9IjE5MCIgeT0iMTc1IiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjI1Ii8+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjM4OCIgaGVpZ2h0PSIyODgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40Ii8+PHRleHQgeD0iMTIiIHk9IjI5MCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNBOEE2OUMiPjE5MTIgwrcgUml2ZXJzaWRlIHNhd21pbGwsIGFyY2hpdmFsIGRyYXdpbmcgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">1 of 7 · scroll ↓</span><span class="tl-year">1912</span></div>
+        <p>Sawmill opens on the riverbank. The site&#x27;s first building and the reason the street grid bends here.</p>
+        <small class="tl-src">From the presentation, slide 4</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1912</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1912"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="1" data-target="1948" data-slide="slide 4" aria-label="1948">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMwIEw0MDAgMjMwIEw0MDAgMzAwIEwwIDMwMFoiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjEyIi8+PHBhdGggZD0iTTAgMjMyIFEyMDAgMjIyIDQwMCAyMzIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMjMwIDYwLDE1MCAyNDAsMTUwIDI0MCwyMzAiIGZpbGw9InVybCgjaCkiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cG9seWdvbiBwb2ludHM9IjUwLDE1MCAxNTAsMTAwIDI1MCwxNTAiIGZpbGw9IiNFRkU2RDQiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSIyNzAiIHk9IjgwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTUwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii41IiBzdHJva2U9IiM2RTVFNDgiLz48cGF0aCBkPSJNMjc5IDgwIHExMCAtMjAgMCAtNDAgcS04IC0xOCA2IC0zNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjMgMyIvPjxlbGxpcHNlIGN4PSIzMDAiIGN5PSIyMzYiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjMxOCIgY3k9IjI0MiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZWxsaXBzZSBjeD0iMzM2IiBjeT0iMjM2IiByeD0iOSIgcnk9IjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxlbGxpcHNlIGN4PSIzNTQiIGN5PSIyNDIiIHJ4PSI5IiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4Ii8+PGVsbGlwc2UgY3g9IjM3MiIgY3k9IjIzNiIgcng9IjkiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSI5MCIgeT0iMTkwIiB3aWR0aD0iMjIiIGhlaWdodD0iNDAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjQiLz48cmVjdCB4PSIxNDAiIHk9IjE3NSIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjNkU1RTQ4IiBmaWxsLW9wYWNpdHk9Ii4yNSIvPjxyZWN0IHg9IjE5MCIgeT0iMTc1IiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjI1Ii8+PHBhdGggZD0iTTAgMjA1IFE2MCAxOTggMTIwIDIwNiBUMjQwIDIwNiBUMzYwIDIwNiBUNDAwIDIwNCBMNDAwIDMwMCBMMCAzMDBaIiBmaWxsPSIjQkZEM0U2IiBmaWxsLW9wYWNpdHk9Ii43NSIvPjxsaW5lIHgxPSI0MCIgeTE9IjIwNSIgeDI9IjM2MCIgeTI9IjIwNSIgc3Ryb2tlPSIjMkU1RThDIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSAzIi8+PHRleHQgeD0iNDAiIHk9IjE5OCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMyRTVFOEMiPjE5NDggZmxvb2QgbGluZTwvdGV4dD48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMzg4IiBoZWlnaHQ9IjI4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjQiLz48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+MTk0OCDCtyBTcHJpbmcgZmxvb2QgcmVhY2hlcyB0aGUgbWlsbCBmbG9vciAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">2 of 7 · scroll ↓</span><span class="tl-year">1948</span></div>
+        <p>Spring flood reaches the mill floor. The flood line is still used in today&#x27;s site constraints.</p>
+        <small class="tl-src">From the presentation, slide 4</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1948</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1948"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="2" data-target="1971" data-slide="slide 5" aria-label="1971">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cG9seWdvbiBwb2ludHM9IjcwLDIzMiA3MCwxNjAgMzMwLDE2MCAzMzAsMjMyIiBmaWxsPSIjRUZFNkQ0IiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMjAwLDEwMCAzNDAsMTYwIiBmaWxsPSJ1cmwoI2gpIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iOTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxMzAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxNzAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyMTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyNTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyOTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjMwIiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTMwIDIxNyB2MTQgTTI0IDIyNCBoMTIiLz48L2c+PGcgc3Ryb2tlPSIjNkU1RTQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSI0OCIgY3k9IjIxMiIgcj0iNSIvPjxwYXRoIGQ9Ik00OCAyMTcgdjE0IE00MiAyMjQgaDEyIi8+PC9nPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzYwIiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTM2MCAyMTcgdjE0IE0zNTQgMjI0IGgxMiIvPjwvZz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjM3OCIgY3k9IjIxMiIgcj0iNSIvPjxwYXRoIGQ9Ik0zNzggMjE3IHYxNCBNMzcyIDIyNCBoMTIiLz48L2c+PHRleHQgeD0iMjAwIiB5PSIxNTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNkU1RTQ4IiBsZXR0ZXItc3BhY2luZz0iMiI+UklWRVJTSURFIENPTU1VTklUWSBIQUxMPC90ZXh0PjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIzODgiIGhlaWdodD0iMjg4IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS1vcGFjaXR5PSIuNCIvPjx0ZXh0IHg9IjEyIiB5PSIyOTAiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjQThBNjlDIj4xOTcxIMK3IEhhbGwgYnVpbHQgYnkgdm9sdW50ZWVycyBvbiB0aGUgbWlsbCBmb3VuZGF0aW9ucyAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">3 of 7 · scroll ↓</span><span class="tl-year">1971</span></div>
+        <p>Community hall built by volunteers on the mill foundations. Hosts the Saturday market until 1998.</p>
+        <small class="tl-src">From the presentation, slide 5</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1971</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1971"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="3" data-target="1998" data-slide="slide 5" aria-label="1998">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cG9seWdvbiBwb2ludHM9IjcwLDIzMiA3MCwxNjAgMzMwLDE2MCAzMzAsMjMyIiBmaWxsPSIjRUZFNkQ0IiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMjAwLDEwMCAzNDAsMTYwIiBmaWxsPSJ1cmwoI2gpIiBvcGFjaXR5PSIuMzUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48cmVjdCB4PSI5MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjEzMCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjE3MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjIxMCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjI1MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxyZWN0IHg9IjI5MCIgeT0iMTgwIiB3aWR0aD0iMjIiIGhlaWdodD0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIvPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIyMTIiIHI9IjUiLz48cGF0aCBkPSJNMzAgMjE3IHYxNCBNMjQgMjI0IGgxMiIvPjwvZz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjQ4IiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTQ4IDIxNyB2MTQgTTQyIDIyNCBoMTIiLz48L2c+PGcgc3Ryb2tlPSIjNkU1RTQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSIzNjAiIGN5PSIyMTIiIHI9IjUiLz48cGF0aCBkPSJNMzYwIDIxNyB2MTQgTTM1NCAyMjQgaDEyIi8+PC9nPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzc4IiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTM3OCAyMTcgdjE0IE0zNzIgMjI0IGgxMiIvPjwvZz48dGV4dCB4PSIyMDAiIHk9IjE1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiM2RTVFNDgiIGxldHRlci1zcGFjaW5nPSIyIj5SSVZFUlNJREUgQ09NTVVOSVRZIEhBTEw8L3RleHQ+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMTMwLDEzMCAxNTAsMTYwIiBmaWxsPSIjMkU1RThDIiBmaWxsLW9wYWNpdHk9Ii41NSIgc3Ryb2tlPSIjMkU1RThDIi8+PHBhdGggZD0iTTEzMCAxMzAgbC0yMCAtOCBNMTUwIDE2MCBsLTEwIC0yNiIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2UtZGFzaGFycmF5PSIzIDIiLz48dGV4dCB4PSIyMCIgeT0iMTIwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzJFNUU4QyI+bm9ydGggd2luZyBjbG9zZWQ8L3RleHQ+PHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjM4OCIgaGVpZ2h0PSIyODgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40Ii8+PHRleHQgeD0iMTIiIHk9IjI5MCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNBOEE2OUMiPjE5OTggwrcgTm9ydGggd2luZyByb29mIGZhaWx1cmUgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">4 of 7 · scroll ↓</span><span class="tl-year">1998</span></div>
+        <p>Hall&#x27;s north wing closed after roof failure. The market moves to the school parking lot.</p>
+        <small class="tl-src">From the presentation, slide 5</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 1998</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 1998"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="4" data-target="2016" data-slide="slide 6" aria-label="2016">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFOUU1RDkiLz48cGF0aCBkPSJNMCA4MCBRMTIwIDYwIDIyMCA4NSBUNDAwIDcwIEw0MDAgMTIwIFEzMDAgMTMwIDIyMCAxMTUgVDAgMTMwWiIgZmlsbD0iI0JGRDNFNiIvPjxnIGZpbGw9IiNENkQyQzYiIHN0cm9rZT0iI0E4QTY5QyI+PHJlY3QgeD0iMjAiIHk9IjE1MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQwIi8+PHJlY3QgeD0iMjAiIHk9IjIwMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjYwIi8+PHJlY3QgeD0iMzMwIiB5PSIxNDUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI0NSIvPjxyZWN0IHg9IjMzMCIgeT0iMjAwIiB3aWR0aD0iNTAiIGhlaWdodD0iNzAiLz48cmVjdCB4PSIxMDAiIHk9IjI1MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzMCIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIi8+PHJlY3QgeD0iMzEwIiB5PSIxNSIgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIi8+PC9nPjxwYXRoIGQ9Ik0wIDAgTDQwMCAwIiBzdHJva2U9Im5vbmUiLz48bGluZSB4MT0iOTAiIHkxPSIxNDAiIHgyPSIzMTAiIHkyPSIxNDAiIHN0cm9rZT0iI0E4QTY5QyIvPjxsaW5lIHgxPSI5MCIgeTE9IjI0MCIgeDI9IjMxMCIgeTI9IjI0MCIgc3Ryb2tlPSIjQThBNjlDIi8+PHJlY3QgeD0iMTEwIiB5PSIxNTAiIHdpZHRoPSIxODAiIGhlaWdodD0iODAiIGZpbGw9IiM5REJCOEYiIGZpbGwtb3BhY2l0eT0iLjU1IiBzdHJva2U9IiNFODY0MkMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNiA0Ii8+PHRleHQgeD0iMjAwIiB5PSIxOTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5USEUgU0lURTwvdGV4dD48Y2lyY2xlIGN4PSIzNzAiIGN5PSIyNzAiIHI9IjE0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjJBMjQiLz48dGV4dCB4PSIzNzAiIHk9IjI3NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMyQjJBMjQiPk48L3RleHQ+PHJlY3QgeD0iMTUwIiB5PSI5MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIzNCIgcng9IjMiIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iIzJCMkEyNCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSI5IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5SRVpPTklORyBOT1RJQ0U8L3RleHQ+PHRleHQgeD0iMjAwIiB5PSIxMTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiMyQjJBMjQiPmNvbW11bml0eSB1c2UgwrcgMjAxNjwvdGV4dD48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+MjAxNiDCtyBTaXRlIHJlem9uZWQgZm9yIGNvbW11bml0eSB1c2UgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">5 of 7 · scroll ↓</span><span class="tl-year">2016</span></div>
+        <p>Site rezoned for community use. Riverside Residents&#x27; Association forms to steer the next step.</p>
+        <small class="tl-src">From the presentation, slide 6</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 2016</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 2016"></div>
+      </div>
+    </article>
+    <article class="tl-scene" data-i="5" data-target="2026" data-slide="slide 1" aria-label="2026">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNGM0VGRTQiLz48cG9seWdvbiBwb2ludHM9IjU5LjYsMTIyLjAgMTYzLjUsMTgyLjAgOTAuOCwyMjQuMCAtMTMuMSwxNjQuMCIgZmlsbD0iI0U2RTJENiIvPjxwb2x5Z29uIHBvaW50cz0iMzEuMCwxNTYuNSA2Ny40LDE3Ny41IDY3LjQsMTcxLjUgMzEuMCwxNTAuNSIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSI4NS42LDE2Ny4wIDY3LjQsMTc3LjUgNjcuNCwxNzEuNSA4NS42LDE2MS4wIiBmaWxsPSIjNTg3NTk3IiBzdHJva2U9IiMyQjJBMjQiIHN0cm9rZS13aWR0aD0iLjgiLz48cG9seWdvbiBwb2ludHM9IjQ5LjIsMTQwLjAgODUuNiwxNjEuMCA2Ny40LDE3MS41IDMxLjAsMTUwLjUiIGZpbGw9IiM4RkIzRDQiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIuOCIvPjxwb2x5Z29uIHBvaW50cz0iNjcuNCwxNzcuNSA4NS42LDE4OC4wIDg1LjYsMTc2LjAgNjcuNCwxNjUuNSIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxMDMuOCwxNzcuNSA4NS42LDE4OC4wIDg1LjYsMTc2LjAgMTAzLjgsMTY1LjUiIGZpbGw9IiM1ODc1OTciIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIuOCIvPjxwb2x5Z29uIHBvaW50cz0iODUuNiwxNTUuMCAxMDMuOCwxNjUuNSA4NS42LDE3Ni4wIDY3LjQsMTY1LjUiIGZpbGw9IiM4RkIzRDQiIHN0cm9rZT0iIzJCMkEyNCIgc3Ryb2tlLXdpZHRoPSIuOCIvPjx0ZXh0IHg9IjcwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQTwvdGV4dD48cG9seWdvbiBwb2ludHM9IjE4OS42LDEyMi4wIDI5My41LDE4Mi4wIDIyMC44LDIyNC4wIDExNi45LDE2NC4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIxNDguMCwxNTguMCAxNzQuMCwxNzMuMCAxNzQuMCwxNjEuMCAxNDguMCwxNDYuMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxOTQuOCwxNjEuMCAxNzQuMCwxNzMuMCAxNzQuMCwxNjEuMCAxOTQuOCwxNDkuMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxNjguOCwxMzQuMCAxOTQuOCwxNDkuMCAxNzQuMCwxNjEuMCAxNDguMCwxNDYuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxODQuNCwxNzkuMCAyMDUuMiwxOTEuMCAyMDUuMiwxNzkuMCAxODQuNCwxNjcuMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMjYuMCwxNzkuMCAyMDUuMiwxOTEuMCAyMDUuMiwxNzkuMCAyMjYuMCwxNjcuMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMDUuMiwxNTUuMCAyMjYuMCwxNjcuMCAyMDUuMiwxNzkuMCAxODQuNCwxNjcuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIxODkuNiwxNTIuMCAyMTAuNCwxNjQuMCAyMTAuNCwxNTguMCAxODkuNiwxNDYuMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMjMuNCwxNTYuNSAyMTAuNCwxNjQuMCAyMTAuNCwxNTguMCAyMjMuNCwxNTAuNSIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIyMDIuNiwxMzguNSAyMjMuNCwxNTAuNSAyMTAuNCwxNTguMCAxODkuNiwxNDYuMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHRleHQgeD0iMjAwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQjwvdGV4dD48cG9seWdvbiBwb2ludHM9IjMxOS42LDEyMi4wIDQyMy41LDE4Mi4wIDM1MC44LDIyNC4wIDI0Ni45LDE2NC4wIiBmaWxsPSIjRTZFMkQ2Ii8+PHBvbHlnb24gcG9pbnRzPSIyOTEuMCwxNjIuNSAzMjIuMiwxODAuNSAzMjIuMiwxNzQuNSAyOTEuMCwxNTYuNSIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzNDUuNiwxNjcuMCAzMjIuMiwxODAuNSAzMjIuMiwxNzQuNSAzNDUuNiwxNjEuMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzMTQuNCwxNDMuMCAzNDUuNiwxNjEuMCAzMjIuMiwxNzQuNSAyOTEuMCwxNTYuNSIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzMzAuMCwxODIuMCAzNDUuNiwxOTEuMCAzNDUuNiwxNjcuMCAzMzAuMCwxNTguMCIgZmlsbD0iIzZGOEZCMCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzNjEuMiwxODIuMCAzNDUuNiwxOTEuMCAzNDUuNiwxNjcuMCAzNjEuMiwxNTguMCIgZmlsbD0iIzU4NzU5NyIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHBvbHlnb24gcG9pbnRzPSIzNDUuNiwxNDkuMCAzNjEuMiwxNTguMCAzNDUuNiwxNjcuMCAzMzAuMCwxNTguMCIgZmlsbD0iIzhGQjNENCIgc3Ryb2tlPSIjMkIyQTI0IiBzdHJva2Utd2lkdGg9Ii44Ii8+PHRleHQgeD0iMzMwIiB5PSIyNDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5PcHRpb24gQzwvdGV4dD48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+MjAyNiDCtyBUaHJlZSBtYXNzaW5nIG9wdGlvbnMgcHJlcGFyZWQgZm9yIHB1YmxpYyByZXZpZXcgKHNhbXBsZSk8L3RleHQ+PC9zdmc+" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">6 of 7 · scroll ↓</span><span class="tl-year">2026</span></div>
+        <p>Pre-design begins. Three massing options prepared for public review.</p>
+        <small class="tl-src">From the presentation, slide 1</small>
+        <div class="row"><button type="button" class="primary tl-add">Add a memory of 2026</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for 2026"></div>
+      </div>
+    </article>
+    <article class="tl-scene tbc" data-i="6" data-target="undated: Original mill chimney" data-slide="slide 4" aria-label="[year to confirm]">
+      <img class="tl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxODUiIHk9IjYwIiB3aWR0aD0iMzAiIGhlaWdodD0iMTcyIiBmaWxsPSJ1cmwoI2gpIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMTgwIiB5PSI1NCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjUiLz48cGF0aCBkPSJNMjAwIDUwIHExMiAtMTggMCAtMzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40IiBzdHJva2UtZGFzaGFycmF5PSIzIDMiLz48dGV4dCB4PSIzMDAiIHk9IjE1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZpbGw9IiNFODY0MkMiPj88L3RleHQ+PHRleHQgeD0iMzAwIiB5PSIxNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNkU1RTQ4Ij5kZW1vbGlzaGVkIOKAlCB3aGVuPzwvdGV4dD48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMzg4IiBoZWlnaHQ9IjI4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjQiLz48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+TWlsbCBjaGltbmV5LCBkYXRlIG5vdCBpbiB0aGUgZGVjayAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="tl-cap">
+        <div class="tl-top"><span class="tl-pos" aria-hidden="true">7 of 7</span><span class="tl-year">[year to confirm]</span></div>
+        <p>Original mill chimney demolished. Several residents recall it; the deck gives no date.</p>
+        <small class="tl-src">From the presentation, slide 4 · date not given</small>
+        <div class="row"><button type="button" class="primary tl-add">Do you know when? Tell us</button><span class="chip tl-count" hidden><b>0</b> <span class="tl-n">memories</span> on this device</span></div>
+        <div class="tl-mem" role="list" aria-label="Memories for [year to confirm]"></div>
+      </div>
+    </article>
+  </div>
+  <nav class="tl-rail" id="tlRail" aria-label="Years"><button type="button" data-i="0" aria-label="1912"><span>1912</span></button><button type="button" data-i="1" aria-label="1948"><span>1948</span></button><button type="button" data-i="2" aria-label="1971"><span>1971</span></button><button type="button" data-i="3" aria-label="1998"><span>1998</span></button><button type="button" data-i="4" aria-label="2016"><span>2016</span></button><button type="button" data-i="5" aria-label="2026"><span>2026</span></button><button type="button" data-i="6" class=tbc aria-label="[year to confirm]"><span>?</span></button></nav>
+  </div>
 </section>
 
 <section data-feature="massing" data-title="Massing" hidden>
@@ -207,7 +317,10 @@ const EK = window.EK = (() => {
     /* events: 'ek:reaction' | 'ek:show' */
     on(ev, fn) { (handlers[ev] = handlers[ev] || []).push(fn); },
     /* context shown in the reaction bar */
-    context(feature, target, hint) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = target; document.getElementById("hint").textContent = hint || ""; },
+    /* target is what gets stored; label (optional) is what the bar shows when the target is not readable as-is */
+    context(feature, target, hint, label) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = label || target; document.getElementById("hint").textContent = hint || ""; },
+    /* true once a feature has registered a voice kind on the bar; copy that mentions speaking should check this */
+    hasKind(kind) { return !!kinds[kind]; },
     ctx: () => ctx,
     toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); },
     /* navigation */
@@ -250,8 +363,10 @@ const EK = window.EK = (() => {
   const QUESTION = PROJECT.first_question || "";
   form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v }); note.value = ""; EK.toast("Added to " + c.target); });
   // On the welcome page the note is about the project's first decision, so it carries context too.
-  EK.on("ek:show", id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; });
-  EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); if (QUESTION) note.placeholder = QUESTION;
+  const onShow = id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; };
+  EK.on("ek:show", onShow); onShow(EK.current());
+  // Copy that depends on what features actually registered (voice) is resolved once every feature script has run.
+  window.addEventListener("load", () => { const voice = EK.hasKind("voice"); document.querySelectorAll("[data-with-voice]").forEach(el => { el.textContent = voice ? el.dataset.withVoice : el.dataset.withoutVoice; }); });
   // Removal: storage is the shell's, so the way out is the shell's.
   const cnt = document.getElementById("reactCount"), clr = document.getElementById("clearDevice");
   const refresh = () => { const n = EK.reactions().length; cnt.textContent = n; clr.disabled = !n; };
@@ -274,6 +389,74 @@ const EK = window.EK = (() => {
   window.addEventListener("load", () => { if (window.__hash0 === "#tour" && EK.tourSteps().length) setTimeout(start, 600); });
 })();
 </script>
-<!-- ek:scripts — feature skills append their <script data-feature="…"> blocks after this line; EK is ready -->
+<!-- feature skills insert their <script data-feature="…"> blocks after the next marker; EK is ready -->
+<!-- ek:scripts -->
+<script data-feature="timeline">
+(function timeline() {
+  const TL = {"count": 7, "undated": 6};
+  const root = document.getElementById("tl"), rail = document.getElementById("tlRail");
+  if (!root || !rail) return;
+  const scenes = [...root.querySelectorAll(".tl-scene")], dots = [...rail.querySelectorAll("button")];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let active = 0, armed = false;
+  const target = i => scenes[i] ? scenes[i].dataset.target : "";
+  const label = i => scenes[i] ? scenes[i].getAttribute("aria-label") : "";
+  const chipLabel = i => scenes[i] && scenes[i].classList.contains("tbc") ? "the undated moment" : label(i);
+  const slideOf = i => scenes[i] ? scenes[i].dataset.slide || "" : "";
+  const hasVoice = () => EK.hasKind && EK.hasKind("voice");
+
+  /* size: the story fills the viewport between the sticky header (phones) and the shell's fixed bar */
+  const hdr = document.querySelector("header.top"), bar = document.getElementById("bar");
+  const stickyH = () => (hdr && window.innerWidth < 900) ? hdr.getBoundingClientRect().height : Math.max(0, Math.round(root.getBoundingClientRect().top + window.scrollY));
+  function size() { root.style.setProperty("--tl-top", Math.round(stickyH()) + "px"); root.style.setProperty("--tl-bar", Math.round(bar ? bar.getBoundingClientRect().height : 110) + "px"); }
+  /* on phones the intro scrolls away so the whole story is on screen: align its top under the header */
+  function settle() { if (window.innerWidth >= 900 || EK.current() !== "timeline") return; const se = document.scrollingElement || document.documentElement; const max = Math.max(0, se.scrollHeight - window.innerHeight); const y = Math.min(max, Math.max(0, root.getBoundingClientRect().top + window.scrollY - stickyH())); if (Math.abs(window.scrollY - y) > 4) window.scrollTo({ top: y, behavior: "auto" }); }
+
+  function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
+    dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
+    if (EK.current() === "timeline") EK.context("timeline", target(i), "\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \u00b7 scroll for the next moment" : " \u00b7 the last moment so far"), chipLabel(i)); }
+  function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
+  root.addEventListener("scroll", () => { if (!root._settled) { root._settled = true; settle(); } }, { passive: true });
+
+  /* which scene is on screen */
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting && e.intersectionRatio >= 0.55) setActive(+e.target.dataset.i, true); }); }, { root, threshold: [0.55] });
+    scenes.forEach(s => io.observe(s));
+  } else { root.addEventListener("scroll", () => setActive(Math.round(root.scrollTop / root.clientHeight), true), { passive: true }); }
+
+  /* rail, keyboard, buttons */
+  dots.forEach(d => d.addEventListener("click", () => go(+d.dataset.i, true)));
+  root.addEventListener("keydown", e => { const k = e.key; if (k === "ArrowDown" || k === "PageDown" || k === " ") { e.preventDefault(); go(active + 1); } else if (k === "ArrowUp" || k === "PageUp") { e.preventDefault(); go(active - 1); } else if (k === "Home") { e.preventDefault(); go(0); } else if (k === "End") { e.preventDefault(); go(scenes.length - 1); } });
+  scenes.forEach((s, i) => { const b = s.querySelector(".tl-add"); if (!b) return; b.addEventListener("click", () => { setActive(i); EK.context("timeline", target(i), s.classList.contains("tbc") ? "\u2014 when was this?" : "\u2014 what do you remember?", chipLabel(i)); EK.focusNote(); EK.toast(s.classList.contains("tbc") ? "Tell us when, below" : (hasVoice() ? "Speak or type your memory below" : "Type your memory below")); }); });
+  /* the bar grows when its context wraps; keep the story above it */
+  if ("ResizeObserver" in window && bar) new ResizeObserver(() => { const before = root.clientHeight; size(); if (root.clientHeight !== before && scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); }).observe(bar);
+
+  /* memories: this device's reactions per moment, escaped on render */
+  function render() { const R = EK.reactions().filter(r => r.feature === "timeline");
+    scenes.forEach((s, i) => { const mine = R.filter(r => r.target === target(i)); const box = s.querySelector(".tl-mem"), chip = s.querySelector(".tl-count"); if (!box) return;
+      box.textContent = "";
+      mine.forEach(r => { const d = document.createElement("div"); d.setAttribute("role", "listitem");
+        if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\/[\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); const t = document.createElement("small"); t.textContent = (r.value.seconds || "?") + " s, voice"; d.appendChild(t); }
+        else if (r.kind === "voice") d.textContent = "Unsupported voice note";
+        else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
+        box.appendChild(d); });
+      if (chip) { chip.hidden = !mine.length; chip.querySelector("b").textContent = mine.length; chip.querySelector(".tl-n").textContent = mine.length === 1 ? "memory" : "memories"; }
+      if (dots[i]) dots[i].setAttribute("aria-label", label(i) + (mine.length ? ", " + mine.length + " memor" + (mine.length === 1 ? "y" : "ies") + " on this device" : "")); }); }
+  EK.on("ek:reaction", render); render();
+
+  EK.on("ek:show", id => { if (id === "timeline") { size(); armed = false; setActive(active); root._settled = false; setTimeout(settle, 350); } });
+  window.addEventListener("resize", size); size();
+  if (EK.current() === "timeline") { setActive(0); setTimeout(settle, 350); }
+  window.addEventListener("load", () => { size(); setTimeout(settle, 50); });
+
+  /* tour */
+  const steps = [
+    { go: "timeline", do: () => go(Math.min(1, scenes.length - 1)), text: "History: " + TL.count + " moments that shaped the site" + (TL.undated ? ", one undated" : "") + ". Scroll, or use the dots, to move between them." },
+    { go: "timeline", do: () => { const b = scenes[active] && scenes[active].querySelector(".tl-add"); if (b) b.focus(); }, text: "Were you there? Add a memory and it becomes part of the record, tied to that year." }
+  ];
+  if (TL.undated >= 0 && TL.undated !== null) steps.push({ go: "timeline", do: () => go(TL.undated), text: "This one has no date in the presentation. If you know when it happened, tell us." });
+  EK.registerTour(steps);
+})();
+</script>
 </body>
 </html>

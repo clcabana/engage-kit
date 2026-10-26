@@ -36,10 +36,13 @@ Every feature skill, and the three QC agents, rely on exactly this.
   `ek-voice-reactions` and `ek-massing-markup` get no section: they extend the bar or the massing section.
 - A feature skill replaces its `<section data-feature="…">` in full, keeping `data-feature`, `data-title` and
   `hidden`. Its first child is an `<h2>`, its second a `<p class="lede">` saying what the visitor can do.
-- Extra CSS goes after the `/* ek:styles */` line inside the shell's `<style>`; extra `<script>` blocks go
-  after the `<!-- ek:scripts -->` marker at the end of `<body>` (EK is defined by then). Pinned CDN scripts
-  go immediately before the feature's own script. Feature code is wrapped in an IIFE; no globals except what
-  it registers on `EK`.
+- Extra CSS goes in one `<style data-feature="…">` inserted after the `<!-- ek:styles -->` marker (after the
+  shell's `</style>` in `<head>`); extra code goes in one `<script data-feature="…">` after the
+  `<!-- ek:scripts -->` marker at the end of `<body>` (EK is defined by then). Pinned CDN scripts go
+  immediately before the feature's own script. A feature's build removes its own previous blocks before
+  inserting, so re-running is safe. Feature code is wrapped in an IIFE; no globals except what it registers
+  on `EK`. Full-bleed inside `main`: use `margin:0 -20px; width:calc(100% + 40px)` and, from 900 px,
+  `-32px` / `+ 64px` to cancel the shell's `main` padding.
 - Two optional hooks on the welcome page: `#welcomeImage` (a site plan or key drawing) and `#welcomeExtra`
   (a strip of option thumbnails, say). Leave them empty rather than fill them with text.
 
@@ -55,7 +58,11 @@ EK.remove(id); EK.clear()                     // emit 'ek:reaction' with null
 EK.kinds()                                    // ['voice','note','pin','vote','edit','submission','markup']
 EK.on('ek:reaction' | 'ek:show', fn)          // handlers are isolated: one throwing does not stop the others
 EK.show(id); EK.current()                     // switch section (unknown id → welcome), update nav, hash, scroll, emit 'ek:show'
-EK.context(feature, target, hint); EK.ctx()   // what the bar's note (and any registered kind) will be about
+EK.context(feature, target, hint, label?)     // what the bar's note (and any registered kind) will be about;
+                                              //   label is shown instead of target when target is not readable as-is
+EK.hasKind(kind)                              // true once a feature registered that kind on the bar; any copy that
+                                              //   says "speak" checks this at load (or uses data-with-voice / data-without-voice
+                                              //   attributes, which the shell resolves on window load)
 EK.toast(msg)                                 // 1.8 s status message, aria-live
 EK.registerKind(kind, {icon, label, onActivate(ctx)} | {icon, label, mount(button, slotEl)})
                                               // adds one round button to the bar; mount() gets the button and the

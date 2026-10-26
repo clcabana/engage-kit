@@ -210,12 +210,11 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
         warnings.append(f"typeface '{typeface}' is not in the known Google Fonts list; system stack only (add a @font-face if the project ships the files)")
     stack = (f'"{typeface}", ' if typeface else "") + '"Helvetica Neue", Arial, sans-serif'
 
-    # Welcome copy: only what the installed features make true.
+    # Welcome copy: only what the installed features make true. Voice is mentioned only if a voice kind is
+    # actually registered at runtime (the shell swaps the two variants on load), so an installed-but-not-yet-built
+    # ek-voice-reactions never promises a microphone that is not there.
     hero_h1 = one_line or f"Tell us what works for you at {name}, and why."
-    verbs = []
-    if "ek-voice-reactions" in installed:
-        verbs.append("speak")
-    verbs.append("type")
+    verbs = ["type"]
     if "ek-massing-markup" in installed:
         verbs.append("drop a pin on the model")
     if "ek-site-massing-3d" in installed:
@@ -224,14 +223,16 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
         verbs.append("resize a space")
     if "ek-drawing-markup" in installed:
         verbs.append("mark up a plan")
-    if len(verbs) > 1:
-        verb_text = ", ".join(verbs[:-1]) + " or " + verbs[-1]
-    else:
-        verb_text = verbs[0]
-    hero_lede = f"This is a working tool, not a brochure. Wherever you are in it you can {verb_text}, and the tool records what it was about."
-    privacy_text = ("Everything you add stays on this phone" + (", voice clips included" if "ek-voice-reactions" in installed else "") +
-                    ". Nothing is sent anywhere. The design team collects it from the device at the end of the session; until then you can remove it all here. "
-                    "No name or contact is asked for; please don't add other people's.")
+
+    def join(vs):
+        return (", ".join(vs[:-1]) + " or " + vs[-1]) if len(vs) > 1 else vs[0]
+    lede_tpl = "This is a working tool, not a brochure. Wherever you are in it you can {v}, and the tool records what it was about."
+    hero_lede = lede_tpl.format(v=join(verbs))
+    hero_lede_voice = lede_tpl.format(v=join(["speak"] + verbs))
+    priv_tpl = ("Everything you add stays on this phone{v}. Nothing is sent anywhere. The design team collects it from the device at the end of the session "
+                "and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don't add other people's.")
+    privacy_text = priv_tpl.format(v="")
+    privacy_text_voice = priv_tpl.format(v=", voice clips included")
     # Primary button: the section that answers the first decision point; else the first installed section.
     ids = [f["id"] for f in slots]
     q = first_q.lower()
@@ -286,7 +287,9 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
            .replace("{{PROJECT_NAME}}", html.escape(name))
            .replace("{{SUBTITLE}}", html.escape(subtitle))
            .replace("{{HERO_H1}}", html.escape(hero_h1))
+           .replace("{{HERO_LEDE_VOICE}}", html.escape(hero_lede_voice))
            .replace("{{HERO_LEDE}}", html.escape(hero_lede))
+           .replace("{{PRIVACY_TEXT_VOICE}}", html.escape(privacy_text_voice))
            .replace("{{HERO_BUTTONS}}", hero_buttons)
            .replace("{{PRIVACY_TEXT}}", html.escape(privacy_text))
            .replace("{{SAMPLE_NOTE}}", sample_note)
