@@ -55,11 +55,14 @@ EK.version                                    // shell version string
 EK.project                                    // inlined PROJECT: slug, name, phase, deadline, one_line, audience,
                                               //   palette, typeface, sample, installed[], sections[], reaction_schema
 EK.react({feature, target, kind, value})      // validates (feature+target strings, kind in schema), appends id + ts,
-                                              //   stores, emits 'ek:reaction' with the record; returns it or null
+                                              //   stores, emits 'ek:reaction' with the record; returns it, or null when
+                                              //   the record is invalid OR the storage write failed (quota): a feature
+                                              //   must not tell the visitor "kept" on null
 EK.reactions()                                // copy of the list, oldest first
 EK.remove(id); EK.clear()                     // emit 'ek:reaction' with null
 EK.kinds()                                    // ['voice','note','pin','vote','edit','submission','markup']
-EK.on('ek:reaction' | 'ek:show' | 'ek:context', fn)  // handlers are isolated: one throwing does not stop the others
+EK.on('ek:reaction' | 'ek:show' | 'ek:context' | 'ek:bar', fn)  // handlers are isolated: one throwing does not stop the others
+                                              //   'ek:bar' fires when the bar's extra row opens or closes; stages re-fit on it
 EK.show(id); EK.current()                     // switch section (unknown id → welcome), update nav, hash, scroll, emit 'ek:show'
 EK.context(feature, target, hint, label?)     // what the bar's note (and any registered kind) will be about;
                                               //   label is shown instead of target when target is not readable as-is

@@ -297,7 +297,7 @@ SCRIPT = """<script data-feature="massing">
   const tabs = [...$("msTabs").querySelectorAll("button")];
   function showOption(i, fromTab) { oi = i; tabs.forEach((t, k) => t.setAttribute("aria-selected", String(k === i))); const o = O[i];
     if (fb && !fb.hidden) { const im = $("msFallbackImg"); im.hidden = !o.img; if (o.img) im.src = o.img; }
-    selectMesh(null); if (gl) build(true); drawChoice(); EK.context("massing", optKey(), "\\u2014 " + (o.desc || o.name), o.name); }
+    selectMesh(null); if (gl) build(true); drawChoice(); if (EK.current() === "massing") EK.context("massing", optKey(), "\\u2014 " + (o.desc || o.name), o.name); }
   tabs.forEach((t, i) => { t.addEventListener("click", () => showOption(i, true)); t.addEventListener("keydown", e => { if (e.key === "ArrowRight") tabs[(i + 1) % tabs.length].focus(); if (e.key === "ArrowLeft") tabs[(i - 1 + tabs.length) % tabs.length].focus(); }); });
   $("msSun").addEventListener("input", e => { $("msSunLbl").textContent = e.target.value + ":00"; if (sun) setSun(+e.target.value); });
 
@@ -314,7 +314,7 @@ SCRIPT = """<script data-feature="massing">
   const storeysOf = u => Math.max(0.3, u.s + ((deltas()[optKey() + "/" + u.label] || {}).s || 0));
 
   function selectMesh(m) { selected = m || null; blocks.forEach(b => b.material.color.set(b === selected ? css("--marker") : css("--plan"))); hudText();
-    if (selected) EK.context("massing", optKey() + "/" + selected.userData.label, "\\u2014 what do you think of the " + selected.userData.label + "? Type below", O[oi].name + " \\u00b7 " + selected.userData.label); else if (gl) EK.context("massing", optKey(), "\\u2014 " + (O[oi].desc || O[oi].name), O[oi].name);
+    if (EK.current() !== "massing") {} else if (selected) EK.context("massing", optKey() + "/" + selected.userData.label, "\\u2014 what do you think of the " + selected.userData.label + "? Type below", O[oi].name + " \\u00b7 " + selected.userData.label); else if (gl) EK.context("massing", optKey(), "\\u2014 " + (O[oi].desc || O[oi].name), O[oi].name);
     selectHandlers.forEach(fn => { try { fn(selected); } catch (e) { console.error("[ek] massing onSelect", e); } }); }
 
   if (gl) {
