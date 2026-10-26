@@ -51,13 +51,18 @@ def embed_image(rel: str, root: Path, warnings: list[str]) -> str:
     The path comes from the brief (deck → model → JSON), so it is untrusted: it must resolve inside --root,
     or a hostile deck could have the build publish any image file from the design team's machine.
     """
+    # Refuse UNC and absolute paths BEFORE touching the filesystem: on Windows, resolving \\host\share opens
+    # an SMB session (credential exposure) even when the file is never read.
+    if rel.startswith(("\\\\", "//")) or Path(rel).is_absolute() or rel.startswith("\\") or ":" in rel[:3]:
+        warnings.append(f"image path must be relative to --root, not embedded: {rel!r}")
+        return ""
     root_r = root.resolve()
     try:
         path = (root / rel).resolve()
     except (OSError, ValueError):
         warnings.append(f"image path not usable: {rel!r}")
         return ""
-    if rel.startswith(("\\\\", "//")) or (path != root_r and root_r not in path.parents):
+    if path != root_r and root_r not in path.parents:
         warnings.append(f"image outside --root, not embedded: {rel!r}")
         return ""
     if not path.is_file():

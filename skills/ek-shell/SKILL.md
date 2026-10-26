@@ -45,6 +45,9 @@ Every feature skill, and the three QC agents, rely on exactly this.
   `-32px` / `+ 64px` to cancel the shell's `main` padding.
 - Two optional hooks on the welcome page: `#welcomeImage` (a site plan or key drawing) and `#welcomeExtra`
   (a strip of option thumbnails, say). Leave them empty rather than fill them with text.
+- A feature that others extend (the 3D viewer, extended by `ek-massing-markup`) exposes a small API under
+  `EK.feature[id]` and leaves an empty `[data-slot="…"]` row in its card for the extending skill's controls.
+  No other globals.
 
 ### `window.EK`
 ```js
