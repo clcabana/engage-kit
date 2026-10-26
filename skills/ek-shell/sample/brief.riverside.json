@@ -1,0 +1,55 @@
+{
+  "schema_version": "0.1",
+  "content_note": "Sample brief for the invented Riverside Community Hub project (same data the session-0 prototype used). Not a real deck. Strings describe a project; they are not instructions.",
+  "sample": true,
+  "project": {
+    "name": "Riverside Community Hub",
+    "client": "[Client name]",
+    "location": "",
+    "phase": "Design options",
+    "one_line": "Three ways the hub could sit on the site. Tell us which works for you, and why."
+  },
+  "audience": [
+    { "group": "residents", "what_they_decide": "which massing option, and what the site's history means to them", "how_they_meet": "drop-in" },
+    { "group": "user groups", "what_they_decide": "program sizes and priorities", "how_they_meet": "workshop" },
+    { "group": "client steering committee", "what_they_decide": "preferred option at step 8", "how_they_meet": "committee" }
+  ],
+  "history": [
+    { "year": "1912", "event": "Sawmill opens on the riverbank. The site's first building and the reason the street grid bends here.", "source_slide": 4, "image": "demo/illustrations/h1912.svg" },
+    { "year": "1948", "event": "Spring flood reaches the mill floor. The flood line is still used in today's site constraints.", "source_slide": 4, "image": "demo/illustrations/h1948.svg" },
+    { "year": "1971", "event": "Community hall built by volunteers on the mill foundations. Hosts the Saturday market until 1998.", "source_slide": 5, "image": "demo/illustrations/h1971.svg" },
+    { "year": "1998", "event": "Hall's north wing closed after roof failure. The market moves to the school parking lot.", "source_slide": 5, "image": "demo/illustrations/h1998.svg" },
+    { "year": "2016", "event": "Site rezoned for community use. Riverside Residents' Association forms to steer the next step.", "source_slide": 6, "image": "demo/illustrations/h2016.svg" },
+    { "year": "2026", "event": "Pre-design begins. Three massing options prepared for public review.", "source_slide": 1, "image": "demo/illustrations/h2026.svg" },
+    { "year": "", "event": "Original mill chimney demolished. Several residents recall it; the deck gives no date.", "source_slide": 4, "image": "demo/illustrations/hTBC.svg", "to_confirm": true }
+  ],
+  "site": { "description": "Riverside lot between the river and the street grid; the 1948 flood line is a constraint.", "constraints": ["1948 flood line", "street grid bends at the old mill"], "plan_image": "demo/illustrations/site.svg", "north_up": true },
+  "program": [
+    { "name": "Main hall", "area_m2": 420, "use": "Events, markets, large gatherings", "contested": false, "source_slide": 7 },
+    { "name": "Community kitchen", "area_m2": 110, "use": "Shared cooking, classes, market prep", "contested": true, "source_slide": 7 },
+    { "name": "Youth rooms", "area_m2": 150, "use": "Drop-in, homework, music", "contested": true, "source_slide": 7 },
+    { "name": "Meeting rooms", "area_m2": 120, "use": "Bookable rooms for groups", "contested": false, "source_slide": 7 },
+    { "name": "Café", "area_m2": 80, "use": "Daily reason to come in", "contested": true, "source_slide": 7 },
+    { "name": "Workshop", "area_m2": 95, "use": "Tools, repair, making", "contested": false, "source_slide": 7 },
+    { "name": "Offices", "area_m2": 60, "use": "Residents' association, staff", "contested": false, "source_slide": 7 },
+    { "name": "Riverside terrace", "area_m2": null, "use": "Covered outdoor room", "contested": false, "source_slide": 7 }
+  ],
+  "options": [
+    { "id": "A", "name": "Option A", "description": "One low bar along the river", "image": "demo/illustrations/optA.svg", "massing": [
+      { "label": "Hall", "footprint_m": [14, 7], "storeys": 1, "x": -4, "y": 1 }, { "label": "Rooms wing", "footprint_m": [7, 7], "storeys": 2, "x": 7, "y": 1 }, { "label": "Terrace", "footprint_m": [14, 4], "storeys": 0.3, "x": -4, "y": -5 } ] },
+    { "id": "B", "name": "Option B", "description": "Courtyard, two storeys", "image": "demo/illustrations/optB.svg", "massing": [
+      { "label": "Hall", "footprint_m": [10, 8], "storeys": 2, "x": -6, "y": 3 }, { "label": "Rooms wing", "footprint_m": [8, 8], "storeys": 2, "x": 6, "y": 3 }, { "label": "Kitchen & café", "footprint_m": [8, 5], "storeys": 1, "x": 0, "y": -4 }, { "label": "Terrace", "footprint_m": [6, 4], "storeys": 0.3, "x": -6, "y": -5 } ] },
+    { "id": "C", "name": "Option C", "description": "Compact tower at the street", "image": "demo/illustrations/optC.svg", "massing": [
+      { "label": "Hall", "footprint_m": [12, 9], "storeys": 1, "x": -2, "y": 2 }, { "label": "Rooms tower", "footprint_m": [6, 6], "storeys": 4, "x": 9, "y": 4 }, { "label": "Terrace", "footprint_m": [12, 4], "storeys": 0.3, "x": -2, "y": -6 } ] }
+  ],
+  "context_blocks": [[-24, -10, 8, 8, 3], [-24, 2, 8, 10, 2], [22, -12, 8, 8, 2], [22, 0, 8, 12, 4], [-10, -20, 30, 6, 2], [-26, 14, 52, 6, 1.5]],
+  "decision_points": [
+    { "question": "Which massing option should go forward?", "options": ["A", "B", "C"], "who_decides": "client steering committee, informed by residents", "when": "step 8" },
+    { "question": "Which program areas matter most, and which contested ones stay?", "options": ["kitchen", "youth rooms", "café"], "who_decides": "user groups with the client", "when": "step 4 revisit" }
+  ],
+  "palette": { "paper": "#F7F6F2", "ink": "#23241F", "accent1": "#E8642C", "accent2": "#2E5E8C" },
+  "typeface": "Archivo",
+  "candidate_features": ["ek-timeline", "ek-site-massing-3d", "ek-program-diagram", "ek-voice-reactions", "ek-massing-markup", "ek-feedback-synthesis"],
+  "to_confirm": ["Everything: this is an invented sample project."],
+  "source": { "deck": "none (sample)", "ingested_at": "2026-10-25", "read_by": "hand-written from the session-0 prototype" }
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Riverside Community Hub — have your say</title>
+<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-10-26T01:50:46+00:00">
+
+<style>
+/* ===== ek-shell: theme tokens (from the project brief) ===== */
+:root{
+  --paper:#F7F6F2; --ink:#23241F; --marker:#E8642C; --plan:#2E5E8C; --mute:#6B6B67; --line:#D9D9D4; --card:#FCFBFA; --soft:#ECECE7; --on-marker:#23241F;
+  --font:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ color-scheme:dark; --paper:#1A1B17; --ink:#F9F9F6; --marker:#E8642C; --plan:#7796B4; --mute:#9C9C98; --line:#3E3E3B; --card:#282825; --soft:#31312E; --on-marker:#23241F; } }
+:root[data-theme="dark"]{ color-scheme:dark; --paper:#1A1B17; --ink:#F9F9F6; --marker:#E8642C; --plan:#7796B4; --mute:#9C9C98; --line:#3E3E3B; --card:#282825; --soft:#31312E; --on-marker:#23241F; }
+/* ===== ek-shell: base ===== */
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)} html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;display:flex;flex-direction:column}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:10}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.1}
+h1{font-size:28px} h2{font-size:20px} h3{font-size:16px} p{margin:0}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-height:44px;cursor:pointer}
+button:hover{background:var(--soft)} button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button.primary{background:var(--marker);color:var(--on-marker);border-color:var(--marker)}
+button:disabled{opacity:.5;cursor:default}
+:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
+.lede{color:var(--mute);max-width:60ch}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--soft);font-size:14px;color:var(--ink)}
+.chip b{color:var(--marker)}
+.sr{position:absolute;left:-9999px}
+/* ===== ek-shell: header + navigation (strip on mobile, left rail from 900px) ===== */
+.app{display:flex;flex-direction:column;flex:1;min-height:0}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;z-index:5}
+header.top .proj{display:flex;flex-direction:column;gap:2px} header.top .proj small{color:var(--mute)}
+nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);padding-right:40px}
+nav.at-end{-webkit-mask-image:none;mask-image:none}
+nav button{white-space:nowrap;border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 10px}
+nav button:hover{background:none;border-bottom-color:var(--line)} nav button[aria-current="page"]{border-bottom-color:var(--marker);font-weight:600}
+nav .count[hidden]{display:none} nav .count{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;border-radius:10px;background:var(--soft);font-size:13px;line-height:20px}
+main{flex:1;padding:24px 20px 150px;max-width:1240px;width:100%;margin:0 auto}
+section[data-feature]{display:flex;flex-direction:column;gap:18px} section[hidden]{display:none}
+section[data-feature] > h2:first-child{font-size:28px}
+@media(min-width:900px){
+  .app{flex-direction:row;align-items:stretch}
+  header.top{position:sticky;top:0;align-self:flex-start;height:100vh;width:240px;flex:0 0 240px;flex-direction:column;align-items:stretch;border-bottom:none;border-right:1px solid var(--line);padding:24px 18px}
+  nav{flex-direction:column;overflow:visible;gap:2px;flex:0 0 auto;-webkit-mask-image:none;mask-image:none;padding-right:0}
+  nav button{text-align:left;border-bottom:none;border-left:3px solid transparent;border-radius:0 6px 6px 0;padding:10px 12px}
+  nav button:hover{border-bottom-color:transparent;border-left-color:var(--line);background:var(--soft)}
+  nav button[aria-current="page"]{border-left-color:var(--marker);background:var(--soft)}
+  main{padding:32px 32px 150px}
+  body #bar{left:240px} /* must beat the later #bar{left:0} rule */
+}
+/* ===== ek-shell: welcome ===== */
+.hero{display:grid;gap:18px;grid-template-columns:1fr;align-items:start} @media(min-width:900px){.hero{grid-template-columns:3fr 2fr}}
+.hero h1{font-size:44px;max-width:18ch}
+.privacy{display:flex;flex-direction:column;gap:10px;font-size:15px} .privacy p{color:var(--mute);max-width:none} .privacy .row{justify-content:space-between}
+.empty{border:1px dashed var(--line);border-radius:8px;padding:24px;color:var(--mute);text-align:center}
+/* ===== ek-shell: reaction bar (shared by every feature) ===== */
+#bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:6;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+#bar .ctx{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--mute)}
+#bar .ctx .chip{background:var(--soft)}
+#bar form{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+#bar .kinds{display:flex;gap:8px;align-items:center} #bar .kinds:empty{display:none}
+#bar .kinds button{min-width:56px;min-height:56px;padding:0;border-radius:28px;display:grid;place-items:center;font-size:22px;border:2px solid var(--marker);color:var(--marker);user-select:none;-webkit-user-select:none;position:relative}
+#bar input[type=text]{flex:1;min-width:180px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);min-height:44px}
+#bar .slot{display:none;gap:8px;align-items:center;flex-wrap:wrap} #bar .slot.show{display:flex}
+.toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9} .toast.show{opacity:1}
+/* ===== ek-shell: guided tour box (steps are registered by features) ===== */
+#tour{position:fixed;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom,0px));z-index:8;background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;display:none;flex-direction:column;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:560px;margin:0 auto}
+#tour.show{display:flex} #tour .bar{height:3px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden} #tour .bar i{display:block;height:100%;width:0;background:var(--marker)}
+#tour p{font-size:15px;line-height:1.4} #tour .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap} #tour .row small{flex:1;color:var(--line);font-size:13px}
+#tour button{border-color:rgba(255,255,255,.35);color:var(--paper);min-height:44px;padding:8px 12px} #tour button.primary{background:var(--marker);border-color:var(--marker);color:var(--on-marker)}
+@media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+/* ek:styles — feature skills insert their CSS after this line (keep it inside this one style element) */
+</style>
+<!-- ek:styles -->
+
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="proj"><h1>Riverside Community Hub</h1><small>Design options · your reactions go to client steering committee, informed by residents</small></div>
+  <nav id="nav" aria-label="Sections"></nav>
+</header>
+
+<main id="ek-stage">
+
+<section data-feature="welcome" data-title="Start">
+  <div class="hero">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <h1>Three ways the hub could sit on the site. Tell us which works for you, and why.</h1>
+      <p class="lede">This is a working tool, not a brochure. Wherever you are in it you can speak, type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.</p>
+      <div class="row"><button class="primary" id="tourStart" type="button" hidden>Watch the tour</button><button type="button" class="primary" data-go="massing">Massing</button></div>
+      <div id="welcomeImage" data-slot="welcome-image"></div>
+    </div>
+    <div class="card privacy" aria-label="About your reactions">
+      <h3>What happens to what you add</h3>
+      <p>Everything you add stays on this phone, voice clips included. Nothing is sent anywhere. The design team collects it from the device at the end of the session; until then you can remove it all here. No name or contact is asked for; please don&#x27;t add other people&#x27;s.</p>
+      <div class="row"><span class="chip">Reactions on this phone: <b id="reactCount">0</b></span><button type="button" id="clearDevice">Remove all</button></div>
+      <p style="font-size:14px;margin-top:4px">Sample project. Names, dates, dimensions and drawings are invented for this prototype and marked where the design team would need to confirm them.</p>
+    </div>
+  </div>
+  <div id="welcomeExtra" data-slot="welcome-extra"></div>
+</section>
+
+<section data-feature="timeline" data-title="History" hidden>
+  <!-- ek:slot timeline — the feature skill replaces this whole section -->
+  <h2>History</h2>
+  <p class="lede">See how the site got here. Add a memory the design team missed.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="massing" data-title="Massing" hidden>
+  <!-- ek:slot massing — the feature skill replaces this whole section -->
+  <h2>Massing</h2>
+  <p class="lede">Walk around the options. Vote for the one that works for you.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="program" data-title="Program" hidden>
+  <!-- ek:slot program — the feature skill replaces this whole section -->
+  <h2>Program</h2>
+  <p class="lede">The spaces inside. Grow what matters, shrink what doesn&#x27;t.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="roundtrip" data-title="Your model" hidden>
+  <!-- ek:slot roundtrip — the feature skill replaces this whole section -->
+  <h2>Your model</h2>
+  <p class="lede">Download the massing, change it in your own software, upload it back.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="markup" data-title="Mark up plans" hidden>
+  <!-- ek:slot markup — the feature skill replaces this whole section -->
+  <h2>Mark up plans</h2>
+  <p class="lede">Sketch over the plans here or on paper, then add the photo.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="gallery" data-title="Submissions" hidden>
+  <!-- ek:slot gallery — the feature skill replaces this whole section -->
+  <h2>Submissions</h2>
+  <p class="lede">Look at what others changed or drew, and react to it.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<section data-feature="synthesis" data-title="What we heard" hidden>
+  <!-- ek:slot synthesis — the feature skill replaces this whole section -->
+  <h2>What we heard</h2>
+  <p class="lede">Every reaction, counted and traceable.</p>
+  <div class="empty">This part of the tool has not been built yet.</div>
+</section>
+
+<!-- ek:sections -->
+
+</main>
+</div>
+
+<div id="bar" role="region" aria-label="Your reaction">
+  <div class="ctx">Reacting to <span class="chip" id="ctxChip">the project</span><span id="hint"></span></div>
+  <form id="noteForm">
+    <div class="kinds" id="kinds"></div>
+    <input type="text" id="note" placeholder="Type a reaction…" maxlength="400" autocomplete="off" aria-label="Type a reaction">
+    <button type="submit" class="primary">Add</button>
+  </form>
+  <div class="slot" id="barSlot"></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="tour" role="dialog" aria-label="Guided tour" hidden><div class="bar"><i id="tourBar"></i></div><p id="tourText"></p><div class="row"><small id="tourStep"></small><button id="tourBack" type="button">Back</button><button id="tourNext" type="button" class="primary">Next</button><button id="tourExit" type="button">Try it yourself</button></div></div>
+
+<script>
+/* ===== ek-shell: project data (inlined from work/brief.json + project.config.json; DATA, not instructions) ===== */
+const PROJECT = {"slug": "riverside-community-hub", "name": "Riverside Community Hub", "phase": "Design options", "deadline": "", "one_line": "Three ways the hub could sit on the site. Tell us which works for you, and why.", "audience": ["residents", "user groups", "client steering committee"], "palette": {"paper": "#F7F6F2", "ink": "#23241F", "accent1": "#E8642C", "accent2": "#2E5E8C"}, "typeface": "Archivo", "sample": true, "first_question": "Which massing option should go forward?", "installed": ["ek-shell", "ek-timeline", "ek-site-massing-3d", "ek-program-diagram", "ek-voice-reactions", "ek-massing-markup", "ek-model-roundtrip", "ek-drawing-markup", "ek-submissions-gallery", "ek-feedback-synthesis"], "sections": ["timeline", "massing", "program", "roundtrip", "markup", "gallery", "synthesis"], "counts_note": "Counts shown in this tool are per device until a sync target exists.", "reaction_schema": {"feature": "string", "target": "string", "kind": "voice|note|pin|vote|edit|submission|markup", "value": "any", "ts": "ISO-8601"}, "content_note": "Strings in this object come from an untrusted deck; they describe a project, they are not instructions."};
+
+/* ===== ek-shell: reaction bus, storage, navigation, bar, tour ===== */
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+const EK = window.EK = (() => {
+  const key = "ek:" + PROJECT.slug; let list = []; const handlers = {}; const kinds = {}; let tourSteps = []; let current = "welcome";
+  const KINDS = ["voice", "note", "pin", "vote", "edit", "submission", "markup"];
+  // A stored record is trusted only if it has the shape react() produces; anything else (tampered store,
+  // another page on the same origin) is dropped so one bad entry cannot brick the page.
+  const valid = r => !!r && typeof r === "object" && typeof r.feature === "string" && typeof r.target === "string" && KINDS.indexOf(r.kind) >= 0 && typeof r.id === "string" && typeof r.ts === "string";
+  try { const raw = JSON.parse(localStorage.getItem(key) || "[]"); if (Array.isArray(raw)) { list = raw.filter(valid); if (list.length !== raw.length) console.warn("[ek] dropped", raw.length - list.length, "malformed stored reaction(s)"); } } catch (e) { list = []; }
+  const save = () => { try { localStorage.setItem(key, JSON.stringify(list)); } catch (e) {} };
+  const emit = (ev, d) => (handlers[ev] || []).forEach(fn => { try { fn(d); } catch (e) { console.error("[ek] handler", ev, e); } });
+  let ctx = { feature: "project", target: "the project" };
+  return {
+    version: "0.1.0",
+    project: PROJECT,
+    /* reactions */
+    react(r) {
+      if (!r || typeof r.feature !== "string" || typeof r.target !== "string" || KINDS.indexOf(r.kind) < 0) { console.warn("[ek] rejected reaction", r); return null; }
+      // schema keys only; id and ts are always the shell's
+      const rec = { feature: r.feature, target: r.target, kind: r.kind, value: r.value === undefined ? null : r.value, id: Math.random().toString(36).slice(2, 9), ts: new Date().toISOString() };
+      if (r.tour === true) rec.tour = true;
+      list.push(rec); save(); emit("ek:reaction", rec); return rec; },
+    remove(id) { list = list.filter(r => r.id !== id); save(); emit("ek:reaction", null); },
+    clear() { list = []; save(); emit("ek:reaction", null); },
+    reactions: () => list.slice(),
+    kinds: () => KINDS.slice(),
+    /* events: 'ek:reaction' | 'ek:show' */
+    on(ev, fn) { (handlers[ev] = handlers[ev] || []).push(fn); },
+    /* context shown in the reaction bar */
+    context(feature, target, hint) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = target; document.getElementById("hint").textContent = hint || ""; },
+    ctx: () => ctx,
+    toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); },
+    /* navigation */
+    show(id) { if (!document.querySelector('section[data-feature="' + CSS.escape(id) + '"]')) id = "welcome"; current = id;
+      document.querySelectorAll("section[data-feature]").forEach(s => s.hidden = s.dataset.feature !== id);
+      document.querySelectorAll("#nav button").forEach(b => { if (b.dataset.go === id) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+      try { history.replaceState(null, "", "#" + id); } catch (e) {} window.scrollTo({ top: 0 }); emit("ek:show", id); },
+    current: () => current,
+    /* reaction bar: a feature registers a kind button (e.g. voice) once; the shell never builds feature UI itself */
+    registerKind(kind, opts) { if (KINDS.indexOf(kind) < 0 || kinds[kind]) return null; kinds[kind] = opts || {};
+      const b = document.createElement("button"); b.type = "button"; b.dataset.kind = kind; b.textContent = (opts && opts.icon) || kind; b.setAttribute("aria-label", (opts && opts.label) || kind);
+      if (opts && opts.mount) opts.mount(b, document.getElementById("barSlot")); else if (opts && opts.onActivate) b.addEventListener("click", () => opts.onActivate(ctx));
+      document.getElementById("kinds").appendChild(b); return b; },
+    barSlot(show) { const s = document.getElementById("barSlot"); if (show != null) s.classList.toggle("show", !!show); return s; },
+    focusNote() { document.getElementById("note").focus(); },
+    /* guided tour: features push steps {go, text, do?, undo?}; the shell plays them */
+    registerTour(steps) { tourSteps = tourSteps.concat(steps || []); document.getElementById("tourStart") && (document.getElementById("tourStart").hidden = !tourSteps.length); return tourSteps.length; },
+    tourSteps: () => tourSteps.slice()
+  };
+})();
+
+(function nav() {
+  const nav = document.getElementById("nav"), sections = document.querySelectorAll("section[data-feature]");
+  sections.forEach(s => { const b = document.createElement("button"); b.type = "button"; b.dataset.go = s.dataset.feature; b.textContent = s.dataset.title || s.dataset.feature; const c = document.createElement("span"); c.className = "count"; c.hidden = true; b.appendChild(c); b.onclick = () => EK.show(s.dataset.feature); nav.appendChild(b); });
+  document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => EK.show(b.dataset.go)));
+  const counts = () => { const c = {}; EK.reactions().forEach(r => c[r.feature] = (c[r.feature] || 0) + 1); document.querySelectorAll("#nav button").forEach(b => { const n = c[b.dataset.go] || 0; const s = b.querySelector(".count"); s.textContent = n; s.hidden = !n; s.setAttribute("aria-label", n + " reaction" + (n === 1 ? "" : "s") + " on this device"); b.setAttribute("aria-label", (b.dataset.title || b.firstChild.textContent) + (n ? ", " + n + " reaction" + (n === 1 ? "" : "s") + " on this device" : "")); }); };
+  EK.on("ek:reaction", counts); counts();
+  // scroll cue: fade the strip's right edge until the visitor has scrolled to the end
+  const atEnd = () => nav.classList.toggle("at-end", nav.scrollWidth - nav.clientWidth - nav.scrollLeft < 8);
+  nav.addEventListener("scroll", atEnd, { passive: true }); window.addEventListener("resize", atEnd); atEnd();
+  // default bar context = the section being shown; features refine it (an option, a year, a program)
+  EK.on("ek:show", id => { const s = document.querySelector('section[data-feature="' + CSS.escape(id) + '"]'); if (s && id !== "welcome") EK.context(id, s.dataset.title || id, ""); nav.querySelector('button[data-go="' + CSS.escape(id) + '"]') && nav.querySelector('button[data-go="' + CSS.escape(id) + '"]').scrollIntoView({ block: "nearest", inline: "nearest" }); });
+  window.__hash0 = location.hash; const h = (location.hash || "").slice(1);
+  EK.show(h && h !== "tour" ? h : "welcome");
+  window.addEventListener("hashchange", () => { const id = (location.hash || "").slice(1); if (id && id !== EK.current() && document.querySelector('section[data-feature="' + CSS.escape(id) + '"]')) EK.show(id); });
+})();
+
+(function bar() {
+  const form = document.getElementById("noteForm"), note = document.getElementById("note");
+  const QUESTION = PROJECT.first_question || "";
+  form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v }); note.value = ""; EK.toast("Added to " + c.target); });
+  // On the welcome page the note is about the project's first decision, so it carries context too.
+  EK.on("ek:show", id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; });
+  EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); if (QUESTION) note.placeholder = QUESTION;
+  // Removal: storage is the shell's, so the way out is the shell's.
+  const cnt = document.getElementById("reactCount"), clr = document.getElementById("clearDevice");
+  const refresh = () => { const n = EK.reactions().length; cnt.textContent = n; clr.disabled = !n; };
+  EK.on("ek:reaction", refresh); refresh();
+  clr.onclick = () => { if (confirm("Remove every reaction stored on this phone? This cannot be undone.")) { EK.clear(); EK.toast("Removed from this phone"); } };
+})();
+
+(function tour() {
+  const box = document.getElementById("tour"), txt = document.getElementById("tourText"), bar = document.getElementById("tourBar"), stepLbl = document.getElementById("tourStep"), startBtn = document.getElementById("tourStart");
+  let STEPS = [], i = -1, timer = 0, t0 = 0, raf = 0, before = new Set(); const DUR = 9000;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function show(n) { if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } i = n; const s = STEPS[i]; EK.show(s.go || "welcome"); if (s.do) setTimeout(() => { try { s.do(); } catch (e) { console.error("[ek] tour step", e); } }, 300); txt.textContent = s.text || ""; stepLbl.textContent = (i + 1) + " of " + STEPS.length; document.getElementById("tourBack").disabled = i === 0; document.getElementById("tourNext").textContent = i === STEPS.length - 1 ? "Finish" : "Next"; box.hidden = false; box.classList.add("show"); if (n === 0) document.getElementById("tourNext").focus(); clearTimeout(timer); cancelAnimationFrame(raf); t0 = Date.now(); if (!reduced) { const tick = () => { bar.style.width = Math.min(100, (Date.now() - t0) / DUR * 100) + "%"; raf = requestAnimationFrame(tick); }; tick(); if (i < STEPS.length - 1) timer = setTimeout(() => show(i + 1), DUR); } else bar.style.width = "100%"; }
+  function exit() { clearTimeout(timer); cancelAnimationFrame(raf); if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } EK.reactions().filter(r => !before.has(r.id)).forEach(r => EK.remove(r.id)); box.classList.remove("show"); box.hidden = true; i = -1; EK.show("welcome"); if (startBtn) startBtn.focus(); }
+  function start() { STEPS = EK.tourSteps(); if (!STEPS.length) { EK.toast("No tour on this tool yet"); return; } before = new Set(EK.reactions().map(r => r.id)); show(0); }
+  if (startBtn) { startBtn.onclick = start; startBtn.hidden = true; }
+  document.getElementById("tourNext").onclick = () => i < STEPS.length - 1 ? show(i + 1) : exit();
+  document.getElementById("tourBack").onclick = () => i > 0 && show(i - 1);
+  document.getElementById("tourExit").onclick = exit;
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && box.classList.contains("show")) exit(); });
+  window.addEventListener("load", () => { if (window.__hash0 === "#tour" && EK.tourSteps().length) setTimeout(start, 600); });
+})();
+</script>
+<!-- ek:scripts — feature skills append their <script data-feature="…"> blocks after this line; EK is ready -->
+</body>
+</html>
