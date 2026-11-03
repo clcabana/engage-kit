@@ -26,3 +26,7 @@ work/brief.skeleton.json
 *.docx
 *.pptx
 
+
+# Real projects (client material) never enter the public repo
+projects/
+
