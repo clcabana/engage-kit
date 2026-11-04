@@ -123,7 +123,13 @@ def events_from_brief(brief: dict, root: Path, warnings: list[str]) -> list[dict
             warnings.append(f"history[{i}] has no event text; skipped")
             continue
         img = str(h.get("image") or "").strip()
-        src = embed_image(img, root, warnings) if img else ""
+        src = ""
+        if img:
+            if h.get("people") and h.get("cleared") is not True:
+                # Same gate as ek-site-story: a photograph that shows a person is not embedded until cleared: true (exactly).
+                warnings.append(f"history[{i}] ({year or 'undated'}) image shows a person and is not marked cleared: true; not embedded")
+            else:
+                src = embed_image(img, root, warnings)
         slide = h.get("source_slide") or h.get("slide") or None
         if not slide:
             warnings.append(f"history[{i}] ({year or 'undated'}) has no source_slide; the claim is not traceable")

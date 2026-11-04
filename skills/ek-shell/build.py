@@ -32,8 +32,10 @@ HERE = Path(__file__).resolve().parent
 # Skills not listed here (voice, massing-markup) augment other sections or the bar and get no slot.
 FEATURES = {
     "ek-timeline":            {"id": "timeline",  "title": "History",       "does": "See how the site got here. Add a memory the design team missed."},
+    "ek-site-story":          {"id": "places",    "title": "The site",      "does": "Walk through the places on the site. Say what must stay as it is."},
     "ek-site-massing-3d":     {"id": "massing",   "title": "Massing",       "does": "Walk around the options. Vote for the one that works for you."},
     "ek-program-diagram":     {"id": "program",   "title": "Program",       "does": "The spaces inside. Grow what matters, shrink what doesn't."},
+    "ek-list-reactions":      {"id": "list",      "title": "Priorities",    "does": "The principles and the parts of the plan, in the team's words. Rank what matters to you and say why."},
     "ek-model-roundtrip":     {"id": "roundtrip", "title": "Your model",    "does": "Download the massing, change it in your own software, upload it back."},
     "ek-drawing-markup":      {"id": "markup",    "title": "Mark up plans", "does": "Sketch over the plans here or on paper, then add the photo."},
     "ek-submissions-gallery": {"id": "gallery",   "title": "Submissions",   "does": "Look at what others changed or drew, and react to it."},
@@ -223,6 +225,10 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
         verbs.append("resize a space")
     if "ek-drawing-markup" in installed:
         verbs.append("mark up a plan")
+    if "ek-list-reactions" in installed:
+        verbs.append("rank what matters")
+    if "ek-site-story" in installed:
+        verbs.append("say what must stay")
 
     def join(vs):
         return (", ".join(vs[:-1]) + " or " + vs[-1]) if len(vs) > 1 else vs[0]
@@ -237,10 +243,13 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
     ids = [f["id"] for f in slots]
     q = first_q.lower()
     pick = None
-    for needles, fid in ((("option", "massing", "height", "where", "sit", "placement", "tall"), "massing"),
-                         (("program", "space", "room", "area", "size"), "program"),
-                         (("history", "memory", "remember"), "timeline")):
-        if any(n in q for n in needles) and fid in ids:
+    # Whole words only ("sit" must not match "site" or "visit"); the first matching installed section wins.
+    for needles, fid in ((("option", "options", "massing", "height", "where", "sit", "sits", "placement", "tall"), "massing"),
+                         (("program", "space", "spaces", "room", "rooms", "area", "areas", "size", "sizes"), "program"),
+                         (("principle", "principles", "priority", "priorities", "matter", "matters", "approve"), "list"),
+                         (("site", "stay", "landscape"), "places"),
+                         (("history", "memory", "memories", "remember"), "timeline")):
+        if fid in ids and any(re.search(r"\b" + re.escape(n) + r"\b", q) for n in needles):
             pick = fid
             break
     first = next((f for f in slots if f["id"] == pick), slots[0] if slots else None)

@@ -24,6 +24,12 @@
     { "year": "", "event": "Original mill chimney demolished. Several residents recall it; the deck gives no date.", "source_slide": 4, "image": "demo/illustrations/hTBC.svg", "to_confirm": true }
   ],
   "site": { "description": "Riverside lot between the river and the street grid; the 1948 flood line is a constraint.", "constraints": ["1948 flood line", "street grid bends at the old mill"], "plan_image": "demo/illustrations/site.svg", "north_up": true },
+  "places_note": "Sample only: the three places use the demo's generated SVG drawings where a real deck supplies photographs.",
+  "places": [
+    { "name": "The riverbank", "text": "The lot's long edge along the river. The 1948 flood line runs through it, and the willows along it are the only mature trees on the site.", "image": "demo/illustrations/site.svg", "source_slide": 3 },
+    { "name": "The mill foundations", "text": "Stone foundations of the 1912 sawmill, under the 1971 hall; to be kept visible in whichever option goes forward.", "image": "demo/illustrations/h1971.svg", "source_slide": 4 },
+    { "name": "Where the chimney stood", "text": "The footprint of the demolished mill chimney, now a gravel circle used for the summer market.", "image": "demo/illustrations/hTBC.svg", "source_slide": 4 }
+  ],
   "program": [
     { "name": "Main hall", "area_m2": 420, "use": "Events, markets, large gatherings", "contested": false, "source_slide": 7 },
     { "name": "Community kitchen", "area_m2": 110, "use": "Shared cooking, classes, market prep", "contested": true, "source_slide": 7 },

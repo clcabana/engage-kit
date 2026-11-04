@@ -31,8 +31,9 @@ Every feature skill, and the three QC agents, rely on exactly this.
   </section>
 </main>
 ```
-- Feature ids and titles are fixed by `build.py` (`FEATURES`): `timeline` History, `massing` Massing, `program`
-  Program, `roundtrip` Your model, `markup` Mark up plans, `gallery` Submissions, `synthesis` What we heard.
+- Feature ids and titles are fixed by `build.py` (`FEATURES`): `timeline` History, `places` The site, `massing`
+  Massing, `program` Program, `list` Priorities, `roundtrip` Your model, `markup` Mark up plans, `gallery`
+  Submissions, `synthesis` What we heard.
   `ek-voice-reactions` and `ek-massing-markup` get no section: they extend the bar or the massing section.
 - A feature skill replaces its `<section data-feature="…">` in full, keeping `data-feature`, `data-title` and
   `hidden`. Its first child is an `<h2>`, its second a `<p class="lede">` saying what the visitor can do.

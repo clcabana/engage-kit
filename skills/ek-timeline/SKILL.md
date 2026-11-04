@@ -62,7 +62,8 @@ downscaled to JPEG when Pillow is available; the script warns when embedded imag
 - **Image guidance for a real project** (the sample's 4:3 flat SVGs show the problem): full-bleed cover crops a
   4:3 slide by about half on a phone. Supply portrait or square images at 1200 px or more on the short side,
   keep the subject in the centre 3:4, and never bake captions, labels or side-by-side comparisons into the
-  image. Photos of identifiable people need the team's clearance before a public URL.
+  image. Photos of identifiable people need the team's clearance before a public URL: mark the event
+  `people: true` and the build leaves the image out until the team adds `cleared: true` (exactly `true`).
 - Image paths in the brief are resolved under `--root` and refused if they escape it (absolute, `..`, UNC).
   SVGs with script, event handlers, entities, `foreignObject` or remote references are refused. Rasters are
   re-encoded through Pillow (downscaled to 1400 px, EXIF dropped); without Pillow they embed as-is with a warning.

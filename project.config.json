@@ -12,6 +12,8 @@
   "install": [
     { "skill": "ek-shell", "reason": "required container" },
     { "skill": "ek-timeline", "reason": "deck has 6 dated site/community events; residents asked for context" },
+    { "skill": "ek-site-story", "reason": "three photographed places on the site that the options treat differently; residents should say what must stay" },
+    { "skill": "ek-list-reactions", "reason": "the program as a ranked list in the team's words, for the user groups who rank rather than resize (sample: exercises the skill)" },
     { "skill": "ek-site-massing-3d", "reason": "three massing options are the main decision gate" },
     { "skill": "ek-program-diagram", "reason": "program areas are still contested; sizes need to be felt, not read" },
     { "skill": "ek-voice-reactions", "reason": "drop-in sessions; typing on phones suppresses responses" },

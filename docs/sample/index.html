@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Riverside Community Hub — have your say</title>
-<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-10-26T20:26:01+00:00">
+<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-11-04T22:56:25+00:00">
 
 <style>
 /* ===== ek-shell: theme tokens (from the project brief) ===== */
@@ -125,6 +125,37 @@ section[data-feature] > h2:first-child{font-size:28px}
 #msChoice[hidden]{display:none} #msResetView[hidden]{display:none}
 #msVote[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 </style>
+<style data-feature="list">
+/* ===== ek-list-reactions: the team's words as a ranked list ===== */
+.ls-tabs{display:flex;gap:6px;margin:4px 0 14px;flex-wrap:wrap}
+.ls-tabs button{min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+.ls-tabs button[aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ls-tabs .ls-n{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:var(--soft);color:var(--ink);font-size:12px;padding:0 6px}
+.ls-tabs button[aria-selected=true] .ls-n{background:var(--paper);color:var(--ink)}
+.ls-group[hidden],.ls-body[hidden],.ls-rank[hidden],.ls-count[hidden],.ls-ranked[hidden],.ls-rankbox[hidden],.ls-rankrow[hidden],.ls-other[hidden]{display:none}
+.ls-other{margin-top:12px;display:flex;flex-direction:column;gap:6px} .ls-other small{color:var(--mute);font-size:14px}
+.ls-items{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ls-item{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ls-item.tbc{border-style:dashed}
+.ls-head{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;padding:12px 14px;border:none;border-radius:0;background:transparent;color:var(--ink);text-align:left;font-size:18px;font-weight:600;line-height:1.2}
+.ls-head:hover{background:var(--soft)} .ls-head:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+.ls-head[aria-expanded=true]{background:var(--soft)}
+.ls-name{flex:1 1 auto;overflow-wrap:anywhere}
+.ls-rank{flex:0 0 auto;display:inline-grid;place-items:center;min-width:34px;height:28px;padding:0 8px;border-radius:14px;background:var(--marker);color:var(--on-marker);font-size:13px}
+.ls-body{padding:4px 14px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line)}
+.ls-body p{margin:8px 0 0;max-width:60ch;font-size:17px;line-height:1.45}
+.ls-item.tbc .ls-body p{color:var(--mute);font-style:italic}
+.ls-body small{color:var(--mute);font-size:14px} .ls-ct{align-self:flex-start}
+.ls-mem{display:grid;gap:6px} .ls-mem:empty{display:none}
+.ls-mem div{padding:8px 10px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px;overflow-wrap:anywhere}
+.ls-mem audio{width:100%;max-width:320px;height:36px;display:block}
+.ls-rankrow{margin-top:14px}
+.ls-rankbox{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.ls-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .ls-sub{font-size:18px;font-weight:600}
+.ls-picks{display:flex;flex-wrap:wrap;gap:6px} .ls-picks button{min-height:44px;padding:6px 10px;font-size:14px;display:inline-flex;align-items:center;gap:6px;text-align:left}
+.ls-picks button b{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:var(--marker);color:var(--on-marker);font-size:12px}
+.ls-picks button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .ls-picks button[aria-pressed=true] b{background:var(--paper);color:var(--ink)}
+</style>
 <style data-feature="program">
 /* ===== ek-program-diagram: full-frame treemap + floating card ===== */
 .pg-wrap{position:relative}
@@ -151,6 +182,47 @@ section[data-feature] > h2:first-child{font-size:28px}
 .pg-picks button b{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:var(--marker);color:var(--on-marker);font-size:12px}
 .pg-picks button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .pg-picks button[aria-pressed=true] b{background:var(--paper);color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.pg rect.blk{transition:none}}
+</style>
+<style data-feature="places">
+/* ===== ek-site-story: undated places as a scroll-driven story ===== */
+.pl-wrap{position:relative}
+.pl{position:relative;overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;background:var(--soft);outline:none;scrollbar-width:none}
+.pl::-webkit-scrollbar{display:none}
+.pl:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+.pl-scene{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:flex-end;padding:16px 16px 20px;overflow:hidden}
+@media(min-width:900px){.pl-scene{padding:28px 32px 32px}}
+.pl-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:var(--soft)}
+.pl-noimg{background:linear-gradient(160deg,var(--soft),var(--card))}
+.pl-scene::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .pl-scene::after{background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}}
+/* the picture gets the top half on a phone: the card is capped at 52% of the stage and scrolls inside itself */
+.pl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.18);margin-right:56px;max-height:52%;overflow:auto;overscroll-behavior:contain}
+@media(min-width:600px){.pl-cap{margin-right:96px;max-height:calc(100% - 8px)}}
+@media(min-width:900px){.pl-cap{margin-right:140px;padding:16px 18px}}
+.pl-name{font-size:28px;font-weight:700;line-height:1.05;letter-spacing:-.01em}
+.pl-cap p{max-width:52ch;margin:0} .pl-cap small{color:var(--mute);font-size:14px}
+@media(max-width:599px){.pl-cap p{font-size:15px} .pl-src{font-size:13px}}
+.pl-q{font-weight:600;margin-top:2px}
+.pl-votes{gap:6px} .pl-vote{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:22px;background:var(--paper);color:var(--ink);font-size:14px;display:inline-flex;align-items:center;gap:6px}
+.pl-vote::before{content:"";width:12px;height:12px;border-radius:6px;border:2px solid var(--mute);flex:0 0 auto}
+.pl-vote[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .pl-vote[aria-pressed=true]::before{background:var(--marker);border-color:var(--marker)}
+.pl-vote:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
+.pl-count[hidden]{display:none} .pl-count{gap:4px}
+.pl-mem{display:grid;gap:6px;max-height:22vh;overflow:auto} .pl-mem:empty{display:none}
+.pl-mem div{padding:8px 10px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px;overflow-wrap:anywhere}
+.pl-mem audio{width:100%;max-width:320px;height:36px;display:block}
+.pl-rail{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-end;padding:6px 4px;z-index:2;background:rgba(20,20,18,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:22px}
+.pl-rail button{min-height:44px;min-width:44px;padding:0 8px;border:none;border-radius:22px;background:transparent;color:#F7F6F2;display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:13px;line-height:1}
+.pl-rail button:hover{background:rgba(255,255,255,.12)}
+.pl-rail button::after{content:"";flex:0 0 auto;width:10px;height:10px;border-radius:5px;background:#F7F6F2;opacity:.7}
+.pl-rail button span{display:none;white-space:nowrap}
+.pl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
+/* phones: dots only (the caption already carries the name); labels from 600 px */
+@media(min-width:600px){.pl-rail button:hover span,.pl-rail button[aria-current="true"] span,.pl-rail button:focus-visible span{display:inline}}
+.pl-rail button[aria-current="true"] span{font-weight:600}
+.pl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
+@media(min-width:900px){.pl-rail{right:16px} .pl-rail button span{display:inline;opacity:.8} .pl-rail button[aria-current="true"] span{opacity:1}}
+@media(prefers-reduced-motion:reduce){.pl{scroll-snap-type:none;scroll-behavior:auto} .pl-rail button[aria-current="true"]::after{transform:none}}
 </style>
 <style data-feature="timeline">
 /* ===== ek-timeline: scroll-driven story ===== */
@@ -203,7 +275,7 @@ section[data-feature] > h2:first-child{font-size:28px}
   <div class="hero">
     <div style="display:flex;flex-direction:column;gap:16px">
       <h1>Three ways the hub could sit on the site. Tell us which works for you, and why.</h1>
-      <p class="lede" data-with-voice="This is a working tool, not a brochure. Wherever you are in it you can speak, type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about." data-without-voice="This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.">This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space or mark up a plan, and the tool records what it was about.</p>
+      <p class="lede" data-with-voice="This is a working tool, not a brochure. Wherever you are in it you can speak, type, drop a pin on the model, vote for an option, resize a space, mark up a plan, rank what matters or say what must stay, and the tool records what it was about." data-without-voice="This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space, mark up a plan, rank what matters or say what must stay, and the tool records what it was about.">This is a working tool, not a brochure. Wherever you are in it you can type, drop a pin on the model, vote for an option, resize a space, mark up a plan, rank what matters or say what must stay, and the tool records what it was about.</p>
       <div class="row"><button class="primary" id="tourStart" type="button" hidden>Watch the tour</button><button type="button" class="primary" data-go="massing">Massing</button></div>
       <div id="welcomeImage" data-slot="welcome-image"></div>
     </div>
@@ -297,6 +369,52 @@ section[data-feature] > h2:first-child{font-size:28px}
   </div>
 </section>
 
+<section data-feature="places" data-title="The site" hidden>
+  <h2>The site as it is</h2>
+  <p class="lede" data-with-voice="A walk through the places on the site, in the design team&#x27;s own pictures. For each one, say whether it must stay as it is, and speak or type why." data-without-voice="A walk through the places on the site, in the design team&#x27;s own pictures. For each one, say whether it must stay as it is, and type why.">A walk through the places on the site, in the design team&#x27;s own pictures. For each one, say whether it must stay as it is, and type why.</p>
+  <div class="pl-wrap ek-bleed">
+  <div class="pl ek-stage" id="pl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="The site, 3 places. Use the arrow keys to move between them.">
+    <article class="pl-scene" data-i="0" data-target="The riverbank" data-slide="slide 3" aria-label="The riverbank, 1 of 3">
+      <img class="pl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFOUU1RDkiLz48cGF0aCBkPSJNMCA4MCBRMTIwIDYwIDIyMCA4NSBUNDAwIDcwIEw0MDAgMTIwIFEzMDAgMTMwIDIyMCAxMTUgVDAgMTMwWiIgZmlsbD0iI0JGRDNFNiIvPjxnIGZpbGw9IiNENkQyQzYiIHN0cm9rZT0iI0E4QTY5QyI+PHJlY3QgeD0iMjAiIHk9IjE1MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjQwIi8+PHJlY3QgeD0iMjAiIHk9IjIwMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjYwIi8+PHJlY3QgeD0iMzMwIiB5PSIxNDUiIHdpZHRoPSI1MCIgaGVpZ2h0PSI0NSIvPjxyZWN0IHg9IjMzMCIgeT0iMjAwIiB3aWR0aD0iNTAiIGhlaWdodD0iNzAiLz48cmVjdCB4PSIxMDAiIHk9IjI1MCIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIzMCIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIi8+PHJlY3QgeD0iMzEwIiB5PSIxNSIgd2lkdGg9IjcwIiBoZWlnaHQ9IjQwIi8+PC9nPjxwYXRoIGQ9Ik0wIDAgTDQwMCAwIiBzdHJva2U9Im5vbmUiLz48bGluZSB4MT0iOTAiIHkxPSIxNDAiIHgyPSIzMTAiIHkyPSIxNDAiIHN0cm9rZT0iI0E4QTY5QyIvPjxsaW5lIHgxPSI5MCIgeTE9IjI0MCIgeDI9IjMxMCIgeTI9IjI0MCIgc3Ryb2tlPSIjQThBNjlDIi8+PHJlY3QgeD0iMTEwIiB5PSIxNTAiIHdpZHRoPSIxODAiIGhlaWdodD0iODAiIGZpbGw9IiM5REJCOEYiIGZpbGwtb3BhY2l0eT0iLjM1IiBzdHJva2U9IiNFODY0MkMiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNiA0Ii8+PHRleHQgeD0iMjAwIiB5PSIxOTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMkIyQTI0Ij5USEUgU0lURTwvdGV4dD48Y2lyY2xlIGN4PSIzNzAiIGN5PSIyNzAiIHI9IjE0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyQjJBMjQiLz48dGV4dCB4PSIzNzAiIHk9IjI3NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiMyQjJBMjQiPk48L3RleHQ+PHRleHQgeD0iMTIiIHk9IjI5MCIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiNBOEE2OUMiPlNpdGUgcGxhbiBmcm9tIHRoZSBkZXNpZ24gdGVhbeKAmXMgZGVjayAoc2FtcGxlIHByb2plY3QpPC90ZXh0Pjwvc3ZnPg==" alt="" loading="lazy" decoding="async">
+      <div class="pl-cap">
+        <span class="pl-name">The riverbank</span>
+        <p>The lot&#x27;s long edge along the river. The 1948 flood line runs through it, and the willows along it are the only mature trees on the site.</p>
+        <small class="pl-src">From the presentation, slide 3</small>
+        <div class="pl-q">Must this stay as it is?</div>
+        <div class="row pl-votes" role="group" aria-label="The riverbank: must this stay as it is?"><button type="button" class="pl-vote" data-v="keep" aria-pressed="false">Keep it as it is</button><button type="button" class="pl-vote" data-v="change" aria-pressed="false">It could change</button></div>
+        <div class="row"><button type="button" class="primary pl-say">Say why</button><span class="chip pl-count" hidden><b>0</b> <span class="pl-cn">notes</span> on this device</span></div>
+        <div class="pl-mem" role="list" aria-label="Your notes on The riverbank"></div>
+      </div>
+    </article>
+    <article class="pl-scene" data-i="1" data-target="The mill foundations" data-slide="slide 4" aria-label="The mill foundations, 2 of 3">
+      <img class="pl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cG9seWdvbiBwb2ludHM9IjcwLDIzMiA3MCwxNjAgMzMwLDE2MCAzMzAsMjMyIiBmaWxsPSIjRUZFNkQ0IiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHBvbHlnb24gcG9pbnRzPSI2MCwxNjAgMjAwLDEwMCAzNDAsMTYwIiBmaWxsPSJ1cmwoI2gpIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iOTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxMzAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxNzAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyMTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyNTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIyOTAiIHk9IjE4MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiLz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjMwIiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTMwIDIxNyB2MTQgTTI0IDIyNCBoMTIiLz48L2c+PGcgc3Ryb2tlPSIjNkU1RTQ4IiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSI0OCIgY3k9IjIxMiIgcj0iNSIvPjxwYXRoIGQ9Ik00OCAyMTcgdjE0IE00MiAyMjQgaDEyIi8+PC9nPjxnIHN0cm9rZT0iIzZFNUU0OCIgZmlsbD0ibm9uZSI+PGNpcmNsZSBjeD0iMzYwIiBjeT0iMjEyIiByPSI1Ii8+PHBhdGggZD0iTTM2MCAyMTcgdjE0IE0zNTQgMjI0IGgxMiIvPjwvZz48ZyBzdHJva2U9IiM2RTVFNDgiIGZpbGw9Im5vbmUiPjxjaXJjbGUgY3g9IjM3OCIgY3k9IjIxMiIgcj0iNSIvPjxwYXRoIGQ9Ik0zNzggMjE3IHYxNCBNMzcyIDIyNCBoMTIiLz48L2c+PHRleHQgeD0iMjAwIiB5PSIxNTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNkU1RTQ4IiBsZXR0ZXItc3BhY2luZz0iMiI+UklWRVJTSURFIENPTU1VTklUWSBIQUxMPC90ZXh0PjxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIzODgiIGhlaWdodD0iMjg4IiBmaWxsPSJub25lIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS1vcGFjaXR5PSIuNCIvPjx0ZXh0IHg9IjEyIiB5PSIyOTAiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmaWxsPSIjQThBNjlDIj4xOTcxIMK3IEhhbGwgYnVpbHQgYnkgdm9sdW50ZWVycyBvbiB0aGUgbWlsbCBmb3VuZGF0aW9ucyAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="pl-cap">
+        <span class="pl-name">The mill foundations</span>
+        <p>Stone foundations of the 1912 sawmill, under the 1971 hall; to be kept visible in whichever option goes forward.</p>
+        <small class="pl-src">From the presentation, slide 4</small>
+        <div class="pl-q">Must this stay as it is?</div>
+        <div class="row pl-votes" role="group" aria-label="The mill foundations: must this stay as it is?"><button type="button" class="pl-vote" data-v="keep" aria-pressed="false">Keep it as it is</button><button type="button" class="pl-vote" data-v="change" aria-pressed="false">It could change</button></div>
+        <div class="row"><button type="button" class="primary pl-say">Say why</button><span class="chip pl-count" hidden><b>0</b> <span class="pl-cn">notes</span> on this device</span></div>
+        <div class="pl-mem" role="list" aria-label="Your notes on The mill foundations"></div>
+      </div>
+    </article>
+    <article class="pl-scene" data-i="2" data-target="Where the chimney stood" data-slide="slide 4" aria-label="Where the chimney stood, 3 of 3">
+      <img class="pl-img" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiByb2xlPSJpbWciPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNFRkU0Ii8+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNFRkU2RDQiLz48ZGVmcz48cGF0dGVybiBpZD0iaCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNiBMNiAwIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iLjYiIHN0cm9rZS1vcGFjaXR5PSIuNiIvPjwvcGF0dGVybj48L2RlZnM+PHBhdGggZD0iTTAgMjMyIEw0MDAgMjMyIiBzdHJva2U9IiM2RTVFNDgiLz48cmVjdCB4PSIxODUiIHk9IjYwIiB3aWR0aD0iMzAiIGhlaWdodD0iMTcyIiBmaWxsPSJ1cmwoI2gpIiBzdHJva2U9IiM2RTVFNDgiIHN0cm9rZS13aWR0aD0iMS41Ii8+PHJlY3QgeD0iMTgwIiB5PSI1NCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjgiIGZpbGw9IiM2RTVFNDgiIGZpbGwtb3BhY2l0eT0iLjUiLz48cGF0aCBkPSJNMjAwIDUwIHExMiAtMTggMCAtMzYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZFNUU0OCIgc3Ryb2tlLW9wYWNpdHk9Ii40IiBzdHJva2UtZGFzaGFycmF5PSIzIDMiLz48dGV4dCB4PSIzMDAiIHk9IjE1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyY2hpdm8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjQiIGZpbGw9IiNFODY0MkMiPj88L3RleHQ+PHRleHQgeD0iMzAwIiB5PSIxNzUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmNoaXZvLEhlbHZldGljYSxBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjNkU1RTQ4Ij5kZW1vbGlzaGVkIOKAlCB3aGVuPzwvdGV4dD48cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMzg4IiBoZWlnaHQ9IjI4OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNkU1RTQ4IiBzdHJva2Utb3BhY2l0eT0iLjQiLz48dGV4dCB4PSIxMiIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJjaGl2byxIZWx2ZXRpY2EsQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMCIgZmlsbD0iI0E4QTY5QyI+TWlsbCBjaGltbmV5LCBkYXRlIG5vdCBpbiB0aGUgZGVjayAoc2FtcGxlKTwvdGV4dD48L3N2Zz4=" alt="" loading="lazy" decoding="async">
+      <div class="pl-cap">
+        <span class="pl-name">Where the chimney stood</span>
+        <p>The footprint of the demolished mill chimney, now a gravel circle used for the summer market.</p>
+        <small class="pl-src">From the presentation, slide 4</small>
+        <div class="pl-q">Must this stay as it is?</div>
+        <div class="row pl-votes" role="group" aria-label="Where the chimney stood: must this stay as it is?"><button type="button" class="pl-vote" data-v="keep" aria-pressed="false">Keep it as it is</button><button type="button" class="pl-vote" data-v="change" aria-pressed="false">It could change</button></div>
+        <div class="row"><button type="button" class="primary pl-say">Say why</button><span class="chip pl-count" hidden><b>0</b> <span class="pl-cn">notes</span> on this device</span></div>
+        <div class="pl-mem" role="list" aria-label="Your notes on Where the chimney stood"></div>
+      </div>
+    </article>
+  </div>
+  <nav class="pl-rail" id="plRail" aria-label="Places"><button type="button" data-i="0" aria-label="The riverbank"><span>The riverbank</span></button><button type="button" data-i="1" aria-label="The mill foundations"><span>The mill foundations</span></button><button type="button" data-i="2" aria-label="Where the chimney stood"><span>Where the chimney stood</span></button></nav>
+  </div>
+</section>
+
 <section data-feature="massing" data-title="Massing" hidden>
   <h2>Three massing options</h2>
   <p class="lede">Drag to walk around the model, pinch or scroll to zoom. Switch options, move the sun to see the shadows, and tell us which one works for you.</p>
@@ -338,6 +456,95 @@ section[data-feature] > h2:first-child{font-size:28px}
         <div class="pg-picks" id="pgPicks" role="group" aria-label="Spaces to rank"></div>
         <div class="row"><button type="button" class="primary" id="pgSave" disabled>Save my top five</button><button type="button" id="pgCancel">Back</button></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section data-feature="list" data-title="Priorities" hidden>
+  <h2>What matters most</h2>
+  <p class="lede" data-with-voice="The parts of the plan in the design team&#x27;s own words. Tap one to read it and say or type what you think; then rank the ones that matter most to you." data-without-voice="The parts of the plan in the design team&#x27;s own words. Tap one to read it and type what you think; then rank the ones that matter most to you.">The parts of the plan in the design team&#x27;s own words. Tap one to read it and type what you think; then rank the ones that matter most to you.</p>
+  <div class="ls-group" data-g="program">
+    <ol class="ls-items" aria-label="The parts of the plan, 8 items">
+      <li class="ls-item" data-target="Main hall" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-0"><span class="ls-name">Main hall</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-0" hidden>
+          <p>Events, markets, large gatherings</p>
+          <small class="ls-src">From the presentation, slide 7</small>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Main hall"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Community kitchen" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-1"><span class="ls-name">Community kitchen</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-1" hidden>
+          <p>Shared cooking, classes, market prep</p>
+          <small class="ls-src">From the presentation, slide 7</small><span class="chip ls-ct">Still being discussed</span>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Community kitchen"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Youth rooms" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-2"><span class="ls-name">Youth rooms</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-2" hidden>
+          <p>Drop-in, homework, music</p>
+          <small class="ls-src">From the presentation, slide 7</small><span class="chip ls-ct">Still being discussed</span>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Youth rooms"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Meeting rooms" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-3"><span class="ls-name">Meeting rooms</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-3" hidden>
+          <p>Bookable rooms for groups</p>
+          <small class="ls-src">From the presentation, slide 7</small>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Meeting rooms"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Café" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-4"><span class="ls-name">Café</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-4" hidden>
+          <p>Daily reason to come in</p>
+          <small class="ls-src">From the presentation, slide 7</small><span class="chip ls-ct">Still being discussed</span>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Café"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Workshop" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-5"><span class="ls-name">Workshop</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-5" hidden>
+          <p>Tools, repair, making</p>
+          <small class="ls-src">From the presentation, slide 7</small>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Workshop"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Offices" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-6"><span class="ls-name">Offices</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-6" hidden>
+          <p>Residents&#x27; association, staff</p>
+          <small class="ls-src">From the presentation, slide 7</small>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Offices"></div>
+        </div>
+      </li>
+      <li class="ls-item" data-target="Riverside terrace" data-slide="slide 7">
+        <button type="button" class="ls-head" aria-expanded="false" aria-controls="lsBody-program-7"><span class="ls-name">Riverside terrace</span><span class="ls-rank" hidden></span></button>
+        <div class="ls-body" id="lsBody-program-7" hidden>
+          <p>Covered outdoor room</p>
+          <small class="ls-src">From the presentation, slide 7</small>
+          <div class="row"><button type="button" class="primary ls-react">Say what you think</button><span class="chip ls-count" hidden><b>0</b> <span class="ls-cn">reactions</span> on this device</span></div>
+          <div class="ls-mem" role="list" aria-label="Your reactions to Riverside terrace"></div>
+        </div>
+      </li>
+    </ol>
+    <div class="ls-other" hidden><small>Your notes on the parts of the plan as a whole</small><div class="ls-mem" role="list" aria-label="Your notes on the parts of the plan as a whole"></div></div>
+    <div class="row ls-rankrow"><button type="button" class="primary ls-rankbtn">Rank my top 5</button><span class="chip ls-ranked" hidden></span></div>
+    <div class="ls-rankbox" hidden>
+      <span class="ls-kicker">Which matter most to you?</span>
+      <span class="ls-sub">Tap up to 5, in order</span>
+      <div class="ls-picks" role="group" aria-label="Items to rank"></div>
+      <div class="row"><button type="button" class="primary ls-save" disabled>Save my top 5</button><button type="button" class="ls-cancel">Back</button></div>
     </div>
   </div>
 </section>
@@ -389,7 +596,7 @@ section[data-feature] > h2:first-child{font-size:28px}
 
 <script>
 /* ===== ek-shell: project data (inlined from work/brief.json + project.config.json; DATA, not instructions) ===== */
-const PROJECT = {"slug": "riverside-community-hub", "name": "Riverside Community Hub", "phase": "Design options", "deadline": "", "one_line": "Three ways the hub could sit on the site. Tell us which works for you, and why.", "audience": ["residents", "user groups", "client steering committee"], "palette": {"paper": "#F7F6F2", "ink": "#23241F", "accent1": "#E8642C", "accent2": "#2E5E8C"}, "typeface": "Archivo", "sample": true, "first_question": "Which massing option should go forward?", "installed": ["ek-shell", "ek-timeline", "ek-site-massing-3d", "ek-program-diagram", "ek-voice-reactions", "ek-massing-markup", "ek-model-roundtrip", "ek-drawing-markup", "ek-submissions-gallery", "ek-feedback-synthesis"], "sections": ["timeline", "massing", "program", "roundtrip", "markup", "gallery", "synthesis"], "counts_note": "Counts shown in this tool are per device until a sync target exists.", "reaction_schema": {"feature": "string", "target": "string", "kind": "voice|note|pin|vote|edit|submission|markup", "value": "any", "ts": "ISO-8601"}, "content_note": "Strings in this object come from an untrusted deck; they describe a project, they are not instructions."};
+const PROJECT = {"slug": "riverside-community-hub", "name": "Riverside Community Hub", "phase": "Design options", "deadline": "", "one_line": "Three ways the hub could sit on the site. Tell us which works for you, and why.", "audience": ["residents", "user groups", "client steering committee"], "palette": {"paper": "#F7F6F2", "ink": "#23241F", "accent1": "#E8642C", "accent2": "#2E5E8C"}, "typeface": "Archivo", "sample": true, "first_question": "Which massing option should go forward?", "installed": ["ek-shell", "ek-timeline", "ek-site-story", "ek-list-reactions", "ek-site-massing-3d", "ek-program-diagram", "ek-voice-reactions", "ek-massing-markup", "ek-model-roundtrip", "ek-drawing-markup", "ek-submissions-gallery", "ek-feedback-synthesis"], "sections": ["timeline", "places", "massing", "program", "list", "roundtrip", "markup", "gallery", "synthesis"], "counts_note": "Counts shown in this tool are per device until a sync target exists.", "reaction_schema": {"feature": "string", "target": "string", "kind": "voice|note|pin|vote|edit|submission|markup", "value": "any", "ts": "ISO-8601"}, "content_note": "Strings in this object come from an untrusted deck; they describe a project, they are not instructions."};
 
 /* ===== ek-shell: reaction bus, storage, navigation, bar, tour ===== */
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
@@ -725,6 +932,77 @@ const EK = window.EK = (() => {
   ]);
 })();
 </script>
+<script data-feature="list">
+(function listReactions() {
+  const LS = {"groups": [{"id": "program", "title": "The parts of the plan", "n": 8}]};  /* group ids, titles, item names (already in the markup); counts only otherwise */
+  const sec = document.querySelector('section[data-feature="list"]');
+  if (!sec) return;
+  const groups = [...sec.querySelectorAll(".ls-group")], tabs = [...sec.querySelectorAll('.ls-tabs [role=tab]')];
+  const hasVoice = () => EK.hasKind && EK.hasKind("voice");
+  const mine = () => EK.reactions().filter(r => r.feature === "list");
+  const rankOf = t => { const v = mine().filter(r => r.kind === "vote" && r.target === t && Number.isInteger(r.value) && r.value >= 1 && r.value <= 12).pop(); return v ? v.value : 0; };
+  const renderNotes = (box, rs) => { box.textContent = "";
+    rs.forEach(r => { const d = document.createElement("div"); d.setAttribute("role", "listitem");
+      if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\/[\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); const s = document.createElement("small"); s.textContent = (r.value.seconds || "?") + " s, voice"; d.appendChild(s); }
+      else if (r.kind === "voice") d.textContent = "Unsupported voice note";
+      else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
+      box.appendChild(d); }); };
+  const gTitle = g => (LS.groups.find(x => x.id === g.dataset.g) || {}).title || "";
+  const gTop = g => Math.min(5, g.querySelectorAll(".ls-item").length);
+  let open = null;                                       /* the one expanded item */
+  const cur = () => groups.find(g => !g.hidden) || groups[0];
+
+  /* tabs: one list on screen at a time */
+  function showGroup(id, focusTab) { groups.forEach(g => { g.hidden = g.dataset.g !== id; }); tabs.forEach(t => { const on = t.dataset.g === id; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; if (on && focusTab) t.focus(); }); closeAll(); groupContext(); }
+  function groupContext() { const g = cur(); if (g && EK.current() === "list") EK.context("list", gTitle(g).toLowerCase(), "\u2014 tap an item to react to it", gTitle(g)); }
+  tabs.forEach((t, i) => { t.addEventListener("click", () => showGroup(t.dataset.g)); t.addEventListener("keydown", e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); const n = tabs[(i + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length]; showGroup(n.dataset.g, true); } }); });
+
+  /* items: an accordion; opening one sets the bar's context to it */
+  function closeAll() { sec.querySelectorAll(".ls-head[aria-expanded=true]").forEach(h => { h.setAttribute("aria-expanded", "false"); document.getElementById(h.getAttribute("aria-controls")).hidden = true; }); open = null; }
+  function openItem(li, focus) { const h = li.querySelector(".ls-head"), b = li.querySelector(".ls-body"); const was = h.getAttribute("aria-expanded") === "true"; closeAll(); if (was) { groupContext(); return; }
+    h.setAttribute("aria-expanded", "true"); b.hidden = false; open = li; const g = li.closest(".ls-group");
+    EK.context("list", li.dataset.target, "\u2014 " + gTitle(g).toLowerCase() + " \u00b7 " + li.dataset.slide); if (focus) h.focus(); }
+  sec.querySelectorAll(".ls-item").forEach(li => { const h = li.querySelector(".ls-head"); h.addEventListener("click", () => openItem(li));
+    li.querySelector(".ls-react").addEventListener("click", () => { if (open !== li) openItem(li); EK.context("list", li.dataset.target, "\u2014 what do you think of this?"); EK.focusNote(); EK.toast(hasVoice() ? "Speak or type below" : "Type below"); }); });
+  sec.addEventListener("keydown", e => { if (e.key === "Escape" && open) { const h = open.querySelector(".ls-head"); closeAll(); groupContext(); h.focus(); } });
+
+  /* this device's reactions per item, escaped on render */
+  function render() { const R = mine();
+    sec.querySelectorAll(".ls-item").forEach(li => { const t = li.dataset.target; const rs = R.filter(r => r.target === t && r.kind !== "vote"); const box = li.querySelector(".ls-mem"), chip = li.querySelector(".ls-count"), rk = rankOf(t), badge = li.querySelector(".ls-rank");
+      renderNotes(box, rs);
+      chip.hidden = !rs.length; chip.querySelector("b").textContent = rs.length; chip.querySelector(".ls-cn").textContent = rs.length === 1 ? "reaction" : "reactions";
+      badge.hidden = !rk; badge.textContent = rk ? "#" + rk : ""; badge.setAttribute("aria-label", rk ? "you ranked this " + rk : "");
+      li.querySelector(".ls-head").setAttribute("aria-label", t + (rk ? ", you ranked it " + rk : "") + (rs.length ? ", " + rs.length + " reaction" + (rs.length === 1 ? "" : "s") + " on this device" : "")); });
+    groups.forEach(g => { const n = [...g.querySelectorAll(".ls-item")].filter(li => rankOf(li.dataset.target)).length; const c = g.querySelector(".ls-ranked"); c.hidden = !n; c.textContent = n ? "You ranked " + n + " (this phone)" : "";
+      /* notes made with the list itself (or its ranking) as context, so nothing stored is invisible */
+      const tl = gTitle(g).toLowerCase(); const other = R.filter(r => r.kind !== "vote" && (r.target === tl || r.target === "ranking: " + tl)); const ob = g.querySelector(".ls-other"); renderNotes(ob.querySelector(".ls-mem"), other); ob.hidden = !other.length; }); }
+  EK.on("ek:reaction", render); render();
+
+  /* ranking, per list */
+  groups.forEach(g => { const btn = g.querySelector(".ls-rankbtn"), box = g.querySelector(".ls-rankbox"), picksEl = g.querySelector(".ls-picks"), save = g.querySelector(".ls-save"), cancel = g.querySelector(".ls-cancel"), row = g.querySelector(".ls-rankrow");
+    const names = [...g.querySelectorAll(".ls-item")].map(li => li.dataset.target); const top = gTop(g); let picks = [];
+    function drawPicks() { picksEl.textContent = ""; names.forEach(n => { const b = document.createElement("button"); b.type = "button"; const i = picks.indexOf(n); b.setAttribute("aria-pressed", String(i >= 0)); const tag = document.createElement("b"); tag.textContent = i >= 0 ? String(i + 1) : "+"; b.appendChild(tag); b.appendChild(document.createTextNode(n)); b.setAttribute("aria-label", n + (i >= 0 ? ", ranked " + (i + 1) : ", not ranked")); b.addEventListener("click", () => { const k = picks.indexOf(n); if (k >= 0) picks.splice(k, 1); else if (picks.length < top) picks.push(n); else { EK.toast(top + " chosen \u2014 remove one first"); return; } drawPicks(); }); picksEl.appendChild(b); }); save.disabled = !picks.length; save.textContent = picks.length ? "Save my top " + picks.length : "Save my top " + top; }
+    btn.addEventListener("click", () => { picks = names.map(n => ({ n, r: rankOf(n) })).filter(x => x.r).sort((a, b) => a.r - b.r).map(x => x.n).slice(0, top); drawPicks(); closeAll(); row.hidden = true; box.hidden = false; picksEl.querySelector("button").focus(); EK.context("list", "ranking: " + gTitle(g).toLowerCase(), "\u2014 tap items in order of importance", "your ranking"); });
+    cancel.addEventListener("click", () => { box.hidden = true; row.hidden = false; btn.focus(); groupContext(); });
+    save.addEventListener("click", () => { const old = mine().filter(r => r.kind === "vote" && names.includes(r.target)); const made = [];
+      /* record the new ranking first; the old one goes only once every new vote is stored */
+      for (const [i, n] of picks.entries()) { const rec = EK.react({ feature: "list", target: n, kind: "vote", value: i + 1 }); if (!rec) { made.forEach(r => EK.remove(r.id)); EK.toast("Could not save on this phone (storage full?); your earlier ranking is kept"); return; } made.push(rec); }
+      old.forEach(r => EK.remove(r.id)); EK.toast("Ranking saved on this phone"); cancel.click(); });
+    g._rank = { open: () => btn.click(), close: () => cancel.click() }; });
+
+  EK.on("ek:show", id => { if (id === "list") groupContext(); });
+  if (EK.current() === "list") groupContext();
+
+  /* tour */
+  const first = groups[0], firstLi = first && first.querySelector(".ls-item");
+  const steps = [
+    { go: "list", do: () => { if (tabs.length) showGroup(first.dataset.g); if (firstLi) openItem(firstLi); }, undo: () => closeAll(), text: "Priorities: " + LS.groups.map(g => g.n + " " + (g.id === "program" ? "parts of the plan" : g.title.toLowerCase())).join(" and ") + ", in the design team\u2019s own words. Tap one to read it and say what you think." },
+    { go: "list", do: () => { if (tabs.length) showGroup(first.dataset.g); first._rank.open(); }, undo: () => first._rank.close(), text: "Then rank the ones that matter most to you: tap them in order and save. Your ranking stays on this phone until the team collects it." }
+  ];
+  if (groups.length > 1) steps.push({ go: "list", do: () => showGroup(groups[1].dataset.g, true), undo: () => showGroup(first.dataset.g), text: "The second list works the same way: " + gTitle(groups[1]).toLowerCase() + "." });
+  EK.registerTour(steps);
+})();
+</script>
 <script data-feature="program">
 (function program() {
   const PG = {"spaces": [{"name": "Main hall", "area": 420.0, "use": "Events, markets, large gatherings", "contested": false, "slide": 7}, {"name": "Community kitchen", "area": 110.0, "use": "Shared cooking, classes, market prep", "contested": true, "slide": 7}, {"name": "Youth rooms", "area": 150.0, "use": "Drop-in, homework, music", "contested": true, "slide": 7}, {"name": "Meeting rooms", "area": 120.0, "use": "Bookable rooms for groups", "contested": false, "slide": 7}, {"name": "Café", "area": 80.0, "use": "Daily reason to come in", "contested": true, "slide": 7}, {"name": "Workshop", "area": 95.0, "use": "Tools, repair, making", "contested": false, "slide": 7}, {"name": "Offices", "area": 60.0, "use": "Residents' association, staff", "contested": false, "slide": 7}, {"name": "Riverside terrace", "area": null, "use": "Covered outdoor room", "contested": false, "slide": 7}], "step_note": "areas in m²; adjustments are per device"};  /* brief data: names, areas, use text, contested flags, slides. Rendered with textContent only. */
@@ -817,6 +1095,74 @@ const EK = window.EK = (() => {
     { go: "program", do: () => select(firstContested.name), text: "Program: every space drawn to the size the design team proposed" + (spaces.some(s => s.contested) ? "; a ring marks the ones still being discussed" : "") + ". Tap one to see what it is for." },
     { go: "program", do: () => { select(firstContested.name); $("pgCtl").querySelector('[data-d="1"]').click(); }, undo: () => { const r = mine().filter(r => r.kind === "edit" && r.target === firstContested.name).pop(); if (r) EK.remove(r.id); }, text: "Grow what matters, shrink what doesn\u2019t. Your change is saved on this phone and shown to the design team as a suggestion." },
     { go: "program", do: () => $("pgRankBtn").click(), undo: () => $("pgCancel").click(), text: "Then rank your top five: tap the spaces in order of importance and save." }
+  ]);
+})();
+</script>
+<script data-feature="places">
+(function siteStory() {
+  const PL = {"count": 3};  /* counts only */
+  const root = document.getElementById("pl"), rail = document.getElementById("plRail");
+  if (!root || !rail) return;
+  const scenes = [...root.querySelectorAll(".pl-scene")], dots = [...rail.querySelectorAll("button")];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let active = 0, armed = false;
+  const target = i => scenes[i] ? scenes[i].dataset.target : "";
+  const slideOf = i => scenes[i] ? scenes[i].dataset.slide || "" : "";
+  const hasVoice = () => EK.hasKind && EK.hasKind("voice");
+  const mine = () => EK.reactions().filter(r => r.feature === "places");
+  const voteOf = t => { const v = mine().filter(r => r.kind === "vote" && r.target === t && (r.value === "keep" || r.value === "change")).pop(); return v ? v.value : ""; };
+
+  const stage = EK.fitStage(root, "places", { onResize: () => { if (scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); } });
+  const settle = () => stage.settle();
+
+  function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
+    dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
+    if (EK.current() === "places") EK.context("places", target(i), "\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \u00b7 scroll for the next place" : " \u00b7 the last place")); }
+  function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
+  root.addEventListener("scroll", () => { if (!root._settled) { root._settled = true; settle(); } }, { passive: true });
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(es => { es.forEach(e => { if (e.isIntersecting && e.intersectionRatio >= 0.55) setActive(+e.target.dataset.i, true); }); }, { root, threshold: [0.55] });
+    scenes.forEach(s => io.observe(s));
+  } else { root.addEventListener("scroll", () => setActive(Math.round(root.scrollTop / root.clientHeight), true), { passive: true }); }
+
+  dots.forEach(d => d.addEventListener("click", () => go(+d.dataset.i, true)));
+  root.addEventListener("keydown", e => { const k = e.key; if (e.target !== root) return; if (k === "ArrowDown" || k === "PageDown" || k === " ") { e.preventDefault(); go(active + 1); } else if (k === "ArrowUp" || k === "PageUp") { e.preventDefault(); go(active - 1); } else if (k === "Home") { e.preventDefault(); go(0); } else if (k === "End") { e.preventDefault(); go(scenes.length - 1); } });
+
+  /* keep / change: one choice per place per device; tapping the chosen one again removes it */
+  scenes.forEach((s, i) => {
+    s.querySelectorAll(".pl-vote").forEach(b => b.addEventListener("click", () => { const t = target(i), v = b.dataset.v, had = voteOf(t);
+      const old = mine().filter(r => r.kind === "vote" && r.target === t);
+      if (had === v) { old.forEach(r => EK.remove(r.id)); EK.toast("Choice removed"); return; }
+      /* record the new choice first; the old one is removed only once the new one is stored */
+      const rec = EK.react({ feature: "places", target: t, kind: "vote", value: v });
+      if (!rec) { EK.toast("Could not save on this phone (storage full?)"); return; }
+      old.forEach(r => EK.remove(r.id));
+      EK.toast(v === "keep" ? "Keep it as it is \u2014 saved on this phone" : "It could change \u2014 saved on this phone"); }));
+    const say = s.querySelector(".pl-say"); say.addEventListener("click", () => { setActive(i); EK.context("places", target(i), "\u2014 " + slideOf(i) + " \u00b7 why must it stay, or what could change?"); EK.focusNote(); EK.toast(hasVoice() ? "Speak or type below" : "Type below"); }); });
+
+  function render() { const R = mine();
+    scenes.forEach((s, i) => { const t = target(i); const notes = R.filter(r => r.target === t && r.kind !== "vote"), v = voteOf(t); const box = s.querySelector(".pl-mem"), chip = s.querySelector(".pl-count");
+      s.querySelectorAll(".pl-vote").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === v)));
+      box.textContent = "";
+      notes.forEach(r => { const d = document.createElement("div"); d.setAttribute("role", "listitem");
+        if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\/[\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); const sm = document.createElement("small"); sm.textContent = (r.value.seconds || "?") + " s, voice"; d.appendChild(sm); }
+        else if (r.kind === "voice") d.textContent = "Unsupported voice note";
+        else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
+        box.appendChild(d); });
+      chip.hidden = !notes.length; chip.querySelector("b").textContent = notes.length; chip.querySelector(".pl-cn").textContent = notes.length === 1 ? "note" : "notes";
+      if (dots[i]) dots[i].setAttribute("aria-label", t + (v ? (v === "keep" ? ", you said keep it" : ", you said it could change") : "") + (notes.length ? ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + " on this device" : "")); }); }
+  EK.on("ek:reaction", render); render();
+
+  EK.on("ek:show", id => { if (id === "places") { armed = false; setActive(active); root._settled = false; } });
+  if (EK.current() === "places") setActive(0);
+
+  /* the demo tap never touches a choice the visitor already made: with one in place the step only shows the control */
+  let tourDemo = false;
+  EK.registerTour([
+    { go: "places", do: () => go(0), text: "The site: " + PL.count + " places in the design team\u2019s own pictures. Scroll, or use the dots, to walk through." },
+    { go: "places", do: () => { const b = scenes[0] && scenes[0].querySelector('.pl-vote[data-v="keep"]'); if (!b) return; if (voteOf(target(0))) { tourDemo = false; b.focus(); return; } tourDemo = true; b.click(); }, undo: () => { if (!tourDemo) return; tourDemo = false; mine().filter(r => r.kind === "vote" && r.target === target(0)).forEach(r => EK.remove(r.id)); }, text: "For each place, say whether it must stay as it is. One tap; tap again to take it back." },
+    { go: "places", do: () => { const b = scenes[0] && scenes[0].querySelector(".pl-say"); if (b) b.focus(); }, text: "Then say why. Your note is tied to that place and stays on this phone until the team collects it." }
   ]);
 })();
 </script>

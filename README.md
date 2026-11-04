@@ -32,8 +32,10 @@ engage-kit/
 │   ├── ek-project-manifest/      decide which features this project needs; write the manifest
 │   ├── ek-shell/                 the page container every feature plugs into
 │   ├── ek-timeline/              interactive site & community history
+│   ├── ek-site-story/            the site's places as a photo story: "must this stay as it is?"
 │   ├── ek-site-massing-3d/       interactive 3D site and massing options
 │   ├── ek-program-diagram/       interactive proposed-program diagram
+│   ├── ek-list-reactions/        principles and plan elements as a ranked list in the team's words
 │   ├── ek-voice-reactions/       record spoken reactions while exploring
 │   ├── ek-massing-markup/        pin comments on, and adjust, the 3D massing
 │   ├── ek-model-roundtrip/       download the massing, change it in your software, upload it back
