@@ -28,11 +28,24 @@ Brief field read, `places[]`:
 - Drawings: an SVG image embeds with a warning that it is a drawing, not a photograph; the section's copy says
   "pictures" so a sample built on drawings does not claim photographs. Real projects use photographs.
 
+Brief field read, `site.views[]` (optional; up to 8):
+- `building`, `bearing_deg` (numeric, taken mod 360), `source_slide`. Each becomes a button in a row under the
+  lede, above the story: `.kicker` "Views the presentation gives, from the model", then
+  "<building> · <bearing word> (<deg>°)" with the model's 45° sector words (north, north-east … north-west).
+  On a phone the row is one horizontally scrolling chip line; it wraps from 600 px. No views, no row.
+- Depends on `ek-site-model`'s API, looked up at click time: if `EK.feature.model` or its `stand` is missing,
+  the button toasts "The model is not in this tool". When the building's label (exact, case-insensitive, or
+  its base label without a "(…)" suffix) is in `EK.feature.model.buildings`, it calls `stand(label)`;
+  otherwise it calls `standAt(bearing, building)` and toasts "<building> is not in the model yet; looking that
+  way from the site's centre". Both calls switch to the model section themselves.
+
 ## Markup it writes
 ```html
 <section data-feature="places" data-title="The site" hidden>
   <h2>The site as it is</h2>
   <p class="lede">A walk through the places on the site, in the design team's own pictures. For each one, say whether it must stay as it is, and type why.</p>
+  <div class="pl-views-wrap"><div class="kicker">Views the presentation gives, from the model</div>
+    <div class="pl-views" role="group"><button class="pl-view" data-building="Hall" data-bearing="180">Hall · south (180°)</button>…</div></div>
   <div class="pl ek-stage" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="The site, N places">
     <article class="pl-scene" data-target="The pond">
       <img class="pl-img" src="data:…" alt="">                        <!-- or a quiet panel when there is no image -->

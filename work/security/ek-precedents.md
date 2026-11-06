@@ -1,0 +1,11 @@
+# ek-precedents threat model (2026-11-06)
+- **Assets:** third-party architectural photographs and renders (copyright of photographers/architects), embedded as data: URIs after Pillow re-encode (EXIF dropped, <=1200 px); name/by/slide; visitor right/not votes, `{rank:n}` rankings, notes/voice per precedent name.
+- **Actors:** visitor; hostile visitor / same-origin page (planted records); deck author / ingest model (names image paths); rights holders; the team who republishes behind the passphrase.
+- **Entry points:** brief.precedents[] -> `precedents_from_brief()` -> `embed_image()` (path confined to --root, type allowlist, SVG pattern refusal); `EK.reactions()` -> `render()`/`openRank()`; the tour.
+- **Spoof:** every card carries the honesty line ("Someone else's building...") and the lede says they are not the project; a missing `by` prints "Architect not recorded". No photographer/source credit field exists: `by` credits the architect, not the image's author.
+- **Tamper:** brief strings `html.escape`d; `src` is a base64 data: URI built here; inline `PC` holds two integers. `isRank` accepts integers 1..top only; choices only 'right'|'not'; the rank-pick buttons are built with createElement/textContent. Voice MIME/base64 checked. No `innerHTML`/`eval`/`on*=`.
+- **Repudiate:** each card prints its slide; ranking notes target "ranking: inspiration" and are shown under "Your notes on your ranking".
+- **Disclose:** the `people`/`cleared` gate is opt-in: an entry with no `people` key embeds without any person check. Real build: all 6 lack the key; reviewed by eye, no identifiable person visible.
+- **Deny:** <=12 items, 2 MB image budget warned not enforced (6 real images ~1 MB raw). Save stores the new ranking first and rolls back on a full store.
+- **Elevate:** reads brief/out and files under --root only; Pillow; no subprocess, network or credentials.
+- **Open:** tour step 2 uses `b.click()`: the demo "Feels right" vote is a normal record (no `tour:true`) and survives a tab closed mid-tour into the export. Copyright: republishing these photos needs permission or a documented fair-dealing basis (Copyright Act s.29, research/education/criticism with source credited) and a credit line per image.

@@ -53,6 +53,15 @@ Pillow at up to 1400 px). Up to eight sheets.
 - The card lists this phone's markups and photos on the current sheet with a thumbnail and **Remove**.
 - Tour: two steps (pen on the first sheet; the paper route).
 
+## Extension point
+- `EK.feature.markup = { show(name), sheets() }`: `show` selects the sheet with that exact name (as the chip
+  would) and returns true, or false for an unknown name; call `EK.show('markup')` first so the bar's
+  context follows. `sheets()` returns the sheet names in order. Defined when the script runs, so callers
+  look it up at click time.
+- The card carries an empty `<div class="dm-slot" data-slot="plan-list">` under the source line (hidden
+  while empty). `ek-list-reactions` fills it, for a list whose `plan_sheet` is the sheet on screen, with a
+  link back to that list. Nothing else in this skill changes for it.
+
 ## Rules
 - Markups never alter the sheet; they are layers over the deck's own drawing, attributed to a device.
 - Values are checked on render: strokes must be arrays of numbers within the sheet, photos must be

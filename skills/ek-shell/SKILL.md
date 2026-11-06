@@ -31,9 +31,11 @@ Every feature skill, and the three QC agents, rely on exactly this.
   </section>
 </main>
 ```
-- Feature ids and titles are fixed by `build.py` (`FEATURES`): `timeline` History, `places` The site, `model`
-  The model, `massing` Massing, `program` Program, `list` Priorities, `roundtrip` Your model, `markup` Mark up
-  plans, `gallery` Submissions, `synthesis` What we heard.
+- Feature ids and titles are fixed by `build.py` (`FEATURES`): `about` About the plan, `process` Where we are,
+  `timeline` History, `places` The site, `model` The model, `massing` Massing, `program` Program, `list`
+  Priorities, `precedents` Inspiration, `roundtrip` Your model, `markup` Mark up plans, `gallery` Submissions,
+  `synthesis` What we heard. Augments without a slot: `ek-voice-reactions` (bar), `ek-massing-markup`
+  (massing), `ek-model-pins` (model).
   `ek-voice-reactions` and `ek-massing-markup` get no section: they extend the bar or the massing section.
 - A feature skill replaces its `<section data-feature="…">` in full, keeping `data-feature`, `data-title` and
   `hidden`. Its first child is an `<h2>`, its second a `<p class="lede">` saying what the visitor can do.
@@ -50,6 +52,10 @@ Every feature skill, and the three QC agents, rely on exactly this.
   the tokens; nothing pure white or black.
 - Two optional hooks on the welcome page: `#welcomeImage` (a site plan or key drawing) and `#welcomeExtra`
   (a strip of option thumbnails, say). Leave them empty rather than fill them with text.
+- Optional cover: manifest `project.cover` = `{"image": "<path relative to the manifest>", "alt": "…"}` puts one
+  full-bleed key image (jpg/png/webp, at most 1.5 MB) at the top of the welcome page, embedded as a data URI so a
+  locked page keeps it inside the ciphertext. A path outside the project folder is refused. A real project's photo
+  never goes on the kit's public pages.
 - A feature that others extend (the 3D viewer, extended by `ek-massing-markup`) exposes a small API under
   `EK.feature[id]` and leaves an empty `[data-slot="…"]` row in its card for the extending skill's controls.
   No other globals.
@@ -85,8 +91,11 @@ EK.fitStage(el, featureId, {onResize?})       // el gets class ek-stage (height 
                                               //   scrolls the page so el sits under the header when the section shows;
                                               //   returns {size, settle}. Use it for any full-frame stage (story, map, 3D)
 EK.registerTour([{go, text, do?, undo?}])     // append steps; the shell plays them (9 s each, Next/Back/Finish,
-                                              //   Escape exits, reactions made during the tour are removed on exit,
-                                              //   auto-start on #tour, reduced motion → no auto-advance)
+                                              //   Escape exits, auto-start on #tour, reduced motion → no auto-advance).
+                                              //   While it runs, react() flags every record tour:true unless the
+                                              //   caller passes tour:false (the bar's note form and the voice recorder
+                                              //   do); on exit only tour:true records made during the tour are removed
+EK.tourRunning()                              // true while the tour plays
 ```
 - Reaction schema (`project.config.json → reaction_schema`): `{feature, target, kind, value, ts}` plus `id`.
   `target` must say what the reaction is about (an option id, a year, a program name, a pin path).

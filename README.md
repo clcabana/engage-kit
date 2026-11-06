@@ -42,6 +42,10 @@ engage-kit/
 │   ├── ek-site-story/            the site's places as a photo story: "must this stay as it is?"
 │   ├── ek-site-model/            the team's Rhino site model in 3D (export_3dm.py + viewer), each building a reaction target
 │   ├── ek-lock-page/             publish a tool on a static host as an encrypted page that a passphrase opens
+│   ├── ek-about/                 the deck's own narrative as paragraphs to underline and react to
+│   ├── ek-process-timeline/      the gates ahead, "we are here", questions and "involve me" per gate
+│   ├── ek-precedents/            the team's references as a gallery: feels right / not for us, favourites
+│   ├── ek-model-pins/            pins on the 3D site model: "where should it go?", keep / change / question
 │   ├── ek-site-massing-3d/       interactive 3D site and massing options
 │   ├── ek-program-diagram/       interactive proposed-program diagram
 │   ├── ek-list-reactions/        principles and plan elements as a ranked list in the team's words

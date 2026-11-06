@@ -36,6 +36,8 @@ views page; a building whose label matches gets "Stand here" looking that way an
     <div class="sm-view"> <canvas tabindex="0"> <div class="sm-labels"> <details class="sm-ovl sm-viewbox"> trees · labels · shadows · sun az/alt </details> <div class="sm-fallback" hidden> </div>
     <div class="sm-card"> <small>about</small> <div class="sm-chips">one chip per building</div>
       <div class="sm-sel" hidden> name · view bearing · [The spot works] [It should move] · [Say why] [Stand here] [Back to overview] · notes </div>
+      <div class="sm-none"> [Overview] hint </div>
+      <div class="sm-slot" data-slot="pins" id="smSlot"></div>   <!-- empty; ek-model-pins mounts here; hidden while a building is selected -->
     </div>
   </div>
 </section>
@@ -57,6 +59,28 @@ views page; a building whose label matches gets "Stand here" looking that way an
   none is given); drag turns the head; **Back to overview** returns.
 - Fallback: no three.js or no WebGL → a message, and the chips, votes and notes still work.
 - Tour: three steps (turn; pick the first building; stand there).
+
+## Extension point
+`EK.feature.model` = `{buildings, select(label), selected(), overview, fallback, render(), rebuild(), renderer,
+camera, canvas, view, stand(label), standAt(bearingDeg, label?)}` plus, for augments such as `ek-model-pins`:
+- `scene` — the three.js scene (null in fallback). Rebuilds (theme, shadows) replace only the model's own group,
+  so objects an augment adds to `scene` survive them.
+- `ground()` — the current terrain, water and existing meshes (`userData.kind` = `terrain|water|existing`).
+- `onPick(fn)` — `fn(hit, raycaster, event)` runs on every tap before the default building select. `hit` is the
+  first surface the ray meets among buildings and ground, `{point:[x,y,z], distance, building|null, kind, object}`,
+  or null. Returning `true` means handled (no building select). The default select still raycasts buildings only,
+  so its behaviour is unchanged.
+- `onRender(fn)` — runs after every frame (after the building labels), for an augment's own projected labels.
+- `project([x,y,z])` — `{x, y, on}` in view pixels; `on` is the labels' own in-front-and-in-frame test.
+- `bbox` `{min:[x,y,z], max:[x,y,z]}` and `span` — the model's extent in metres (copies).
+- The card ends with an empty `<div class="sm-slot" data-slot="pins" id="smSlot">` for the augment's controls.
+  It shows only in overview: selecting a building hides it (`hidden`), so one way to react is on screen at a time.
+- `stand(label)` — selects that building (exact label, else case-insensitive) and runs Stand here (outside the
+  facade on its bearing, south when none). `standAt(bearingDeg, label?)` — stands at the named building, or at the
+  model's centre 1.6 m above the terrain when no label is given, looking along `bearingDeg` (degrees from north).
+  Both call `EK.show('model')` first when another section is showing (the stage sizes on `ek:show`) and render
+  again after 80 ms, so they work straight from a link in another section. Return `true` when the camera moved,
+  `false` for an unknown label, a non-numeric bearing or the fallback (the section still shows).
 
 ## Rules
 - The model is the team's working file as exported, and the card says so: what is not modelled is not in

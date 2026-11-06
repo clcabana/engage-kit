@@ -144,7 +144,53 @@ def places_from_brief(brief: dict, root: Path, warnings: list[str]) -> list[dict
     return out
 
 
-def section_html(places: list[dict]) -> str:
+BEARING_WORDS = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"]
+MAX_VIEWS = 8
+
+
+def bearing_word(deg: float) -> str:
+    """Same 45-degree sectors as ek-site-model's bearingWord."""
+    return BEARING_WORDS[round(deg / 45) % 8]
+
+
+def views_from_brief(brief: dict, warnings: list[str]) -> list[dict]:
+    """brief.site.views[]: {building, bearing_deg, source_slide} -> buttons that open the model at that view."""
+    site = brief.get("site") if isinstance(brief.get("site"), dict) else {}
+    out = []
+    for i, v in enumerate(site.get("views") or []):
+        if not isinstance(v, dict):
+            continue
+        name = str(v.get("building") or "").strip()[:60]
+        deg = v.get("bearing_deg")
+        if not name or isinstance(deg, bool) or not isinstance(deg, (int, float)) or not math.isfinite(deg):
+            warnings.append(f"site.views[{i}] needs a building and a numeric bearing_deg; skipped")
+            continue
+        deg = round(float(deg)) % 360
+        slide = v.get("source_slide")
+        if slide is None or slide == "" or isinstance(slide, bool):
+            warnings.append(f"site.views[{i}] ({name}) has no source_slide; the claim is not traceable")
+            slide = None
+        out.append({"building": name, "deg": deg, "word": bearing_word(deg), "slide": slide})
+    if len(out) > MAX_VIEWS:
+        warnings.append(f"{len(out)} site views; only the first {MAX_VIEWS} are shown")
+        out = out[:MAX_VIEWS]
+    return out
+
+
+def views_html(views: list[dict]) -> str:
+    if not views:
+        return ""
+    parts = []
+    for v in views:
+        title = f' title="From the presentation, slide {html.escape(str(v["slide"]))}"' if v["slide"] is not None else ""
+        parts.append(f'<button type="button" class="pl-view" data-building="{html.escape(v["building"])}" data-bearing="{v["deg"]}"{title}>'
+                     f'{html.escape(v["building"])} · {v["word"]} ({v["deg"]}°)</button>')
+    btns = "".join(parts)
+    return (f'  <div class="pl-views-wrap"><div class="kicker" id="plViewsK">Views the presentation gives, from the model</div>\n'
+            f'  <div class="pl-views" id="plViews" role="group" aria-labelledby="plViewsK">{btns}</div></div>\n')
+
+
+def section_html(places: list[dict], views: list[dict] | None = None) -> str:
     n = len(places)
     scenes = []
     for i, p in enumerate(places):
@@ -172,6 +218,7 @@ def section_html(places: list[dict]) -> str:
         f'<section data-feature="places" data-title="The site" hidden>\n'
         f'  <h2>The site as it is</h2>\n'
         f'  <p class="lede" data-with-voice="{html.escape(lede.format(v="speak or type"))}" data-without-voice="{html.escape(lede.format(v="type"))}">{html.escape(lede.format(v="type"))}</p>\n'
+        + views_html(views or []) +
         f'  <div class="pl-wrap ek-bleed">\n'
         f'  <div class="pl ek-stage" id="pl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="The site, {n} places. Use the arrow keys to move between them.">\n'
         + "\n".join(scenes) + "\n"
@@ -195,7 +242,7 @@ STYLE = """<style data-feature="places">
 .pl-scene::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .pl-scene::after{background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}}
 /* the picture gets the top half on a phone: the card is capped at 52% of the stage and scrolls inside itself */
-.pl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius,6px);padding:14px 16px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:var(--float,0 10px 30px rgba(0,0,0,.18));margin-right:56px;max-height:52%;overflow:auto;overscroll-behavior:contain}
+.pl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius,6px);padding:14px 16px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:var(--float);margin-right:56px;max-height:52%;overflow:auto;overscroll-behavior:contain}
 @media(min-width:600px){.pl-cap{margin-right:96px;max-height:calc(100% - 8px)}}
 @media(min-width:900px){.pl-cap{margin-right:140px;padding:16px 18px}}
 .pl-name{font-size:28px;font-weight:500;line-height:1.05;letter-spacing:-.01em}
@@ -221,6 +268,13 @@ STYLE = """<style data-feature="places">
 .pl-rail button[aria-current="true"] span{font-weight:500}
 .pl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
 @media(min-width:900px){.pl-rail{right:16px} .pl-rail button span{display:inline;opacity:.8} .pl-rail button[aria-current="true"] span{opacity:1}}
+/* views from the brief: a chip row above the story; one line that scrolls sideways on a phone, wraps from 600 px */
+.pl-views-wrap{display:grid;gap:6px;margin:0 0 12px;min-width:0;max-width:100%}
+.pl-views{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;min-width:0;max-width:100%;padding:2px 0}
+.pl-views::-webkit-scrollbar{display:none}
+@media(min-width:600px){.pl-views{flex-wrap:wrap;overflow:visible}}
+.pl-view{flex:0 0 auto;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--ink);font-size:14px;white-space:nowrap}
+.pl-view:hover{border-color:var(--ink)} .pl-view:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.pl{scroll-snap-type:none;scroll-behavior:auto} .pl-rail button[aria-current="true"]::after{transform:none}}
 </style>"""
 
@@ -281,6 +335,24 @@ SCRIPT = """<script data-feature="places">
       if (dots[i]) dots[i].setAttribute("aria-label", t + (v ? (v === "keep" ? ", you said keep it" : ", you said it could change") : "") + (notes.length ? ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + " on this device" : "")); }); }
   EK.on("ek:reaction", render); render();
 
+  /* views the presentation gives: open the model there. EK.feature.model.stand / standAt are looked up at click time */
+  const viewRow = document.getElementById("plViews");
+  if (viewRow) {
+    const base = s => String(s || "").replace(/\\s*\\([^)]*\\)\\s*$/, "").trim().toLowerCase();
+    viewRow.querySelectorAll(".pl-view").forEach(b => b.addEventListener("click", () => {
+      const M = window.EK && EK.feature && EK.feature.model;
+      if (!M || typeof M.stand !== "function") { EK.toast("The model is not in this tool"); return; }
+      const name = b.dataset.building || "", deg = Number(b.dataset.bearing);
+      const labels = (Array.isArray(M.buildings) ? M.buildings : []).map(x => x && x.label).filter(l => typeof l === "string");
+      const hit = labels.find(l => l === name) || labels.find(l => l.toLowerCase() === name.toLowerCase()) || labels.find(l => base(l) === base(name));
+      try {
+        if (hit) { M.stand(hit); return; }
+        if (typeof M.standAt !== "function" || !isFinite(deg)) { EK.toast("The model is not in this tool"); return; }
+        M.standAt(deg); EK.toast(name + " is not in the model yet; looking that way from the site\\u2019s centre");   /* no label: the model stands at its centre */
+      } catch (err) { EK.toast("The model could not open that view"); }
+    }));
+  }
+
   EK.on("ek:show", id => { if (id === "places") { armed = false; setActive(active); root._settled = false; } });
   if (EK.current() === "places") setActive(0);
 
@@ -324,15 +396,16 @@ def main(argv=None) -> int:
     places = places_from_brief(brief, args.root, warnings)
     if not places:
         sys.exit("brief.places has no usable places; ek-project-manifest should not have installed ek-site-story")
+    views = views_from_brief(brief, warnings)
     data = {"count": len(places)}
-    new_doc = splice(doc, section_html(places), STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
+    new_doc = splice(doc, section_html(places, views),STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
     args.out.write_text(new_doc, encoding="utf-8", newline="\n")
     img_bytes = sum(len(p["img"]) for p in places)
     if img_bytes > IMG_BUDGET:
         warnings.append(f"embedded images total {img_bytes // 1024} KB; consider smaller photographs")
     for w in warnings:
         log(f"warning: {w}")
-    print(json.dumps({"out": str(args.out), "bytes": len(new_doc.encode("utf-8")), "places": len(places),
+    print(json.dumps({"out": str(args.out), "bytes": len(new_doc.encode("utf-8")), "places": len(places), "views": len(views),
                       "images_embedded": sum(1 for p in places if p["img"]), "image_bytes": img_bytes,
                       "people_embedded": [p["name"] for p in places if p["people_embedded"]],
                       "warnings": len(warnings)}, indent=2))

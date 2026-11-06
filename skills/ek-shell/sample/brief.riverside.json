@@ -23,7 +23,25 @@
     { "year": "2026", "event": "Pre-design begins. Three massing options prepared for public review.", "source_slide": 1, "image": "demo/illustrations/h2026.svg" },
     { "year": "", "event": "Original mill chimney demolished. Several residents recall it; the deck gives no date.", "source_slide": 4, "image": "demo/illustrations/hTBC.svg", "to_confirm": true }
   ],
-  "site": { "description": "Riverside lot between the river and the street grid; the 1948 flood line is a constraint.", "constraints": ["1948 flood line", "street grid bends at the old mill"], "plan_image": "demo/illustrations/site.svg", "north_up": true },
+  "site": { "description": "Riverside lot between the river and the street grid; the 1948 flood line is a constraint.", "constraints": ["1948 flood line", "street grid bends at the old mill"], "plan_image": "demo/illustrations/site.svg", "north_up": true,
+    "views": [ { "building": "Hall", "bearing_deg": 180, "source_slide": 6 }, { "building": "Rooms wing", "bearing_deg": 250, "source_slide": 6 } ] },
+  "about": { "note": "sample: invented deck narrative", "blocks": [
+    { "title": "What this report is", "source_slide": 2, "text": "This is the pre-design report for the Riverside Community Hub: site history, three massing options, a draft program and the questions the neighbourhood is asked to answer before the steering committee chooses an option (January 2027)." },
+    { "title": "The site", "source_slide": 3, "text": "A riverside lot between the river and the street grid, with the 1912 mill foundations under the 1971 hall and the 1948 flood line as the main constraint." }
+  ] },
+  "schedule": { "note": "sample: invented process", "entries": [
+    { "when": "September 2026", "event": "Pre-design begins; three options drawn", "source_slide": 1 },
+    { "when": "November 2026", "event": "Drop-in sessions and this tool", "source_slide": 2 },
+    { "when": "January 2027", "event": "Steering committee chooses an option", "source_slide": 2 } ],
+    "gates": [
+    { "name": "Pre-design options", "status": "here", "source_slide": 2, "text": "Three massing options and a draft program, for public review." },
+    { "name": "Option chosen", "status": "next", "source_slide": 2, "text": "Decided when the steering committee chooses an option (January 2027), informed by residents." },
+    { "name": "Schematic design", "status": "later", "source_slide": 2, "text": "The chosen option is developed into a building design." } ] },
+  "precedents": [
+    { "name": "A low bar by the river", "by": "an invented drawing, for the sample", "image": "demo/illustrations/optA.svg", "source_slide": 8, "people": false },
+    { "name": "A courtyard hall", "by": "an invented drawing, for the sample", "image": "demo/illustrations/optB.svg", "source_slide": 8, "people": false },
+    { "name": "A compact tower", "by": "an invented drawing, for the sample", "image": "demo/illustrations/optC.svg", "source_slide": 8, "people": false }
+  ],
   "sheets": [
     { "name": "Site plan", "image": "demo/illustrations/site.svg", "source_slide": 3, "text": "The lot between the river and the street grid, with the 1948 flood line." },
     { "name": "Option A axon", "image": "demo/illustrations/optA.svg", "source_slide": 8, "text": "One low bar along the river." },
@@ -55,12 +73,56 @@
   ],
   "context_blocks": [[-24, -10, 8, 8, 3], [-24, 2, 8, 10, 2], [22, -12, 8, 8, 2], [22, 0, 8, 12, 4], [-10, -20, 30, 6, 2], [-26, 14, 52, 6, 1.5]],
   "decision_points": [
-    { "question": "Which massing option should go forward?", "options": ["A", "B", "C"], "who_decides": "client steering committee, informed by residents", "when": "step 8" },
+    { "question": "Which massing option should go forward?", "options": ["A", "B", "C"], "who_decides": "client steering committee, informed by residents", "when": "January 2027, when the steering committee chooses an option" },
     { "question": "Which program areas matter most, and which contested ones stay?", "options": ["kitchen", "youth rooms", "café"], "who_decides": "user groups with the client", "when": "step 4 revisit" }
   ],
   "palette": { "paper": "#F7F6F2", "ink": "#23241F", "accent1": "#E8642C", "accent2": "#2E5E8C" },
   "typeface": "Archivo",
   "candidate_features": ["ek-timeline", "ek-site-massing-3d", "ek-program-diagram", "ek-voice-reactions", "ek-massing-markup", "ek-feedback-synthesis"],
   "to_confirm": ["Everything: this is an invented sample project."],
-  "source": { "deck": "none (sample)", "ingested_at": "2026-10-25", "read_by": "hand-written from the session-0 prototype" }
+  "source": { "deck": "none (sample)", "ingested_at": "2026-10-25", "read_by": "hand-written from the session-0 prototype" },
+  "lists": [
+    {
+      "id": "site-trees",
+      "title": "Trees on the site",
+      "kicker": "The arborist's inventory (invented)",
+      "items": [
+        {
+          "name": "Tree 01 · Bigleaf Maple",
+          "text": "Acer macrophyllum · DBH 64 cm · height 18 m · Leans over the riverbank path; healthy crown.",
+          "source_slide": 9,
+          "tags": [
+            "Retain"
+          ]
+        },
+        {
+          "name": "Tree 02 · Red Alder",
+          "text": "Alnus rubra · DBH 31 cm · height 15 m · Inside the new hall footprint.",
+          "source_slide": 9,
+          "tags": [
+            "Remove"
+          ]
+        },
+        {
+          "name": "Tree 03 · Western Red Cedar",
+          "text": "Thuja plicata · DBH 48 cm · height 22 m · Dead top; no structural weakness found.",
+          "source_slide": 9,
+          "tags": [
+            "Monitor"
+          ]
+        },
+        {
+          "name": "Tree 04 · Black Cottonwood",
+          "text": "Populus trichocarpa · DBH 72 cm · height 27 m · Root plate undercut by the 1948 flood channel.",
+          "source_slide": 10,
+          "tags": [
+            "Remove"
+          ]
+        }
+      ],
+      "filters": true,
+      "rank": false,
+      "matters_label": "This tree matters to me"
+    }
+  ]
 }

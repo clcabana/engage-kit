@@ -229,6 +229,7 @@ def section_html(data: dict, brief: dict) -> str:
         f'          <div class="sm-mem" id="smMem" role="list" aria-label="Your notes on this building"></div>\n'
         f'        </div>\n'
         f'        <div class="row sm-none" id="smNone"><button type="button" id="smOverview">Overview</button><span class="sm-hint2">Tap a building, in the model or above, to react to it.</span></div>\n'
+        f'        <div class="sm-slot" data-slot="pins" id="smSlot"></div>\n'
         f'      </div>\n'
         f'    </div>\n'
         f'  </div>\n'
@@ -259,14 +260,14 @@ STYLE = """<style data-feature="model">
 .sm-about{font-size:13px;line-height:1.35;color:var(--mute)}
 .sm-chips{display:flex;flex-wrap:wrap;gap:6px} .sm-chip{min-height:44px;padding:8px 14px;border-radius:999px;font-size:14px}
 .sm-chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.sm-sel[hidden],.sm-none[hidden],#smBack[hidden],#smCount[hidden],.sm-about[hidden],.sm-chips[hidden]{display:none}
+.sm-sel[hidden],.sm-none[hidden],#smBack[hidden],#smCount[hidden],.sm-about[hidden],.sm-chips[hidden],.sm-slot[hidden]{display:none}
 .sm-sel{display:flex;flex-direction:column;gap:8px} .sm-all{min-height:36px;padding:4px 10px;font-size:13px;color:var(--mute);border-color:transparent;background:transparent} .sm-name{font-size:24px;font-weight:500;line-height:1.05}
 .sm-sun input[type=range]{min-height:44px}
 .sm-sel small{color:var(--mute);font-size:13px} .sm-sel small:empty{display:none}
 .sm-vote{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:22px;background:var(--paper);color:var(--ink);font-size:14px;display:inline-flex;align-items:center;gap:6px}
 .sm-vote::before{content:"";width:12px;height:12px;border-radius:6px;border:2px solid var(--mute);flex:0 0 auto}
 .sm-vote[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .sm-vote[aria-pressed=true]::before{background:var(--marker);border-color:var(--marker)}
-.sm-mem{display:grid;gap:6px} .sm-mem:empty{display:none}
+.sm-mem{display:grid;gap:6px} .sm-mem:empty{display:none} .sm-slot{display:flex;flex-direction:column;gap:8px} .sm-slot:empty{display:none}
 .sm-mem div{padding:8px 10px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px;overflow-wrap:anywhere}
 .sm-mem audio{width:100%;max-width:320px;height:36px;display:block}
 @media(prefers-reduced-motion:reduce){.sm-view canvas{transition:none}}
@@ -295,7 +296,8 @@ SCRIPT = """<script data-feature="model">
     let g = new T.BufferGeometry(); g.setAttribute("position", new T.BufferAttribute(p, 3)); g.setIndex(new T.BufferAttribute(idx, 1)); if (flat) g = g.toNonIndexed(); g.computeVertexNormals(); return g; }
 
   /* ---- three ---- */
-  let gl = null, renderer, scene, camera, sun, hemi, group, bMeshes = [], treeGroup, shadowsOn = true;
+  let gl = null, renderer, scene, camera, sun, hemi, group, bMeshes = [], gMeshes = [], treeGroup, shadowsOn = true;
+  const pickHooks = [], renderHooks = [];  /* extension point: see EK.feature.model.onPick / onRender */
   function fallback(msg) { fb.hidden = false; $("smFallbackText").textContent = msg; canvas.hidden = true; $("smViewBox").hidden = true; $("smStand").disabled = true; $("smOverview").disabled = true; }
   if (!T) fallback("The 3D model could not load here (no connection to the script library). You can still react to each building from the list.");
   else { try { renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true }); gl = renderer.getContext(); } catch (e) { fallback("3D needs WebGL, which this device has turned off. You can still react to each building from the list."); } }
@@ -314,9 +316,9 @@ SCRIPT = """<script data-feature="model">
   function dispose(obj) { obj.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose()); }); }
   function build() { try { buildScene(); } catch (e) { console.error("[ek] model build", e); fallback("The 3D model could not be drawn on this device. You can still react to each building from the list."); gl = null; } }
   function buildScene() {
-    if (!gl) return; const C = P(); if (group) { scene.remove(group); dispose(group); } group = new T.Group(); scene.add(group); bMeshes = [];
+    if (!gl) return; const C = P(); if (group) { scene.remove(group); dispose(group); } group = new T.Group(); scene.add(group); bMeshes = []; gMeshes = [];
     const lam = (color, extra) => new T.MeshLambertMaterial(Object.assign({ color }, extra || {}));
-    SM.meshes.forEach(m => { const g = geom(m, m.kind === "existing"); if (!g) return; const mat = m.kind === "water" ? lam(C.water, { transparent: true, opacity: 0.85 }) : lam(m.kind === "existing" ? C.existing : C.ground); const mesh = new T.Mesh(g, mat); mesh.receiveShadow = true; mesh.castShadow = m.kind === "existing"; if (m.kind === "terrain") mesh.userData.ground = true; group.add(mesh);
+    SM.meshes.forEach(m => { const g = geom(m, m.kind === "existing"); if (!g) return; const mat = m.kind === "water" ? lam(C.water, { transparent: true, opacity: 0.85 }) : lam(m.kind === "existing" ? C.existing : C.ground); const mesh = new T.Mesh(g, mat); mesh.receiveShadow = true; mesh.castShadow = m.kind === "existing"; if (m.kind === "terrain") mesh.userData.ground = true; mesh.userData.kind = m.kind; gMeshes.push(mesh); group.add(mesh);
       if (m.kind === "existing") { const e = new T.LineSegments(new T.EdgesGeometry(g, 25), new T.LineBasicMaterial({ color: C.edge, transparent: true, opacity: C.edgeA })); group.add(e); } });
     B.forEach(b => { const g = geom(b, true); if (!g) return; const mesh = new T.Mesh(g, lam(parseInt(css("--plan").slice(1), 16) || 0x4c6fa3)); mesh.castShadow = mesh.receiveShadow = true; mesh.userData.b = b; group.add(mesh); bMeshes.push(mesh);
       const e = new T.LineSegments(new T.EdgesGeometry(g, 20), new T.LineBasicMaterial({ color: C.edge, transparent: true, opacity: C.edgeA })); group.add(e); });
@@ -332,7 +334,9 @@ SCRIPT = """<script data-feature="model">
     if (standing) { camera.position.set(standing.pos[0], standing.pos[1], standing.pos[2]); camera.lookAt(standing.pos[0] + Math.sin(standing.az) * 50, standing.pos[1] - 3, standing.pos[2] - Math.cos(standing.az) * 50); }
     else { const R = span * 1.1 * orbit.r; const c = new T.Vector3(centre[0] + orbit.pan[0], centre[1], centre[2] + orbit.pan[1]); camera.position.set(c.x + R * Math.sin(orbit.ph) * Math.cos(orbit.th), c.y + R * Math.cos(orbit.ph), c.z + R * Math.sin(orbit.ph) * Math.sin(orbit.th)); camera.lookAt(c); }
     if (sun) { const az = +$("smAz").value * Math.PI / 180, alt = +$("smAlt").value * Math.PI / 180; const D = span * 2.2; const cx = centre[0], cz = centre[2]; sun.position.set(cx + D * Math.cos(alt) * Math.sin(az), centre[1] + D * Math.sin(alt), cz - D * Math.cos(alt) * Math.cos(az)); sun.target.position.set(cx, centre[1], cz); sun.intensity = 0.35 + 0.5 * Math.sin(alt); }
-    renderer.render(scene, camera); labels(); }
+    renderer.render(scene, camera); labels(); renderHooks.forEach(fn => { try { fn(); } catch (e) { console.error("[ek] model onRender", e); } }); }
+  /* world point → pixels in the view; on = in front of the camera and inside the frame (the labels' own test) */
+  function project(p) { if (!gl) return null; const v = Array.isArray(p) ? new T.Vector3(p[0], p[1], p[2]) : p.clone(); v.project(camera); return { x: (v.x + 1) / 2 * view.clientWidth, y: (1 - v.y) / 2 * view.clientHeight, on: v.z <= 1 && Math.abs(v.x) <= 1.05 && Math.abs(v.y) <= 1.05 }; }
   function labels() { lblBox.textContent = ""; if (!gl || !$("smLabelsOn").checked) return; const w = view.clientWidth, h = view.clientHeight; const v = new T.Vector3();
     B.forEach(b => { v.set(b.center[0], b.bbox[4] + 1.2, b.center[2]).project(camera); if (v.z > 1 || Math.abs(v.x) > 1.05 || Math.abs(v.y) > 1.05) return; const s = document.createElement("span"); s.className = "sm-lbl" + (b === sel ? " sel" : ""); s.style.left = ((v.x + 1) / 2 * w).toFixed(0) + "px"; s.style.top = ((1 - v.y) / 2 * h).toFixed(0) + "px"; const i = document.createElement("i"); s.appendChild(i); s.appendChild(document.createTextNode(b.label)); lblBox.appendChild(s); }); }
 
@@ -364,7 +368,11 @@ SCRIPT = """<script data-feature="model">
     canvas.addEventListener("dblclick", () => overview());
     canvas.addEventListener("keydown", e => { const k = e.key; if (k === "ArrowLeft") orbit.th += .1; else if (k === "ArrowRight") orbit.th -= .1; else if (k === "ArrowUp") orbit.ph = Math.max(0.12, orbit.ph - .08); else if (k === "ArrowDown") orbit.ph = Math.min(1.52, orbit.ph + .08); else if (k === "+" || k === "=") orbit.r *= .9; else if (k === "-") orbit.r *= 1.1; else if (k === "0") { overview(); return; } else return; e.preventDefault(); if (standing && (k === "ArrowLeft" || k === "ArrowRight")) standing.az += k === "ArrowLeft" ? -0.15 : 0.15; render(); });
     const ray = new T.Raycaster(), ndc = new T.Vector2();
-    function pick(e) { const r = canvas.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(bMeshes)[0]; select(hit ? hit.object.userData.b : null); }
+    function pick(e) { const r = canvas.getBoundingClientRect(); ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(bMeshes)[0];
+      /* extensions see the first surface the ray meets (buildings, terrain, water, existing); one returning true has handled the tap */
+      if (pickHooks.length) { const s = ray.intersectObjects(bMeshes.concat(gMeshes))[0]; const h = s ? { point: [s.point.x, s.point.y, s.point.z], distance: s.distance, building: s.object.userData.b || null, kind: s.object.userData.b ? "building" : (s.object.userData.kind || "terrain"), object: s.object } : null;
+        for (const fn of pickHooks) { try { if (fn(h, ray, e)) return; } catch (err) { console.error("[ek] model onPick", err); } } }
+      select(hit ? hit.object.userData.b : null); }
     window.addEventListener("resize", render);
     if ("ResizeObserver" in window) new ResizeObserver(render).observe(view);
   }
@@ -375,6 +383,8 @@ SCRIPT = """<script data-feature="model">
   function select(b, keepView) { prevSel = sel; sel = b; chips.forEach(c => c.setAttribute("aria-pressed", String(!!b && c.dataset.b === b.label))); $("smSel").hidden = !b; $("smNone").hidden = !!b; colour();
     /* once a building is chosen the card is only about it: the about-text and the chips fold away (phones have 240 px of card) */
     $("smAbout").hidden = !!b; $("smChips").hidden = !!b; if (!b) card.scrollTop = 0;
+    /* one way to react at a time: the augment row (pins) belongs to the overview, the votes to a chosen building */
+    $("smSlot").hidden = !!b;
     if (b) { $("smName").textContent = b.label; const v = b.view; $("smMeta").textContent = (v ? "The presentation gives this building a view of " + bearingWord(v.bearing) + (v.slide ? " (slide " + v.slide + ")" : "") + "." : "The presentation gives no view bearing for this building; Stand here looks south.") + " Drag the model to look at it from every side.";
       if (EK.current() === "model") EK.context("model", b.label, "\\u2014 does its spot work, and why?"); }
     else { if (EK.current() === "model") EK.context("model", "the model", "\\u2014 tap a building to react to it"); }
@@ -385,8 +395,19 @@ SCRIPT = """<script data-feature="model">
   function overview() { standing = null; orbit = HOME(); $("smBack").hidden = true; $("smStand").hidden = false; render(); }
   $("smOverview").addEventListener("click", overview); $("smAll").addEventListener("click", () => { select(null); if (standing) overview(); });
   /* eye level: just outside the facade on the bearing side, 1.6 m above the building's floor, looking along the bearing */
-  $("smStand").addEventListener("click", () => { if (!sel || !gl) return; const b = sel; const az = b.view ? b.view.bearing * Math.PI / 180 : Math.PI; const dx = Math.sin(az), dz = -Math.cos(az); const half = Math.max(Math.abs(b.bbox[3] - b.bbox[0]), Math.abs(b.bbox[5] - b.bbox[2])) / 2; const out = half + 2.5;
-    standing = { pos: [b.center[0] + dx * out, b.bbox[1] + 1.6, b.center[2] + dz * out], az }; $("smBack").hidden = false; $("smStand").hidden = true; render(); EK.toast("Standing just outside " + b.label + ", 1.6 m above its floor, looking " + bearingWord(b.view ? b.view.bearing : 180).split(" (")[0] + ". Drag to look around."); });
+  /* with no building: the model's centre, 1.6 m above the terrain there (ray straight down), else the lowest floor */
+  function groundY(x, z) { const low = B.length ? Math.min.apply(null, B.map(b => b.bbox[1])) : bbox.min[1]; if (!gl) return low;
+    const rc = new T.Raycaster(new T.Vector3(x, bbox.max[1] + 50, z), new T.Vector3(0, -1, 0)); const s = rc.intersectObjects(gMeshes.filter(m => m.userData.kind !== "existing"))[0]; return s ? s.point.y : low; }
+  function standFor(b, deg) { if (!gl) return false; const d = deg != null ? ((deg % 360) + 360) % 360 : (b && b.view ? b.view.bearing : 180); const az = d * Math.PI / 180; const dx = Math.sin(az), dz = -Math.cos(az);
+    if (b) { const half = Math.max(Math.abs(b.bbox[3] - b.bbox[0]), Math.abs(b.bbox[5] - b.bbox[2])) / 2; const out = half + 2.5; standing = { pos: [b.center[0] + dx * out, b.bbox[1] + 1.6, b.center[2] + dz * out], az }; }
+    else standing = { pos: [centre[0], groundY(centre[0], centre[2]) + 1.6, centre[2]], az };
+    $("smBack").hidden = false; $("smStand").hidden = true; render();
+    EK.toast((b ? "Standing just outside " + b.label + ", 1.6 m above its floor" : "Standing in the middle of the site, at eye level") + ", looking " + bearingWord(d).split(" (")[0] + ". Drag to look around."); return true; }
+  $("smStand").addEventListener("click", () => { if (sel) standFor(sel); });
+  /* for links from other sections (a view in the story, say): switch to the model first; the stage sizes on ek:show,
+     and one more frame after a short timeout catches a layout that settles late */
+  function goModel(fn) { if (EK.current() !== "model") EK.show("model"); const r = fn(); setTimeout(() => { if (gl) render(); }, 80); return r; }
+  const findB = l => l == null ? null : byLabel(String(l)) || B.find(b => b.label.toLowerCase() === String(l).trim().toLowerCase()) || null;
   $("smBack").addEventListener("click", overview);
   $("smSay").addEventListener("click", () => { if (!sel) return; EK.context("model", sel.label, "\\u2014 why does its spot work, or where should it go?"); EK.focusNote(); EK.toast(hasVoice() ? "Speak or type below" : "Type below"); });
   $("smSel").querySelectorAll(".sm-vote").forEach(btn => btn.addEventListener("click", () => { if (!sel) return; const t = sel.label, v = btn.dataset.v, had = voteOf(t); const old = mine().filter(r => r.kind === "vote" && r.target === t);
@@ -408,7 +429,15 @@ SCRIPT = """<script data-feature="model">
   EK.on("ek:show", id => { if (id === "model") { layoutView(true); if (gl) render(); select(sel, true); } });
   layoutView(true); if (EK.current() === "model") select(null);
 
-  EK.feature = EK.feature || {}; EK.feature.model = { buildings: B, select: l => select(byLabel(l)), selected: () => sel, overview, fallback: !gl, render: () => render(), rebuild: () => build(), renderer: gl ? renderer : null, camera: gl ? camera : null, canvas, view };
+  EK.feature = EK.feature || {}; EK.feature.model = { buildings: B, select: l => select(byLabel(l)), selected: () => sel, overview, fallback: !gl, render: () => render(), rebuild: () => build(), renderer: gl ? renderer : null, camera: gl ? camera : null, canvas, view,
+    /* extension point (ek-model-pins): the scene survives rebuilds (only the model group is replaced), ground() is the
+       current terrain / water / existing meshes, onPick(fn(hit|null, raycaster, event)) runs before the default select,
+       onRender(fn) after every frame, project([x,y,z]) gives view pixels, bbox/span are the model's extent in metres */
+    scene: gl ? scene : null, ground: () => gMeshes.slice(), onPick: fn => { if (typeof fn === "function") pickHooks.push(fn); }, onRender: fn => { if (typeof fn === "function") renderHooks.push(fn); }, project, bbox: { min: bbox.min.slice(), max: bbox.max.slice() }, span,
+    /* stand(label): select that building and Stand here on its own bearing; standAt(deg, label?): stand at that building
+       (or the model's centre) looking along deg from north. Both show the model section first; true when the camera moved */
+    stand: l => goModel(() => { const b = findB(l); if (!b) return false; select(b); return standFor(b); }),
+    standAt: (deg, l) => goModel(() => { const d = Number(deg); const b = findB(l); if (!isFinite(d) || (l != null && !b)) return false; select(b); return standFor(b, d); }) };
 
   /* ---- tour ---- */
   const first = B[0];

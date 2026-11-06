@@ -1,0 +1,11 @@
+# ek-process-timeline threat model (2026-11-06)
+- **Assets:** brief.schedule gates (name <=100, status, text/note <=500, slide), dated entries (when <=60, event <=300), phases matrix (<=8x8 names, no dates); visitor notes/voice per gate name and `involve` votes ("I'd like to be involved here") in localStorage.
+- **Actors:** visitor on own/shared phone; hostile visitor (devtools, planted store, same-origin page); deck author / ingest model; the team reading `involve` counts as a list of volunteers.
+- **Entry points:** brief.schedule -> `schedule_from_brief()`; `EK.reactions()` -> `render()`; the bar; the tour (no demo reaction).
+- **Spoof:** status is whitelisted (here|next|later, else later with a warning); a gate's note is shown as "Note:", never resolved; dates only from entries[]; the matrix states it has no dates. `schedule.note` (builder note) is logged, not shown.
+- **Tamper:** all brief strings `html.escape`d in text and quoted attributes; `data-status` from the whitelist; inline `PR` holds two integers. Visitor values via `textContent`; voice MIME/base64 checked. No `innerHTML`/`eval`/`on*=`.
+- **Repudiate:** each gate and entry prints its slide or "slide not recorded"; notes on a renamed gate show under "Your other notes".
+- **Disclose:** no contact is collected, so an `involve` vote cannot be followed up: the team must not read it as consent to be contacted. Export carries gate names only.
+- **Deny:** <=10 gates, <=16 entries, 8x8 matrix bound the markup; render O(gates x reactions).
+- **Elevate:** reads --brief/--out, writes --out; stdlib; no subprocess, network or credentials.
+- **Open:** duplicate gate names merge reactions (warned). Gate names are not whitespace-collapsed (a newline reaches `data-target`; harmless, `tx` flattens it in the Markdown).

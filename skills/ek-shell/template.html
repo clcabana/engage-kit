@@ -64,6 +64,8 @@ section[data-feature] > h2:first-child{font-size:30px;letter-spacing:-.02em}
 /* ===== ek-shell: welcome ===== */
 .hero{display:grid;gap:18px;grid-template-columns:1fr;align-items:start} @media(min-width:900px){.hero{grid-template-columns:3fr 2fr;gap:28px}}
 .hero h1{font-size:40px;max-width:20ch;letter-spacing:-.025em;line-height:1.02} @media(min-width:900px){.hero h1{font-size:48px}}
+.ek-cover{margin-top:-20px;margin-bottom:4px;height:clamp(220px,52vh,560px);overflow:hidden;background:var(--soft)} .ek-cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+@media(min-width:900px){.ek-cover{margin-top:-32px;height:clamp(320px,62vh,720px)}}
 .privacy{display:flex;flex-direction:column;gap:10px;font-size:14px} .privacy h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:400} .privacy p{color:var(--ink);max-width:none} .privacy .row{justify-content:space-between}
 .empty{border:1px dashed var(--line);border-radius:var(--radius);padding:24px;color:var(--mute);text-align:center}
 /* ===== ek-shell: stage helpers for features (see EK.fitStage). The bar floats 12 px off the bottom, so the stage leaves room for it plus the gap. ===== */
@@ -101,6 +103,7 @@ section[data-feature] > h2:first-child{font-size:30px;letter-spacing:-.02em}
 <main id="ek-stage">
 
 <section data-feature="welcome" data-title="Start">
+  {{COVER}}
   <div class="hero">
     <div style="display:flex;flex-direction:column;gap:16px">
       <h1>{{HERO_H1}}</h1>
@@ -143,7 +146,7 @@ const PROJECT = {{PROJECT_JSON}};
 /* ===== ek-shell: reaction bus, storage, navigation, bar, tour ===== */
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 const EK = window.EK = (() => {
-  const key = "ek:" + PROJECT.slug; let list = []; const handlers = {}; const kinds = {}; let tourSteps = []; let current = "welcome";
+  const key = "ek:" + PROJECT.slug; let list = []; const handlers = {}; const kinds = {}; let tourSteps = []; let current = "welcome"; let tourOn = false;
   const KINDS = ["voice", "note", "pin", "vote", "edit", "submission", "markup"];
   // A stored record is trusted only if it has the shape react() produces; anything else (tampered store,
   // another page on the same origin) is dropped so one bad entry cannot brick the page.
@@ -163,7 +166,9 @@ const EK = window.EK = (() => {
       if (!r || typeof r.feature !== "string" || typeof r.target !== "string" || KINDS.indexOf(r.kind) < 0) { console.warn("[ek] rejected reaction", r); return null; }
       // schema keys only; id and ts are always the shell's
       const rec = { feature: r.feature, target: r.target, kind: r.kind, value: r.value === undefined ? null : r.value, id: Math.random().toString(36).slice(2, 9), ts: new Date().toISOString() };
-      if (r.tour === true) rec.tour = true;
+      // While the guided tour runs, anything a feature records is a demo unless the caller says tour:false (the bar's
+      // note form and the voice recorder do, because those are the visitor's own); demos leave with the tour.
+      if (r.tour === true || (tourOn && r.tour !== false)) rec.tour = true;
       list.push(rec); if (!save()) { list.pop(); return null; } emit("ek:reaction", rec); return rec; },
     remove(id) { list = list.filter(r => r.id !== id); save(); emit("ek:reaction", null); },
     clear() { list = []; save(); emit("ek:reaction", null); },
@@ -216,7 +221,9 @@ const EK = window.EK = (() => {
       const order = [...document.querySelectorAll("section[data-feature]")].map(s => s.dataset.feature);
       tourSteps = tourSteps.map((s, i) => ({ s, i })).sort((a, b) => (order.indexOf(a.s.go) - order.indexOf(b.s.go)) || (a.i - b.i)).map(x => x.s);
       document.getElementById("tourStart") && (document.getElementById("tourStart").hidden = !tourSteps.length); return tourSteps.length; },
-    tourSteps: () => tourSteps.slice()
+    tourSteps: () => tourSteps.slice(),
+    /* the tour runner tells the bus when it starts and ends; features need not know */
+    tourRunning(on) { if (on != null) tourOn = !!on; return tourOn; }
   };
 })();
 
@@ -239,7 +246,7 @@ const EK = window.EK = (() => {
 (function bar() {
   const form = document.getElementById("noteForm"), note = document.getElementById("note");
   const QUESTION = PROJECT.first_question || "";
-  form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v }); note.value = ""; EK.toast("Added to " + c.target); });
+  form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v, tour: false }); note.value = ""; EK.toast("Added to " + c.target); });
   // On the welcome page the note is about the project's first decision, so it carries context too.
   const onShow = id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; };
   EK.on("ek:show", onShow); onShow(EK.current());
@@ -256,11 +263,13 @@ const EK = window.EK = (() => {
   const box = document.getElementById("tour"), txt = document.getElementById("tourText"), bar = document.getElementById("tourBar"), stepLbl = document.getElementById("tourStep"), startBtn = document.getElementById("tourStart");
   let STEPS = [], i = -1, timer = 0, t0 = 0, raf = 0, before = new Set(); const DUR = 9000;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function show(n) { if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } i = n; const s = STEPS[i]; EK.show(s.go || "welcome"); if (s.do) setTimeout(() => { try { s.do(); } catch (e) { console.error("[ek] tour step", e); } }, 300); txt.textContent = s.text || ""; stepLbl.textContent = (i + 1) + " of " + STEPS.length; document.getElementById("tourBack").disabled = i === 0; document.getElementById("tourNext").textContent = i === STEPS.length - 1 ? "Finish" : "Next"; box.hidden = false; box.classList.add("show"); if (n === 0) document.getElementById("tourNext").focus(); clearTimeout(timer); cancelAnimationFrame(raf); t0 = Date.now(); if (!reduced) { const tick = () => { bar.style.width = Math.min(100, (Date.now() - t0) / DUR * 100) + "%"; raf = requestAnimationFrame(tick); }; tick(); if (i < STEPS.length - 1) timer = setTimeout(() => show(i + 1), DUR); } else bar.style.width = "100%"; }
-  function exit() { clearTimeout(timer); cancelAnimationFrame(raf); if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } EK.reactions().filter(r => !before.has(r.id)).forEach(r => EK.remove(r.id)); box.classList.remove("show"); box.hidden = true; i = -1; EK.show("welcome"); if (startBtn) startBtn.focus(); }
-  function start() { STEPS = EK.tourSteps(); if (!STEPS.length) { EK.toast("No tour on this tool yet"); return; } before = new Set(EK.reactions().map(r => r.id)); show(0); }
+  function show(n) { if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} } i = n; const s = STEPS[i]; EK.show(s.go || "welcome"); if (s.do) setTimeout(() => { if (i !== n || !box.classList.contains("show")) return; /* the tour moved on or exited meanwhile: never leave a demo reaction behind */ try { s.do(); } catch (e) { console.error("[ek] tour step", e); } }, 300); txt.textContent = s.text || ""; stepLbl.textContent = (i + 1) + " of " + STEPS.length; document.getElementById("tourBack").disabled = i === 0; document.getElementById("tourNext").textContent = i === STEPS.length - 1 ? "Finish" : "Next"; box.hidden = false; box.classList.add("show"); if (n === 0) document.getElementById("tourNext").focus(); clearTimeout(timer); cancelAnimationFrame(raf); t0 = Date.now(); if (!reduced) { const tick = () => { bar.style.width = Math.min(100, (Date.now() - t0) / DUR * 100) + "%"; raf = requestAnimationFrame(tick); }; tick(); if (i < STEPS.length - 1) timer = setTimeout(() => show(i + 1), DUR); } else bar.style.width = "100%"; }
+  function exit() { if (i < 0) return; /* a tour that never started has nothing to undo, and must never clear the visitor's reactions */ clearTimeout(timer); cancelAnimationFrame(raf); if (STEPS[i] && STEPS[i].undo) { try { STEPS[i].undo(); } catch (e) {} }
+    /* only demo records leave: those made during the tour and flagged tour:true by the bus; a note the visitor typed meanwhile stays */
+    EK.reactions().filter(r => !before.has(r.id) && r.tour === true).forEach(r => EK.remove(r.id)); EK.tourRunning(false); box.classList.remove("show"); box.hidden = true; i = -1; EK.show("welcome"); if (startBtn) startBtn.focus(); }
+  function start() { STEPS = EK.tourSteps(); if (!STEPS.length) { EK.toast("No tour on this tool yet"); return; } before = new Set(EK.reactions().map(r => r.id)); EK.tourRunning(true); show(0); }
   if (startBtn) { startBtn.onclick = start; startBtn.hidden = true; }
-  document.getElementById("tourNext").onclick = () => i < STEPS.length - 1 ? show(i + 1) : exit();
+  document.getElementById("tourNext").onclick = () => { if (i < 0) return; i < STEPS.length - 1 ? show(i + 1) : exit(); };
   document.getElementById("tourBack").onclick = () => i > 0 && show(i - 1);
   document.getElementById("tourExit").onclick = exit;
   document.addEventListener("keydown", e => { if (e.key === "Escape" && box.classList.contains("show")) exit(); });

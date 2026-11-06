@@ -106,7 +106,7 @@ SCRIPT = """<script data-feature="voice">
       keep.onclick = () => { keep.disabled = true; const fr = new FileReader(); fr.onload = () => { const base64 = String(fr.result).split(",")[1] || ""; const mime = (b.type || "audio/webm").split(";")[0];
           let size = 0; try { size = (localStorage.getItem("ek:" + EK.project.slug) || "").length; } catch (e) {}
           if (size + base64.length > BUDGET) { keep.disabled = false; EK.toast("This phone is nearly full of reactions; ask the team to collect them. You can delete this clip and type instead."); return; }
-          const c = EK.ctx(); const r = EK.react({ feature: c.feature, target: c.target, kind: "voice", value: { mime, base64, seconds: secs } });
+          const c = EK.ctx(); const r = EK.react({ feature: c.feature, target: c.target, kind: "voice", value: { mime, base64, seconds: secs }, tour: false });  /* the visitor's own, even during the tour */
           if (!r) { keep.disabled = false; EK.toast("Could not keep the clip (this phone\\u2019s storage is full). Delete it and type instead."); return; }
           done(); EK.toast("Voice reaction kept for " + c.target); }; fr.onerror = () => { keep.disabled = false; EK.toast("Could not read the clip \\u2014 try again or type"); }; fr.readAsDataURL(b); };
       row.appendChild(keep); row.appendChild(del); box.appendChild(row); slot.appendChild(box); EK.barSlot(true); keep.focus(); }

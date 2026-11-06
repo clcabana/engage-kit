@@ -1,0 +1,10 @@
+# ek-model-pins threat model (2026-11-06)
+- **Assets:** visitor pins `{feature:'model', kind:'pin', target:'pin:x,y,z (near)', value:{x,y,z,label<=60,kind,program?}}` in local model metres (ek-site-model drops `origin`; confirmed no origin/CRS/EPSG in the real inline SM), notes/voice per pin target; brief.program[] names (<=24 x 60) inlined as `PROGRAM`.
+- **Actors:** visitor; hostile visitor / same-origin page (planted pins); deck author / ingest model (program names); the team, who hold model.json with the real origin and can geolocate every pin.
+- **Entry points:** brief.program -> `program_names()` -> `json_inline`; `EK.reactions()` -> `valid()`; the inline label field; model taps via `M.onPick`; the tour (pin with `tour:true`).
+- **Spoof:** the "near" word comes from the model (building label, else ground/water/existing), not the visitor. The record's `target` coordinates are not checked against `value` (a planted record can say one place in the target and draw another).
+- **Tamper:** `valid()` on every render: target starts `pin:`, x/y/z finite and inside model bbox +/-1 m, kind in own keys of KIND, welcome needs a string program; label/program sliced. All labels, chips, list rows via `textContent`; PROGRAM via `json_inline` (</ neutralised). No `innerHTML`/`eval`/`on*=`. Rejected records are counted in a visible note.
+- **Repudiate:** the card lists the device's pins with Remove; removing a pin removes its notes.
+- **Disclose:** pins add no location beyond what the model already shows; label is free text (<=60) and can carry a name: it reaches the Markdown through `tx(valueText)` neutralised, but not in section 4 with the other verbatim visitor text. Markdown heading says coordinates are in the JSON only, yet `tx(r.target)` prints them.
+- **Deny:** no cap on pins per device; each pin is 3 meshes, label projection per frame: a planted store of thousands slows the view (local only).
+- **Elevate:** ek-site-model extension exposes `scene`, `ground()`, `onPick`, `onRender`, `project`, `bbox` to same-page scripts only; build reads brief/out, stdlib, no subprocess or network.

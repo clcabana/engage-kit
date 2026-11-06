@@ -18,6 +18,7 @@ inline PROJECT object (with </script sequences neutralised). Deck/brief content 
 from __future__ import annotations
 
 import argparse
+import base64
 import html
 import json
 import re
@@ -31,18 +32,21 @@ HERE = Path(__file__).resolve().parent
 # Which installed skills own a page section, in what order, with what title and visitor sentence.
 # Skills not listed here (voice, massing-markup) augment other sections or the bar and get no slot.
 FEATURES = {
+    "ek-about":               {"id": "about",     "title": "About the plan", "does": "Read what the design team wrote, in their words, and react to any paragraph."},
+    "ek-process-timeline":    {"id": "process",   "title": "Where we are",  "does": "See the gates ahead, which one is next, and ask about any of them."},
     "ek-timeline":            {"id": "timeline",  "title": "History",       "does": "See how the site got here. Add a memory the design team missed."},
     "ek-site-story":          {"id": "places",    "title": "The site",      "does": "Walk through the places on the site. Say what must stay as it is."},
     "ek-site-model":          {"id": "model",     "title": "The model",     "does": "Turn the site model in 3D, stand at each building, and say what you think of its spot."},
     "ek-site-massing-3d":     {"id": "massing",   "title": "Massing",       "does": "Walk around the options. Vote for the one that works for you."},
     "ek-program-diagram":     {"id": "program",   "title": "Program",       "does": "The spaces inside. Grow what matters, shrink what doesn't."},
     "ek-list-reactions":      {"id": "list",      "title": "Priorities",    "does": "The principles and the parts of the plan, in the team's words. Rank what matters to you and say why."},
+    "ek-precedents":          {"id": "precedents", "title": "Inspiration",  "does": "The buildings the design team looked at. Say which feel right for us, and why."},
     "ek-model-roundtrip":     {"id": "roundtrip", "title": "Your model",    "does": "Download the massing, change it in your own software, upload it back."},
     "ek-drawing-markup":      {"id": "markup",    "title": "Mark up plans", "does": "Sketch over the plans here or on paper, then add the photo."},
     "ek-submissions-gallery": {"id": "gallery",   "title": "Submissions",   "does": "Look at what others changed or drew, and react to it."},
     "ek-feedback-synthesis":  {"id": "synthesis", "title": "What we heard", "does": "Every reaction, counted and traceable."},
 }
-AUGMENTS = {"ek-voice-reactions": "massing", "ek-massing-markup": "massing"}  # no slot of their own
+AUGMENTS = {"ek-voice-reactions": "massing", "ek-massing-markup": "massing", "ek-model-pins": "model"}  # no slot of their own
 ORDER = list(FEATURES.keys())
 
 # Google Fonts we know how to link; anything else falls back to the system stack.
@@ -160,7 +164,41 @@ def json_inline(obj) -> str:
     return json.dumps(obj, ensure_ascii=False).replace("</", "<\\/").replace("<!--", "<\\!--").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
 
 
-def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
+COVER_TYPES = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}
+COVER_MAX_BYTES = 1_500_000
+
+
+def cover_html(mp: dict, base: Path | None, warnings: list[str]) -> str:
+    """Optional full-bleed key image at the top of the welcome page: manifest project.cover = {"image": <path
+    relative to the manifest's folder>, "alt": <text>}. Embedded as a data URI so the tool stays one file (and,
+    when locked, the image is inside the ciphertext, never a separate public file)."""
+    c = mp.get("cover")
+    if not c:
+        return ""
+    if not isinstance(c, dict) or not isinstance(c.get("image"), str) or base is None:
+        warnings.append("project.cover must be {\"image\": path, \"alt\": text}; no cover")
+        return ""
+    root = base.resolve()
+    p = (root / c["image"]).resolve()
+    if root != p and root not in p.parents:
+        warnings.append(f"project.cover.image {c['image']!r} is outside the project folder; no cover")
+        return ""
+    mime = COVER_TYPES.get(p.suffix.lower())
+    if not mime or not p.is_file():
+        warnings.append(f"project.cover.image {c['image']!r} is missing or not a jpg/png/webp; no cover")
+        return ""
+    data = p.read_bytes()
+    if len(data) > COVER_MAX_BYTES:
+        warnings.append(f"project.cover.image is {len(data):,} bytes (over {COVER_MAX_BYTES:,}); resize it; no cover")
+        return ""
+    alt = (c.get("alt") or "").strip()
+    if not alt:
+        warnings.append("project.cover has no alt text; the image is treated as decorative")
+    uri = f"data:{mime};base64," + base64.b64encode(data).decode("ascii")
+    return f'<figure class="ek-cover ek-bleed"><img src="{uri}" alt="{html.escape(alt)}"></figure>'
+
+
+def build(brief: dict, manifest: dict, warnings: list[str], base: Path | None = None) -> tuple[str, dict]:
     mp = manifest.get("project", {}) or {}
     bp = brief.get("project", {}) or {}
     name = (mp.get("name") or bp.get("name") or "").strip()
@@ -233,8 +271,14 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
         verbs.append("say what must stay")
     if "ek-site-model" in installed:
         verbs.append("stand at a building in the model")
+    if "ek-model-pins" in installed:
+        verbs.append("drop a pin where something should go")
+    if "ek-precedents" in installed:
+        verbs.append("pick the references that feel right")
 
+    # The lede names at most three things the visitor can do; a list of every verb reads as a pile (critic, 2026-11-06).
     def join(vs):
+        vs = vs[:3]
         return (", ".join(vs[:-1]) + " or " + vs[-1]) if len(vs) > 1 else vs[0]
     lede_tpl = "This is a working tool, not a brochure. Wherever you are in it you can {v}, and the tool records what it was about."
     hero_lede = lede_tpl.format(v=join(verbs))
@@ -301,6 +345,7 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
            .replace("{{FONT_STACK}}", stack)
            .replace("{{PROJECT_NAME}}", html.escape(name))
            .replace("{{SUBTITLE}}", html.escape(subtitle))
+           .replace("{{COVER}}", cover_html(mp, base, warnings))
            .replace("{{HERO_H1}}", html.escape(hero_h1))
            .replace("{{HERO_LEDE_VOICE}}", html.escape(hero_lede_voice))
            .replace("{{HERO_LEDE}}", html.escape(hero_lede))
@@ -328,7 +373,7 @@ def main(argv=None) -> int:
     brief = json.loads(args.brief.read_text(encoding="utf-8"))
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     warnings: list[str] = []
-    out, project = build(brief, manifest, warnings)
+    out, project = build(brief, manifest, warnings, base=args.manifest.parent)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(out, encoding="utf-8", newline="\n")
     for w in warnings:

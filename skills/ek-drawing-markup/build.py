@@ -162,6 +162,7 @@ def section_html(sheets: list[dict]) -> str:
         f'      <div class="dm-card" id="dmCard">\n'
         f'        <div class="dm-chips" id="dmChips" role="group" aria-label="Sheets">{chips}</div>\n'
         f'        <small id="dmMeta" class="dm-meta"></small>\n'
+        f'        <div class="dm-slot" data-slot="plan-list"></div>\n'
         f'        <div class="row"><button type="button" class="primary" id="dmSave" disabled>Save my marks</button><button type="button" id="dmClear" hidden>Start again</button></div>\n'
         f'        <div class="row dm-paper"><label class="dm-file"><input type="file" id="dmPhoto" accept="image/*" capture="environment"><span>Add a photo of a sketch</span></label><button type="button" id="dmPrint">Print this sheet</button></div>\n'
         f'        <small class="dm-meta">Rather draw on paper? Print the sheet, sketch, photograph only the paper; the photo stays on this phone until you hand it to the team.</small>\n'
@@ -194,7 +195,7 @@ STYLE = """<style data-feature="markup">
 @media(min-width:900px){.dm-view{height:100%} .dm-card{position:absolute;right:12px;top:12px;bottom:12px;width:320px;border:1px solid var(--line);border-radius:var(--radius,6px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--float);gap:10px}}
 .dm-chips{display:flex;flex-wrap:wrap;gap:6px} .dm-chip{min-height:44px;padding:8px 14px;border-radius:999px;font-size:14px;text-align:left;white-space:nowrap} .dm-chip[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 @media(max-width:899px){.dm-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px} .dm-chips::-webkit-scrollbar{display:none}}  /* one row on a phone, so Save and the paper route stay in view */
-.dm-meta{color:var(--mute);font-size:13px} .dm-meta:empty{display:none}
+.dm-meta{color:var(--mute);font-size:13px} .dm-meta:empty{display:none} .dm-slot:empty,.dm-slot:not(:has(> :not([hidden]))){display:none}
 #dmClear[hidden]{display:none}
 .dm-paper{gap:8px}
 .dm-file{display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card);cursor:pointer;font-weight:400;position:relative;overflow:hidden} .dm-file input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%} .dm-file:focus-within{outline:3px solid var(--marker);outline-offset:2px}
@@ -311,6 +312,9 @@ SCRIPT = """<script data-feature="markup">
   EK.on("ek:show", id => { if (id === "markup") { layoutView(true); fit(); if (EK.current() === "markup") EK.context("markup", sheet().name, "\\u2014 draw on it, then say what your marks mean"); hint(); } });
   if ("ResizeObserver" in window) new ResizeObserver(() => fit()).observe(view);
   setMode("pen"); layoutView(true); showSheet(0);
+  /* extension point: other features show a sheet by name (ek-list-reactions' "Show on plan") */
+  EK.feature = EK.feature || {};
+  EK.feature.markup = { show: name => { const i = S.findIndex(s => s.name === name); if (i < 0) return false; showSheet(i); return true; }, sheets: () => S.map(s => s.name) };
 
   EK.registerTour([
     { go: "markup", do: () => { showSheet(0); setMode("pen"); }, text: "Mark up the drawings: " + S.length + " sheet" + (S.length === 1 ? "" : "s") + " from the presentation. Draw with a finger what you would keep or change, then save and say what it means." },
