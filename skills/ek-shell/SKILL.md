@@ -31,9 +31,9 @@ Every feature skill, and the three QC agents, rely on exactly this.
   </section>
 </main>
 ```
-- Feature ids and titles are fixed by `build.py` (`FEATURES`): `timeline` History, `places` The site, `massing`
-  Massing, `program` Program, `list` Priorities, `roundtrip` Your model, `markup` Mark up plans, `gallery`
-  Submissions, `synthesis` What we heard.
+- Feature ids and titles are fixed by `build.py` (`FEATURES`): `timeline` History, `places` The site, `model`
+  The model, `massing` Massing, `program` Program, `list` Priorities, `roundtrip` Your model, `markup` Mark up
+  plans, `gallery` Submissions, `synthesis` What we heard.
   `ek-voice-reactions` and `ek-massing-markup` get no section: they extend the bar or the massing section.
 - A feature skill replaces its `<section data-feature="…">` in full, keeping `data-feature`, `data-title` and
   `hidden`. Its first child is an `<h2>`, its second a `<p class="lede">` saying what the visitor can do.
@@ -42,8 +42,12 @@ Every feature skill, and the three QC agents, rely on exactly this.
   `<!-- ek:scripts -->` marker at the end of `<body>` (EK is defined by then). Pinned CDN scripts go
   immediately before the feature's own script. A feature's build removes its own previous blocks before
   inserting, so re-running is safe. Feature code is wrapped in an IIFE; no globals except what it registers
-  on `EK`. Full-bleed inside `main`: use `margin:0 -20px; width:calc(100% + 40px)` and, from 900 px,
-  `-32px` / `+ 64px` to cancel the shell's `main` padding.
+  on `EK`. Full-bleed inside `main`: use the shell's `ek-bleed` class (`margin:0 -16px; width:calc(100% + 32px)`
+  and, from 900 px, `-32px` / `+ 64px`) to cancel the shell's `main` padding.
+- Look (from Massing Studio, 2026-11-06): body weight 300, headings 500 with tight tracking, `.kicker` for
+  11 px uppercase labels, `.card` and the bar as sheets with `--float` shadow; the bar floats 12 px off the
+  bottom as a translucent blurred sheet (`--sheet-a`). Feature CSS keeps weights within 300–500 and uses
+  the tokens; nothing pure white or black.
 - Two optional hooks on the welcome page: `#welcomeImage` (a site plan or key drawing) and `#welcomeExtra`
   (a strip of option thumbnails, say). Leave them empty rather than fill them with text.
 - A feature that others extend (the 3D viewer, extended by `ek-massing-markup`) exposes a small API under

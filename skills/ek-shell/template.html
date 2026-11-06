@@ -15,70 +15,76 @@
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ color-scheme:dark; {{DARK_VARS}} } }
 :root[data-theme="dark"]{ color-scheme:dark; {{DARK_VARS}} }
-/* ===== ek-shell: base ===== */
+/* ===== ek-shell: base. The look follows Massing Studio: one continuous matte ground, light type (300/500),
+   everything that floats is a translucent sheet with a soft shadow, small radii, no pure white or black. ===== */
+:root{--sheet-a:var(--card);--float:0 1px 2px rgba(20,25,35,.05),0 10px 30px -14px rgba(20,25,35,.22);--radius:6px}
+@supports (background:color-mix(in srgb,red 50%,transparent)){:root{--sheet-a:color-mix(in srgb,var(--card) 90%,transparent)}}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--float:0 1px 2px rgba(0,0,0,.35),0 10px 30px -14px rgba(0,0,0,.7)} } :root[data-theme="dark"]{--float:0 1px 2px rgba(0,0,0,.35),0 10px 30px -14px rgba(0,0,0,.7)}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)} html,body{height:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45;display:flex;flex-direction:column}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;font-weight:300;line-height:1.45;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:10}
-h1,h2,h3{margin:0;font-weight:600;line-height:1.1}
-h1{font-size:28px} h2{font-size:20px} h3{font-size:16px} p{margin:0}
-button{font:inherit;color:inherit;background:none;border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-height:44px;cursor:pointer}
-button:hover{background:var(--soft)} button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-button.primary{background:var(--marker);color:var(--on-marker);border-color:var(--marker)}
-button:disabled{opacity:.5;cursor:default}
+b,strong{font-weight:500}
+h1,h2,h3{margin:0;font-weight:500;line-height:1.08;letter-spacing:-.015em}
+h1{font-size:28px} h2{font-size:22px} h3{font-size:16px;letter-spacing:0} p{margin:0}
+button{font:inherit;font-weight:400;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 14px;min-height:44px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+button:hover{background:var(--soft);border-color:var(--mute)} button[aria-pressed="true"],button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button.primary{background:var(--marker);color:var(--on-marker);border-color:var(--marker)} button.primary:hover{opacity:.92}
+button:disabled{opacity:.45;cursor:default}
 :focus-visible{outline:3px solid var(--marker);outline-offset:2px}
-.lede{color:var(--mute);max-width:60ch}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px}
-.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--soft);font-size:14px;color:var(--ink)}
-.chip b{color:var(--marker)}
+.lede{color:var(--mute);max-width:60ch;font-size:17px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--float)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--soft);font-size:13px;color:var(--ink)}
+.chip b{color:var(--ink);font-weight:500}
+.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute)}
 .sr{position:absolute;left:-9999px}
-/* ===== ek-shell: header + navigation (strip on mobile, left rail from 900px) ===== */
+/* ===== ek-shell: header + navigation (pill strip on mobile, a left rail of pills from 900px) ===== */
 .app{display:flex;flex-direction:column;flex:1;min-height:0}
-header.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--paper);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;z-index:5}
-header.top .proj{display:flex;flex-direction:column;gap:2px} header.top .proj small{color:var(--mute)}
-nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);padding-right:40px}
-nav.at-end{-webkit-mask-image:none;mask-image:none}
-nav button{white-space:nowrap;border:none;border-bottom:3px solid transparent;border-radius:0;padding:8px 10px}
-nav button:hover{background:none;border-bottom-color:var(--line)} nav button[aria-current="page"]{border-bottom-color:var(--marker);font-weight:600}
-nav .count[hidden]{display:none} nav .count{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;border-radius:10px;background:var(--soft);font-size:13px;line-height:20px}
-main{flex:1;padding:24px 20px 150px;max-width:1240px;width:100%;margin:0 auto}
-section[data-feature]{display:flex;flex-direction:column;gap:18px} section[hidden]{display:none}
-section[data-feature] > h2:first-child{font-size:28px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 16px 10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;z-index:5}
+header.top .proj{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 100%} header.top .proj h1{font-size:22px;letter-spacing:-.02em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} header.top .proj small{color:var(--mute);font-size:12px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;flex:1;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);padding:2px 40px 2px 2px}
+nav::-webkit-scrollbar{display:none} nav.at-end{-webkit-mask-image:none;mask-image:none}
+nav button{white-space:nowrap;border:1px solid transparent;border-radius:999px;padding:6px 14px;min-height:44px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);background:transparent}
+nav button:hover{background:var(--soft);color:var(--ink);border-color:transparent} nav button[aria-current="page"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+nav .count[hidden]{display:none} nav .count{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;border-radius:9px;background:var(--soft);color:var(--ink);font-size:11px;line-height:18px;letter-spacing:0} nav button[aria-current="page"] .count{background:var(--paper);color:var(--ink)}
+main{flex:1;padding:20px 16px 160px;max-width:1240px;width:100%;margin:0 auto}
+section[data-feature]{display:flex;flex-direction:column;gap:16px} section[hidden]{display:none}
+section[data-feature] > h2:first-child{font-size:30px;letter-spacing:-.02em}
 @media(min-width:900px){
   .app{flex-direction:row;align-items:stretch}
-  header.top{position:sticky;top:0;align-self:flex-start;height:100vh;width:240px;flex:0 0 240px;flex-direction:column;align-items:stretch;border-bottom:none;border-right:1px solid var(--line);padding:24px 18px}
-  nav{flex-direction:column;overflow:visible;gap:2px;flex:0 0 auto;-webkit-mask-image:none;mask-image:none;padding-right:0}
-  nav button{text-align:left;border-bottom:none;border-left:3px solid transparent;border-radius:0 6px 6px 0;padding:10px 12px}
-  nav button:hover{border-bottom-color:transparent;border-left-color:var(--line);background:var(--soft)}
-  nav button[aria-current="page"]{border-left-color:var(--marker);background:var(--soft)}
-  main{padding:32px 32px 150px}
-  body #bar{left:240px} /* must beat the later #bar{left:0} rule */
+  header.top{position:sticky;top:0;align-self:flex-start;height:100vh;width:240px;flex:0 0 240px;flex-direction:column;align-items:stretch;border-bottom:none;padding:24px 16px;gap:22px;background:var(--paper);backdrop-filter:none;-webkit-backdrop-filter:none}
+  header.top .proj{flex:0 0 auto} header.top .proj h1{font-size:30px;line-height:.95;white-space:normal} header.top .proj small{white-space:normal}
+  nav{flex-direction:column;overflow:visible;gap:3px;flex:0 0 auto;-webkit-mask-image:none;mask-image:none;padding:0}
+  nav button{text-align:left;padding:8px 12px;min-height:40px;border-radius:6px;display:flex;align-items:center;justify-content:space-between}
+  nav button[aria-current="page"]{background:var(--ink);color:var(--paper)}
+  main{padding:32px 32px 170px}
+  body #bar{left:252px} /* must beat the later #bar{left:12px} rule */
 }
 /* ===== ek-shell: welcome ===== */
-.hero{display:grid;gap:18px;grid-template-columns:1fr;align-items:start} @media(min-width:900px){.hero{grid-template-columns:3fr 2fr}}
-.hero h1{font-size:44px;max-width:18ch}
-.privacy{display:flex;flex-direction:column;gap:10px;font-size:15px} .privacy p{color:var(--mute);max-width:none} .privacy .row{justify-content:space-between}
-.empty{border:1px dashed var(--line);border-radius:8px;padding:24px;color:var(--mute);text-align:center}
-/* ===== ek-shell: stage helpers for features (see EK.fitStage) ===== */
-.ek-bleed{margin:0 -20px;width:calc(100% + 40px)} @media(min-width:900px){.ek-bleed{margin:0 -32px;width:calc(100% + 64px)}}
-.ek-stage{height:calc(100dvh - var(--ek-top,0px) - var(--ek-bar,110px) - 12px);min-height:320px;max-height:900px}
+.hero{display:grid;gap:18px;grid-template-columns:1fr;align-items:start} @media(min-width:900px){.hero{grid-template-columns:3fr 2fr;gap:28px}}
+.hero h1{font-size:40px;max-width:20ch;letter-spacing:-.025em;line-height:1.02} @media(min-width:900px){.hero h1{font-size:48px}}
+.privacy{display:flex;flex-direction:column;gap:10px;font-size:14px} .privacy h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:400} .privacy p{color:var(--ink);max-width:none} .privacy .row{justify-content:space-between}
+.empty{border:1px dashed var(--line);border-radius:var(--radius);padding:24px;color:var(--mute);text-align:center}
+/* ===== ek-shell: stage helpers for features (see EK.fitStage). The bar floats 12 px off the bottom, so the stage leaves room for it plus the gap. ===== */
+.ek-bleed{margin:0 -16px;width:calc(100% + 32px)} @media(min-width:900px){.ek-bleed{margin:0 -32px;width:calc(100% + 64px)}}
+.ek-stage{height:calc(100dvh - var(--ek-top,0px) - var(--ek-bar,110px) - 24px);min-height:320px;max-height:900px}
 @media(max-width:899px){.ek-stage{min-height:240px}}  /* room for the bar's extra row (consent, review) on a phone */
-/* ===== ek-shell: reaction bar (shared by every feature) ===== */
-#bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:6;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
-#bar .ctx{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--mute)}
-#bar .ctx .chip{background:var(--soft)}
+/* ===== ek-shell: reaction bar (shared by every feature): a floating sheet ===== */
+#bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;z-index:6;box-shadow:var(--float)}
+#bar .ctx{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mute)}
+#bar .ctx .chip{background:var(--soft);font-weight:400}
 #bar form{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
 #bar .kinds{display:flex;gap:8px;align-items:center} #bar .kinds:empty{display:none}
-#bar .kinds button{min-width:56px;min-height:56px;padding:0;border-radius:28px;display:grid;place-items:center;font-size:22px;border:2px solid var(--marker);color:var(--marker);user-select:none;-webkit-user-select:none;position:relative}
-#bar input[type=text]{flex:1;min-width:180px;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);min-height:44px}
+#bar .kinds button{min-width:52px;min-height:52px;padding:0;border-radius:26px;display:grid;place-items:center;font-size:21px;border:2px solid var(--marker);color:var(--marker);background:var(--card);user-select:none;-webkit-user-select:none;position:relative}
+#bar input[type=text]{flex:1;min-width:160px;font:inherit;font-weight:300;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);min-height:44px} #bar input[type=text]:focus{border-color:var(--mute);outline:none}
 #bar .slot{display:none;gap:8px;align-items:center;flex-wrap:wrap} #bar .slot.show{display:flex}
-.toast{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:6px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9} .toast.show{opacity:1}
+.toast{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--paper);padding:9px 14px;border-radius:6px;font-size:13.5px;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:9;max-width:calc(100% - 24px);text-align:center} .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* ===== ek-shell: guided tour box (steps are registered by features) ===== */
-#tour{position:fixed;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom,0px));z-index:8;background:var(--ink);color:var(--paper);border-radius:10px;padding:12px 14px;display:none;flex-direction:column;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:560px;margin:0 auto}
+#tour{position:fixed;left:12px;right:12px;bottom:calc(156px + env(safe-area-inset-bottom,0px));z-index:8;background:var(--ink);color:var(--paper);border-radius:12px;padding:12px 14px;display:none;flex-direction:column;gap:8px;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:560px;margin:0 auto}
 #tour.show{display:flex} #tour .bar{height:3px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden} #tour .bar i{display:block;height:100%;width:0;background:var(--marker)}
 #tour p{font-size:15px;line-height:1.4} #tour .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap} #tour .row small{flex:1;color:var(--line);font-size:13px}
-#tour button{border-color:rgba(255,255,255,.35);color:var(--paper);min-height:44px;padding:8px 12px} #tour button.primary{background:var(--marker);border-color:var(--marker);color:var(--on-marker)}
+#tour button{border-color:rgba(255,255,255,.35);color:var(--paper);background:transparent;min-height:44px;padding:8px 12px} #tour button.primary{background:var(--marker);border-color:var(--marker);color:var(--on-marker)}
 @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 /* ek:styles — feature skills insert their CSS after this line (keep it inside this one style element) */
 </style>

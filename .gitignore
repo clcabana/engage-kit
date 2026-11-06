@@ -30,3 +30,7 @@ work/brief.skeleton.json
 # Real projects (client material) never enter the public repo
 projects/
 
+# Rhino files and their viewer exports are the team's model of a real place; only the sample's synthetic model is committed
+*.3dm
+work/model.json
+

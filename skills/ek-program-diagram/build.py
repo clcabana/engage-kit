@@ -116,7 +116,7 @@ STYLE = """<style data-feature="program">
 .pg g[role=button]{cursor:pointer;outline:none} .pg rect.blk{fill:var(--plan);stroke:var(--paper);stroke-width:3;transition:fill .15s}
 .pg g[aria-pressed=true] rect.blk{fill:var(--marker)} .pg g.tbc rect.blk{fill:var(--mute);stroke-dasharray:8 6}
 .pg g:focus-visible rect.blk{stroke:var(--marker);stroke-width:5} .pg g.tbc:focus-visible rect.blk,.pg g[aria-pressed=true]:focus-visible rect.blk{stroke:var(--ink)}
-.pg text{fill:var(--paper);font-family:var(--font);pointer-events:none} .pg text.nm{font-weight:600;font-size:15px} .pg text.ar{font-size:13px;opacity:.9}
+.pg text{fill:var(--paper);font-family:var(--font);pointer-events:none} .pg text.nm{font-weight:500;font-size:15px} .pg text.ar{font-size:13px;opacity:.9}
 .pg g[aria-pressed=true] text{fill:var(--on-marker)} .pg g[aria-pressed=true] circle.ct{stroke:var(--on-marker)} .pg g[aria-pressed=true] circle.ct2{fill:var(--on-marker)}
 .pg circle.ct{fill:none;stroke:var(--paper);stroke-width:2} .pg circle.ct2{fill:var(--paper)}
 /* the visitor's suggested size: an outline scaled from the block's centre, over everything, never moving the map */
@@ -125,7 +125,7 @@ STYLE = """<style data-feature="program">
 @media(max-width:899px){.pg svg{flex:0 0 auto}}  /* phones: the script sets the map's height in px once per show, so bar growth only shrinks the card */
 @media(min-width:900px){.pg{flex-direction:row} .pg svg{flex:1;height:100%} .pg-card{flex:0 0 340px;width:340px;border-width:0 0 0 1px}}
 .pg-card[hidden],.pg-ctl[hidden],.pg-card .chip[hidden]{display:none} .pg-card .pg-name:empty,.pg-card p:empty{display:none}
-.pg-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .pg-name{font-size:28px;font-weight:700;line-height:1.05} .pg-name-sm{font-size:18px}
+.pg-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .pg-name{font-size:28px;font-weight:500;line-height:1.05} .pg-name-sm{font-size:18px}
 .pg-card p{max-width:52ch} .pg-card small{color:var(--mute);font-size:14px} .pg-card small:empty{display:none}
 .pg-ctl .grp{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden} .pg-ctl .grp button{border:none;border-radius:0;min-width:48px;font-size:20px}
 .pg-picks{display:flex;flex-wrap:wrap;gap:6px;overflow:auto} .pg-picks button{min-height:44px;padding:6px 10px;font-size:14px;display:inline-flex;align-items:center;gap:6px}

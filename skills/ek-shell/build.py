@@ -33,6 +33,7 @@ HERE = Path(__file__).resolve().parent
 FEATURES = {
     "ek-timeline":            {"id": "timeline",  "title": "History",       "does": "See how the site got here. Add a memory the design team missed."},
     "ek-site-story":          {"id": "places",    "title": "The site",      "does": "Walk through the places on the site. Say what must stay as it is."},
+    "ek-site-model":          {"id": "model",     "title": "The model",     "does": "Turn the site model in 3D, stand at each building, and say what you think of its spot."},
     "ek-site-massing-3d":     {"id": "massing",   "title": "Massing",       "does": "Walk around the options. Vote for the one that works for you."},
     "ek-program-diagram":     {"id": "program",   "title": "Program",       "does": "The spaces inside. Grow what matters, shrink what doesn't."},
     "ek-list-reactions":      {"id": "list",      "title": "Priorities",    "does": "The principles and the parts of the plan, in the team's words. Rank what matters to you and say why."},
@@ -45,13 +46,14 @@ AUGMENTS = {"ek-voice-reactions": "massing", "ek-massing-markup": "massing"}  # 
 ORDER = list(FEATURES.keys())
 
 # Google Fonts we know how to link; anything else falls back to the system stack.
+# Weights 300 / 400 / 500: the shell sets body text at 300 and headings at 500 (the Massing Studio look).
 GOOGLE_FONTS = {
-    "Archivo": "family=Archivo:wdth,wght@87.5,400;87.5,600;100,400;100,600;100,700",
-    "Inter": "family=Inter:wght@400;600;700", "Work Sans": "family=Work+Sans:wght@400;600;700",
-    "Source Sans 3": "family=Source+Sans+3:wght@400;600;700", "IBM Plex Sans": "family=IBM+Plex+Sans:wght@400;600;700",
-    "Manrope": "family=Manrope:wght@400;600;700", "DM Sans": "family=DM+Sans:wght@400;600;700",
-    "Public Sans": "family=Public+Sans:wght@400;600;700", "Noto Sans": "family=Noto+Sans:wght@400;600;700",
-    "Open Sans": "family=Open+Sans:wght@400;600;700", "Roboto": "family=Roboto:wght@400;500;700",
+    "Archivo": "family=Archivo:wdth,wght@87.5,300;87.5,400;87.5,500;100,300;100,400;100,500",
+    "Inter": "family=Inter:wght@300;400;500", "Work Sans": "family=Work+Sans:wght@300;400;500",
+    "Source Sans 3": "family=Source+Sans+3:wght@300;400;500", "IBM Plex Sans": "family=IBM+Plex+Sans:wght@300;400;500",
+    "Manrope": "family=Manrope:wght@300;400;500", "DM Sans": "family=DM+Sans:wght@300;400;500",
+    "Public Sans": "family=Public+Sans:wght@300;400;500", "Noto Sans": "family=Noto+Sans:wght@300;400;500",
+    "Open Sans": "family=Open+Sans:wght@300;400;500", "Roboto": "family=Roboto:wght@300;400;500",
 }
 
 # --------------------------------------------------------------------------- colour helpers
@@ -229,6 +231,8 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
         verbs.append("rank what matters")
     if "ek-site-story" in installed:
         verbs.append("say what must stay")
+    if "ek-site-model" in installed:
+        verbs.append("stand at a building in the model")
 
     def join(vs):
         return (", ".join(vs[:-1]) + " or " + vs[-1]) if len(vs) > 1 else vs[0]
@@ -236,7 +240,8 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
     hero_lede = lede_tpl.format(v=join(verbs))
     hero_lede_voice = lede_tpl.format(v=join(["speak"] + verbs))
     priv_tpl = ("Everything you add stays on this phone{v}. Nothing is sent anywhere. The design team collects it from the device at the end of the session "
-                "and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don't add other people's.")
+                "and adds it to the record; until then you can remove it all here. No name or contact is asked for; please don't add other people's."
+                + (" An export carries a random id for this phone, not your name, so the team can tell phones apart; Remove all resets it." if "ek-feedback-synthesis" in installed else ""))
     privacy_text = priv_tpl.format(v="")
     privacy_text_voice = priv_tpl.format(v=", voice clips included")
     # Primary button: the section that answers the first decision point; else the first installed section.
@@ -248,6 +253,7 @@ def build(brief: dict, manifest: dict, warnings: list[str]) -> tuple[str, dict]:
                          (("program", "space", "spaces", "room", "rooms", "area", "areas", "size", "sizes"), "program"),
                          (("principle", "principles", "priority", "priorities", "matter", "matters", "approve"), "list"),
                          (("site", "stay", "landscape"), "places"),
+                         (("model", "spot", "location", "cabin", "cabins", "building", "buildings"), "model"),
                          (("history", "memory", "memories", "remember"), "timeline")):
         if fid in ids and any(re.search(r"\b" + re.escape(n) + r"\b", q) for n in needles):
             pick = fid

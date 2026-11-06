@@ -29,9 +29,9 @@ STYLE = """<style data-feature="voice">
 #bar .kinds button[data-kind=voice].rec{background:var(--marker);color:var(--on-marker);outline:4px solid var(--marker);animation:ek-rec 1s infinite}
 @keyframes ek-rec{0%,100%{outline-offset:2px}50%{outline-offset:8px}}
 #bar .kinds button[data-kind=voice].hint{outline:6px solid var(--marker);outline-offset:4px}
-#bar .kinds button[data-kind=voice].typed{font-size:18px;font-weight:600}
+#bar .kinds button[data-kind=voice].typed{font-size:18px;font-weight:500}
 .vx-level{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:var(--line);border-radius:2px;overflow:hidden;display:none} .rec .vx-level{display:block} .vx-level i{display:block;height:100%;width:0;background:var(--marker)}
-.vx-timer{position:absolute;top:-10px;right:-6px;font-size:12px;font-weight:600;background:var(--ink);color:var(--paper);border-radius:10px;padding:1px 6px;line-height:1.3} .vx-timer[hidden]{display:none}
+.vx-timer{position:absolute;top:-10px;right:-6px;font-size:12px;font-weight:500;background:var(--ink);color:var(--paper);border-radius:10px;padding:1px 6px;line-height:1.3} .vx-timer[hidden]{display:none}
 .vx-consent,.vx-review{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%}
 .vx-consent p{font-size:14px;color:var(--ink);max-width:62ch;flex:1 1 240px;margin:0}
 .vx-consent .row,.vx-review .row{display:flex;gap:8px;flex-wrap:wrap}

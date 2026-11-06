@@ -206,11 +206,11 @@ STYLE = """<style data-feature="timeline">
 .tl-noimg{background:linear-gradient(160deg,var(--soft),var(--card))}
 .tl-scene::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .tl-scene::after{background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}}
-.tl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:16px 18px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.18);margin-right:96px}
+.tl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius,6px);padding:16px 18px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:var(--float,0 10px 30px rgba(0,0,0,.18));margin-right:96px}
 @media(min-width:900px){.tl-cap{margin-right:140px}}
 .tl-scene.tbc .tl-cap{border-style:dashed}
 .tl-top{display:flex;flex-direction:column;gap:4px} .tl-pos{font-size:13px;color:var(--mute);letter-spacing:.02em}
-.tl-year{font-size:44px;font-weight:700;line-height:1;letter-spacing:-.01em} .tl-scene.tbc .tl-year{font-size:28px;color:var(--mute)}
+.tl-year{font-size:44px;font-weight:500;line-height:1;letter-spacing:-.01em} .tl-scene.tbc .tl-year{font-size:28px;color:var(--mute)}
 .tl-cap p{max-width:52ch} .tl-cap small{color:var(--mute);font-size:14px}
 @media(max-width:599px){.tl-src{display:none}}
 .tl-cap ul{margin:0;padding-left:18px;display:grid;gap:6px;max-height:40vh;overflow:auto} .tl-cap li{font-size:15px}
@@ -225,7 +225,7 @@ STYLE = """<style data-feature="timeline">
 .tl-rail button span{display:none;white-space:nowrap} .tl-rail button.tbc::after{border:2px dashed #F7F6F2;background:transparent;width:8px;height:8px}
 .tl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
 .tl-rail button:hover span,.tl-rail button[aria-current="true"] span,.tl-rail button:focus-visible span{display:inline}
-.tl-rail button[aria-current="true"] span{font-weight:600}
+.tl-rail button[aria-current="true"] span{font-weight:500}
 .tl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
 @media(min-width:900px){.tl-rail{right:16px} .tl-rail button span{display:inline;opacity:.8} .tl-rail button[aria-current="true"] span{opacity:1}}
 @media(prefers-reduced-motion:reduce){.tl{scroll-snap-type:none;scroll-behavior:auto} .tl-rail button[aria-current="true"]::after{transform:none}}

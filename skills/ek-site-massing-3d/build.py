@@ -397,16 +397,20 @@ SCRIPT = """<script data-feature="massing">
 
 def splice(doc: str, section: str, style: str, script: str) -> str:
     doc = re.sub(r'\n?<style data-feature="massing">.*?</style>', "", doc, flags=re.S)
-    doc = re.sub(r'\n?<script[^>]*data-feature="massing"[^>]*>.*?</script>', "", doc, flags=re.S)
+    doc = re.sub(r'\n?<script[^>]*data-feature="massing"[^>]*>.*?</script>', "", doc, flags=re.S)  # never matches lib-three
     sec_re = re.compile(r'<section data-feature="massing"[^>]*>.*?</section>', re.S)
     if not sec_re.search(doc):
         raise SystemExit("no <section data-feature=\"massing\"> slot in the output; is ek-site-massing-3d installed in the manifest and the shell built?")
     doc = sec_re.sub(lambda m: section, doc, count=1)
-    lib = f'<script src="{THREE_SRC}" integrity="{THREE_SRI}" crossorigin="anonymous" data-feature="massing"></script>'
-    for marker, block in (("<!-- ek:styles -->", style), ("<!-- ek:scripts -->", lib + "\n" + script)):
+    for marker in ("<!-- ek:styles -->", "<!-- ek:scripts -->"):
         if marker not in doc:
             raise SystemExit(f"shell marker {marker} missing from the output")
-        doc = doc.replace(marker, marker + "\n" + block, 1)
+    doc = doc.replace("<!-- ek:styles -->", "<!-- ek:styles -->\n" + style, 1)
+    # three.js once per page: one shared tag (same bytes as ek-site-model writes) that no feature's cleanup removes
+    lib = f'<script src="{THREE_SRC}" integrity="{THREE_SRI}" crossorigin="anonymous" data-feature="lib-three"></script>'
+    if lib not in doc:
+        doc = doc.replace("<!-- ek:scripts -->", "<!-- ek:scripts -->\n" + lib, 1)
+    doc = doc.replace(lib, lib + "\n" + script, 1)
     return doc
 
 

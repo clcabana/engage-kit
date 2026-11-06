@@ -155,9 +155,9 @@ STYLE = """<style data-feature="list">
 .ls-group[hidden],.ls-body[hidden],.ls-rank[hidden],.ls-count[hidden],.ls-ranked[hidden],.ls-rankbox[hidden],.ls-rankrow[hidden],.ls-other[hidden]{display:none}
 .ls-other{margin-top:12px;display:flex;flex-direction:column;gap:6px} .ls-other small{color:var(--mute);font-size:14px}
 .ls-items{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.ls-item{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.ls-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius,6px);overflow:hidden;box-shadow:var(--float,none)}
 .ls-item.tbc{border-style:dashed}
-.ls-head{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;padding:12px 14px;border:none;border-radius:0;background:transparent;color:var(--ink);text-align:left;font-size:18px;font-weight:600;line-height:1.2}
+.ls-head{width:100%;min-height:56px;display:flex;align-items:center;gap:12px;padding:12px 14px;border:none;border-radius:0;background:transparent;color:var(--ink);text-align:left;font-size:18px;font-weight:500;line-height:1.2}
 .ls-head:hover{background:var(--soft)} .ls-head:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
 .ls-head[aria-expanded=true]{background:var(--soft)}
 .ls-name{flex:1 1 auto;overflow-wrap:anywhere}
@@ -170,8 +170,8 @@ STYLE = """<style data-feature="list">
 .ls-mem div{padding:8px 10px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px;overflow-wrap:anywhere}
 .ls-mem audio{width:100%;max-width:320px;height:36px;display:block}
 .ls-rankrow{margin-top:14px}
-.ls-rankbox{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
-.ls-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .ls-sub{font-size:18px;font-weight:600}
+.ls-rankbox{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius,6px);padding:14px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--float,none)}
+.ls-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .ls-sub{font-size:18px;font-weight:500}
 .ls-picks{display:flex;flex-wrap:wrap;gap:6px} .ls-picks button{min-height:44px;padding:6px 10px;font-size:14px;display:inline-flex;align-items:center;gap:6px;text-align:left}
 .ls-picks button b{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:11px;background:var(--marker);color:var(--on-marker);font-size:12px}
 .ls-picks button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .ls-picks button[aria-pressed=true] b{background:var(--paper);color:var(--ink)}

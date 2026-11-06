@@ -1,0 +1,4 @@
+# ek-site-model — pinned Python dependency for export_3dm.py (Python 3.11+).
+# The version the exporter was tested with on 2026-11-06 (Windows 11, Python 3.12).
+# Install with:  python -m pip install -r skills/ek-site-model/requirements.txt
+rhino3dm==8.35.0      # reads .3dm files without Rhino: render meshes, block instances, layers, curves

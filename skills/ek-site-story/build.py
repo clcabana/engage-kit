@@ -195,13 +195,13 @@ STYLE = """<style data-feature="places">
 .pl-scene::after{content:"";position:absolute;inset:auto 0 0 0;height:60%;background:linear-gradient(to top,rgba(0,0,0,.42),transparent);pointer-events:none}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .pl-scene::after{background:linear-gradient(to top,rgba(0,0,0,.6),transparent)}}
 /* the picture gets the top half on a phone: the card is capped at 52% of the stage and scrolls inside itself */
-.pl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:14px 16px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.18);margin-right:56px;max-height:52%;overflow:auto;overscroll-behavior:contain}
+.pl-cap{position:relative;z-index:1;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius,6px);padding:14px 16px;max-width:440px;width:100%;display:flex;flex-direction:column;gap:8px;box-shadow:var(--float,0 10px 30px rgba(0,0,0,.18));margin-right:56px;max-height:52%;overflow:auto;overscroll-behavior:contain}
 @media(min-width:600px){.pl-cap{margin-right:96px;max-height:calc(100% - 8px)}}
 @media(min-width:900px){.pl-cap{margin-right:140px;padding:16px 18px}}
-.pl-name{font-size:28px;font-weight:700;line-height:1.05;letter-spacing:-.01em}
+.pl-name{font-size:28px;font-weight:500;line-height:1.05;letter-spacing:-.01em}
 .pl-cap p{max-width:52ch;margin:0} .pl-cap small{color:var(--mute);font-size:14px}
 @media(max-width:599px){.pl-cap p{font-size:15px} .pl-src{font-size:13px}}
-.pl-q{font-weight:600;margin-top:2px}
+.pl-q{font-weight:500;margin-top:2px}
 .pl-votes{gap:6px} .pl-vote{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:22px;background:var(--paper);color:var(--ink);font-size:14px;display:inline-flex;align-items:center;gap:6px}
 .pl-vote::before{content:"";width:12px;height:12px;border-radius:6px;border:2px solid var(--mute);flex:0 0 auto}
 .pl-vote[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)} .pl-vote[aria-pressed=true]::before{background:var(--marker);border-color:var(--marker)}
@@ -218,7 +218,7 @@ STYLE = """<style data-feature="places">
 .pl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
 /* phones: dots only (the caption already carries the name); labels from 600 px */
 @media(min-width:600px){.pl-rail button:hover span,.pl-rail button[aria-current="true"] span,.pl-rail button:focus-visible span{display:inline}}
-.pl-rail button[aria-current="true"] span{font-weight:600}
+.pl-rail button[aria-current="true"] span{font-weight:500}
 .pl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
 @media(min-width:900px){.pl-rail{right:16px} .pl-rail button span{display:inline;opacity:.8} .pl-rail button[aria-current="true"] span{opacity:1}}
 @media(prefers-reduced-motion:reduce){.pl{scroll-snap-type:none;scroll-behavior:auto} .pl-rail button[aria-current="true"]::after{transform:none}}
