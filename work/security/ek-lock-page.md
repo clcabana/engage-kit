@@ -1,0 +1,14 @@
+# ek-lock-page threat model (2026-11-06)
+- **Assets:** the built tool's content (photos, site model, deck facts, client identity); the shared passphrase; the reactions and voice clips each phone keeps in localStorage after decryption.
+- **Actors:** anyone who finds the public link (clcabana.github.io/engage-kit/qop/), one of the 19 who passes the passphrase on, whoever finds a lost or shared phone, GitHub (host, sees ciphertext, visits, IPs), cdnjs (sees IP and origin when three.js loads after decryption), any other page or script on the clcabana.github.io origin, the model that fills the manifest.
+- **Entry points:** manifest `project.name` (escaped) and `project.palette` (raw into `<style>`), the passphrase file, the typed passphrase, localStorage `ek-lock:<hash>`, `location.hash` after `document.write`.
+- **Spoof:** anyone holding the passphrase is indistinguishable from a sister; no identity, by design (accepted).
+- **Tamper:** GCM authenticates the ciphertext; a modified file fails like a wrong passphrase. The gate itself is unauthenticated (whoever controls the repo or origin controls the gate) - same as any static page.
+- **Repudiate:** n/a, nothing is logged by the tool; GitHub's own logs are outside the team's view.
+- **Disclose (offline):** generated passphrase = 46 words (not 50) ^6 x 900 = 8.5e12 = 43.0 bits. At 600k PBKDF2-SHA256, roughly 1e4 guesses/s per high-end GPU: ~9 GPU-years mean, tens of thousands of dollars rented. Adequate for a curious or press-level adversary over months; thin for a funded one. Every past ciphertext stays in public git history, so a passphrase change does not revoke what was already published.
+- **Disclose (identity):** path `qop/` + explainer "a monastery in British Columbia" + committed log line `2605-QOP-Masterplan.3dm` name the client to a search; the remember-key `689a2d888a02` is sha256("queen-of-peace-monastery")[:12], a confirmation oracle for anyone who guesses the name.
+- **Disclose (origin):** every page on clcabana.github.io (sample, demo, explainer, any future repo's Pages, any CDN script they load) shares one origin: it can read the remembered passphrase and the tool's reactions, and inherits any persistent microphone grant.
+- **Disclose (device):** "remember" keeps the passphrase in plain localStorage; a lost unlocked phone opens the tool and yields the passphrase for everyone.
+- **Deny:** wrong passphrase, corrupt file and missing WebCrypto all end in the same "does not open" message (the WebCrypto one is overwritten); 3.6 MB download on mobile data.
+- **Elevate:** a non-hex palette value (`}</style><script>...`) executes in the gate and can steal the typed passphrase; today's values are hex, but the palette comes from deck measurement via the model.
+- **document.write:** same document, so URL, hash, HTTPS secure context and getUserMedia survive; the gate's `noindex` is replaced (the build has none) - harmless for crawlers, who only ever see the gate.
