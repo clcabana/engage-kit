@@ -24,6 +24,11 @@
     { "year": "", "event": "Original mill chimney demolished. Several residents recall it; the deck gives no date.", "source_slide": 4, "image": "demo/illustrations/hTBC.svg", "to_confirm": true }
   ],
   "site": { "description": "Riverside lot between the river and the street grid; the 1948 flood line is a constraint.", "constraints": ["1948 flood line", "street grid bends at the old mill"], "plan_image": "demo/illustrations/site.svg", "north_up": true },
+  "sheets": [
+    { "name": "Site plan", "image": "demo/illustrations/site.svg", "source_slide": 3, "text": "The lot between the river and the street grid, with the 1948 flood line." },
+    { "name": "Option A axon", "image": "demo/illustrations/optA.svg", "source_slide": 8, "text": "One low bar along the river." },
+    { "name": "Option B axon", "image": "demo/illustrations/optB.svg", "source_slide": 8, "text": "Courtyard, two storeys." }
+  ],
   "places_note": "Sample only: the three places use the demo's generated SVG drawings where a real deck supplies photographs.",
   "places": [
     { "name": "The riverbank", "text": "The lot's long edge along the river. The 1948 flood line runs through it, and the willows along it are the only mature trees on the site.", "image": "demo/illustrations/site.svg", "source_slide": 3 },
