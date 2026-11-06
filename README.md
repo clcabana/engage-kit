@@ -2,6 +2,13 @@
 
 **Turn a pre-design presentation into a project-specific community and stakeholder engagement tool.**
 
+## Live links
+
+- **[Engage Kit info page →](https://clcabana.github.io/engage-kit/)** what it is, how it works, and how to build one from your own deck.
+- **[Showcase project (private) →](https://clcabana.github.io/engage-kit/p/c2be2949/)** a real engagement tool built with Engage Kit.
+  It is encrypted: **please ask the author for the passphrase.**
+- **[Open sample →](https://clcabana.github.io/engage-kit/sample/)** an invented project with every feature installed; no passphrase needed.
+
 Engage Kit is not an app. It is a small library of *skills* (plain-language instruction files) plus four
 *agents* (an orchestrator and three quality-control reviewers: design, technical, security) that any current AI model can read. You hand it
 your pre-design deck; it produces a self-contained, interactive engagement site that installs only the
