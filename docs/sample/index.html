@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pacific Design Institute — have your say</title>
-<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-11-13T22:41:38+00:00">
+<meta name="generator" content="Engage Kit ek-shell 0.1.0 · 2026-11-13T23:16:40+00:00">
 
 <style>
 /* ===== ek-shell: theme tokens (from the project brief) ===== */
@@ -72,6 +72,40 @@ section[data-feature] > h2:first-child{font-size:30px;letter-spacing:-.02em}
 .ek-bleed{margin:0 -16px;width:calc(100% + 32px)} @media(min-width:900px){.ek-bleed{margin:0 -32px;width:calc(100% + 64px)}}
 .ek-stage{height:calc(100dvh - var(--ek-top,0px) - var(--ek-bar,110px) - 24px);min-height:320px;max-height:900px}
 @media(max-width:899px){.ek-stage{min-height:240px}}  /* room for the bar's extra row (consent, review) on a phone */
+/* ===== ek-shell: full-screen mode (2026-11-13). A section whose content includes an .ek-stage (images, drawings,
+   3D) fills the screen: the stage is fixed to the viewport, the header/rail slides away behind a menu button, the
+   section's heading and lede move into a small legend top-left that says where you are, and features fold their
+   captions and panels with EK.float. Reading sections (Start, lists, What we heard) keep the normal layout. ===== */
+:root{--ek-safe-top:64px}  /* features keep their top overlays below the legend: top:var(--ek-safe-top) in full mode */
+body.ek-full{overflow:hidden} body.ek-full main{padding:0;max-width:none}
+body.ek-full section[data-feature]:not([hidden]) > h2:first-of-type, body.ek-full section[data-feature]:not([hidden]) > .lede{display:none}
+body.ek-full .ek-bleed{margin:0;width:100%}
+body.ek-full .ek-stage{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-height:none;min-height:0;z-index:1}
+body.ek-full header.top{position:fixed;z-index:9;top:0;left:0;visibility:hidden;box-shadow:var(--float);background:var(--paper)}
+body.ek-ready.ek-full header.top{transition:transform .25s ease,visibility .25s}  /* no slide on first load */
+body.ek-full:not(.ek-nav-open) header.top{transform:translateY(-105%)}
+body.ek-full.ek-nav-open header.top{visibility:visible;transform:none}
+@media(min-width:900px){ body.ek-full header.top{height:100vh;padding-bottom:24px} body.ek-full:not(.ek-nav-open) header.top{transform:translateX(-105%)} }
+@media(max-width:899px){ body.ek-full header.top{right:0} }
+#legend{position:fixed;z-index:8;top:calc(12px + env(safe-area-inset-top,0px));left:12px;max-width:min(560px,calc(100vw - 24px));display:none;flex-direction:column;gap:0;background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:22px;box-shadow:var(--float)}
+body.ek-full #legend{display:flex}
+#legend .lg-row{display:flex;align-items:center;min-width:0}
+#legend button{border:0;background:transparent;min-height:44px;border-radius:22px;padding:0 14px;font-size:13px}
+#legend button:hover{background:var(--soft)}
+#legendMenu{display:grid;place-items:center;width:44px;padding:0 !important} #legendMenu svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+#legendText{display:flex;gap:8px;align-items:center;min-width:0;text-align:left;padding-left:4px !important}
+#legendText b{font-weight:500;white-space:nowrap} #legendText .lg-pos{color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums} #legendText .lg-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#legendMore{display:none;padding:2px 18px 14px;max-width:46ch;font-size:14px;color:var(--ink)} #legend.open{border-radius:14px} #legend.open #legendMore{display:block}
+@media(max-width:599px){ #legendText .lg-name{display:none} }  /* phone: section and position only; the caption carries the name */
+/* EK.float: a caption or panel that folds to a small labelled tab. The tab is the first child; when folded every
+   other child is hidden and the box shrinks to the tab. Features position the box; ek-float--min may move it. */
+.ek-float-tab{display:none;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:22px;background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:var(--float);color:var(--ink);font-size:13px;max-width:100%;cursor:pointer}
+.ek-float-tab span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0} .ek-float-tab svg{width:14px;height:14px;flex:0 0 auto;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.ek-float-close{position:absolute;top:4px;right:4px;width:40px;height:40px;min-height:40px;padding:0;display:grid;place-items:center;border:0;background:transparent;color:var(--mute);z-index:2}
+.ek-float-close svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.ek-float.ek-float--min{width:auto !important;height:auto !important;min-height:0 !important;max-height:none !important;padding:0 !important;background:transparent !important;border:0 !important;box-shadow:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;overflow:visible !important;-webkit-mask-image:none !important;mask-image:none !important}
+.ek-float.ek-float--min > :not(.ek-float-tab){display:none !important}
+.ek-float.ek-float--min > .ek-float-tab{display:flex}
 /* ===== ek-shell: reaction bar (shared by every feature). It takes the page's opposite theme so it always stands out:
    the light page gets the dark tokens and the dark page the light ones, re-declared on #bar so every drawer inside
    (voice, chat) inverts with it. Phones: a floating strip along the bottom. From 900px: a square docked bottom-left
@@ -94,6 +128,20 @@ section[data-feature] > h2:first-child{font-size:30px;letter-spacing:-.02em}
 #bar ::placeholder{color:var(--mute);opacity:1}
 #bar input[type=text]{border-color:var(--mute)}  /* field outline at least 3:1 against the inverted bar */
 body.intro-open .privacy{visibility:hidden}  /* the intro repeats this text; never show it twice side by side */
+body.intro-open #legend{visibility:hidden}  /* nothing sits over the intro's privacy text */
+#legendMore .lg-priv{margin-top:10px;min-height:40px;padding:0 12px !important;border:1px solid var(--line) !important;font-size:13px}
+/* small by default (2026-11-13): a "React" button that opens into the box and folds back after a reaction, on
+   Escape, with its own fold button, or when the visitor taps elsewhere with nothing typed */
+#barOpen{display:none;align-items:center;gap:8px;min-height:52px;padding:0 18px 0 14px;border:0;border-radius:26px;background:transparent;color:var(--ink);font-size:15px;font-weight:500}
+#barOpen svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linejoin:round}
+#barOpen:hover{background:var(--soft)}
+#bar.min{padding:0 !important;gap:0 !important;width:auto !important;min-height:0 !important;right:auto !important;border-radius:26px !important;overflow:visible}
+#bar.min #barOpen{display:flex} #bar.min #barBody{display:none}
+#barBody{display:flex;flex-direction:column;gap:inherit;min-height:inherit;justify-content:inherit}
+body.ek-full .toast{top:calc(var(--ek-safe-top) + 8px);bottom:auto}  /* full screen: never on top of the button just tapped */
+#tour{transition:none} body.ek-full #tour{top:calc(var(--ek-safe-top) + 4px);bottom:auto}  /* full screen: the tour card sits at the top, clear of the captions and controls it points at */
+#barMin{margin-left:auto;width:44px;height:44px;min-height:44px;padding:0;display:grid;place-items:center;border:0;background:transparent;color:var(--mute)}
+#barMin svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
 @media(min-width:900px){
   body #bar{left:12px;right:auto;bottom:12px;width:var(--bar-size);min-height:var(--bar-size);max-height:calc(100vh - 24px);border-radius:4px;padding:14px;gap:12px;justify-content:space-between}
   body #bar.has-drawer{width:min(360px,calc(100vw - 24px))}  /* a drawer (voice, chat) needs room; the square widens while it is open */
@@ -116,10 +164,10 @@ body.intro-open .privacy{visibility:hidden}  /* the intro repeats this text; nev
 .intro-card h2{font-size:24px;padding-right:44px} .intro-card h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:400;margin-top:6px} .intro-card p{font-size:15px}
 .intro-x{position:sticky;top:-12px;align-self:flex-end;margin:-12px -12px -54px 0;z-index:1;width:44px;height:44px;min-height:44px;padding:0;display:grid;place-items:center;border-color:transparent;background:var(--card)}  /* sticky: stays in reach when the card scrolls (landscape phone) */
 .intro-x svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
-.intro-arrow{position:fixed;width:18px;height:18px;background:var(--card);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg);left:50%;margin-left:-9px;bottom:calc(var(--intro-bottom,160px) - 9px)}
+.intro-arrow{position:fixed;width:18px;height:18px;background:var(--card);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg);left:calc(12px + var(--bar-w,120px) / 2);margin-left:-9px;bottom:calc(var(--intro-bottom,160px) - 9px)}
 @media(min-width:900px){
-  .intro-card{left:calc(12px + var(--bar-size) + 24px);right:auto;bottom:12px;max-height:calc(100vh - 24px);width:440px;margin:0}
-  .intro-arrow{left:calc(12px + var(--bar-size) + 15px);margin-left:0;bottom:calc(12px + var(--bar-size) / 2 - 9px);transform:rotate(135deg)}
+  .intro-card{left:calc(12px + var(--bar-w,120px) + 24px);right:auto;bottom:12px;max-height:calc(100vh - 24px);width:440px;margin:0}
+  .intro-arrow{left:calc(12px + var(--bar-w,120px) + 15px);margin-left:0;bottom:calc(12px + var(--bar-h,52px) / 2 - 9px);transform:rotate(135deg)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 /* ek:styles — feature skills insert their CSS after this line (keep it inside this one style element) */
@@ -176,6 +224,18 @@ body.intro-open .privacy{visibility:hidden}  /* the intro repeats this text; nev
 .dm-mem .it img,.dm-mem .it svg{width:64px;height:48px;object-fit:cover;border-radius:4px;background:var(--card);display:block} .dm-mem .it small{display:block;color:var(--mute);font-size:12px}
 .dm-mem .it button{min-height:44px;padding:6px 10px;font-size:13px;border-color:transparent;background:transparent;color:var(--mute)}
 .dm-print{display:none}
+/* full screen (shell 2026-11-13): the sheet fills the screen on every width; the sheet list and save panel is a float
+   (top-right on desktop, above the reaction button on a phone) that folds to a tab named after the sheet */
+body.ek-full .dm-view{flex:1 1 auto !important;height:100% !important}
+.dm-card.dm-unsaved > .ek-float-tab{background:var(--marker);color:var(--on-marker);border-color:var(--marker)}
+body.ek-full .dm-tools{top:var(--ek-safe-top);left:12px}
+body.ek-full .dm-hud,body.ek-full .dm-label{bottom:calc(var(--bar-h,52px) + 24px)}
+body.ek-full .dm-card{position:absolute;z-index:3;right:12px;left:auto;top:var(--ek-safe-top);bottom:auto;width:320px;max-width:calc(100% - 24px);max-height:calc(100% - var(--ek-safe-top) - 12px);border:1px solid var(--line);border-radius:var(--radius,6px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--float);padding:12px 44px 14px 14px}
+@media(max-width:899px){
+  body.ek-full .dm-card{left:12px;right:12px;width:auto;top:auto;bottom:calc(var(--bar-h,52px) + 24px);max-height:55%}
+  body.ek-full .dm-card.ek-float--min{left:auto}
+  body.ek-full .dm-chips{margin:0;padding:2px 0}
+}
 @media print{ body > *{display:none !important} body > .app{display:block !important} .app > *{display:none !important} main{display:block !important;padding:0 !important} main > *{display:none !important} section[data-feature="markup"]{display:block !important} section[data-feature="markup"] > *{display:none !important} .dm-print.on{display:block !important;page-break-inside:avoid} .dm-print.on img{width:100%;max-height:90vh;object-fit:contain} .dm-print.on figcaption{font:12px sans-serif;color:#444;margin-top:6px} }
 </style>
 <style data-feature="list">
@@ -259,7 +319,7 @@ body.intro-open .privacy{visibility:hidden}  /* the intro repeats this text; nev
 .pl-rail button:hover{background:rgba(255,255,255,.12)}
 .pl-rail button::after{content:"";flex:0 0 auto;width:10px;height:10px;border-radius:5px;background:#F7F6F2;opacity:.7}
 .pl-rail button span{display:none;white-space:nowrap}
-.pl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
+.pl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3);box-shadow:0 0 0 2px #F7F6F2}
 /* phones: dots only (the caption already carries the name); labels from 600 px */
 @media(min-width:600px){.pl-rail button:hover span,.pl-rail button[aria-current="true"] span,.pl-rail button:focus-visible span{display:inline}}
 .pl-rail button[aria-current="true"] span{font-weight:500}
@@ -273,6 +333,20 @@ body.intro-open .privacy{visibility:hidden}  /* the intro repeats this text; nev
 .pl-view{flex:0 0 auto;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--ink);font-size:14px;white-space:nowrap}
 .pl-view:hover{border-color:var(--ink)} .pl-view:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.pl{scroll-snap-type:none;scroll-behavior:auto} .pl-rail button[aria-current="true"]::after{transform:none}}
+/* full screen (shell 2026-11-13): the picture fills the screen; the caption folds to a tab with the place's name and
+   sits clear of the legend (top) and the reaction button (bottom-left); the rail shows only the current name */
+body.ek-full .pl-scene{padding:var(--ek-safe-top) 16px calc(var(--bar-h,52px) + 24px)}
+@media(min-width:900px){body.ek-full .pl-scene{padding:var(--ek-safe-top) 32px calc(var(--bar-h,52px) + 28px)}}
+body.ek-full .pl-cap{max-height:calc(100% - 8px);padding-right:44px}
+body.ek-full .pl-rail{position:fixed}  /* the wrapper has no height once the stage is fixed to the screen */
+body.ek-full .pl-views-wrap.ek-float--min{right:auto}
+body.ek-full .pl-rail button span{display:none !important} body.ek-full .pl-rail button[aria-current="true"] span{display:inline !important}
+@media(max-width:599px){body.ek-full .pl-rail button[aria-current="true"] span{display:none !important}}
+body.ek-full .pl-views-wrap{position:fixed;z-index:3;top:var(--ek-safe-top);left:12px;right:72px;margin:0;background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;padding:10px 44px 10px 12px;box-shadow:var(--float)}
+body:not(.ek-full) .pl-views-wrap > .ek-float-tab, body:not(.ek-full) .pl-views-wrap > .ek-float-close{display:none !important}
+body:not(.ek-full) .pl-views-wrap.ek-float--min > :not(.ek-float-tab){display:revert !important}
+body:not(.ek-full) .pl-cap > .ek-float-tab, body:not(.ek-full) .pl-cap > .ek-float-close{display:none !important}
+body:not(.ek-full) .pl-cap.ek-float--min > :not(.ek-float-tab){display:revert !important}
 </style>
 <style data-feature="about">
 /* ===== ek-about: the team's narrative on Start; every paragraph a reaction target ===== */
@@ -696,22 +770,32 @@ body.intro-open .privacy{visibility:hidden}  /* the intro repeats this text; nev
 </main>
 </div>
 
-<div id="bar" role="region" aria-label="Your reaction">
-  <div class="ctx">Reacting to <span class="chip" id="ctxChip">the project</span><span id="hint"></span></div>
+<div id="legend" aria-label="Where you are">
+  <div class="lg-row">
+    <button type="button" id="legendMenu" aria-label="Sections" aria-expanded="false" aria-controls="nav"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button type="button" id="legendText" aria-expanded="false" aria-controls="legendMore"><b id="lgTitle"></b><span class="lg-pos" id="lgPos"></span><span class="lg-name" id="lgName"></span></button>
+  </div>
+  <div id="legendMore"></div>
+</div>
+<div id="bar" class="min" role="region" aria-label="Your reaction">
+  <button type="button" id="barOpen" aria-expanded="false" aria-controls="barBody"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>React</button>
+  <div id="barBody">
+  <div class="ctx">Reacting to <span class="chip" id="ctxChip">the project</span><span id="hint"></span><button type="button" id="barMin" aria-label="Make the reaction box small"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg></button></div>
   <form id="noteForm">
     <div class="kinds" id="kinds"></div>
     <input type="text" id="note" placeholder="Type a reaction…" maxlength="400" autocomplete="off" aria-label="Type a reaction">
     <button type="submit" class="primary">Add</button>
   </form>
   <div class="slot" id="barSlot"></div>
+  </div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div id="tour" role="dialog" aria-label="Guided tour" hidden><div class="bar"><i id="tourBar"></i></div><p id="tourText"></p><div class="row"><small id="tourStep"></small><button id="tourBack" type="button">Back</button><button id="tourNext" type="button" class="primary">Next</button><button id="tourExit" type="button">Try it yourself</button></div></div>
 <div id="intro" role="dialog" aria-labelledby="introTitle" hidden><!-- not aria-modal: the bar it points at stays usable -->
   <div class="intro-card">
     <button type="button" class="intro-x" id="introClose" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <h2 id="introTitle">React to anything with this box</h2>
-    <p data-with-voice="Wherever you are on the page, the box knows what you are looking at. Type or speak what you think and it is kept together with what it was about." data-without-voice="Wherever you are on the page, the box knows what you are looking at. Type what you think, press Add, and it is kept together with what it was about.">Wherever you are on the page, the box knows what you are looking at. Type what you think, press Add, and it is kept together with what it was about.</p>
+    <h2 id="introTitle">React to anything with this button</h2>
+    <p data-with-voice="Wherever you are, tap React to say what you think of what is on screen, by typing or speaking. It knows what you are looking at and keeps your reaction with it." data-without-voice="Wherever you are, tap React to say what you think of what is on screen. It knows what you are looking at and keeps your reaction with it.">Wherever you are, tap React to say what you think of what is on screen. It knows what you are looking at and keeps your reaction with it.</p>
     <h3>What happens to what you add</h3>
     <p data-with-voice="Everything you add is kept on this device. This is a public demonstration: no design team collects what you add. It stays in this browser until you remove it here. No name or contact is asked for; please don&#x27;t add other people&#x27;s. An export carries a random id for this device, not your name; Remove all resets it." data-without-voice="Everything you add is kept on this device. Nothing is sent anywhere. This is a public demonstration: no design team collects what you add. It stays in this browser until you remove it here. No name or contact is asked for; please don&#x27;t add other people&#x27;s. An export carries a random id for this device, not your name; Remove all resets it.">Everything you add is kept on this device. Nothing is sent anywhere. This is a public demonstration: no design team collects what you add. It stays in this browser until you remove it here. No name or contact is asked for; please don&#x27;t add other people&#x27;s. An export carries a random id for this device, not your name; Remove all resets it.</p>
   </div>
@@ -737,7 +821,7 @@ const EK = window.EK = (() => {
   const save = () => { if (!storageOk) return true; try { localStorage.setItem(key, JSON.stringify(list)); return true; } catch (e) { console.warn("[ek] storage write failed", e && e.name); return false; } };
   const emit = (ev, d) => (handlers[ev] || []).forEach(fn => { try { fn(d); } catch (e) { console.error("[ek] handler", ev, e); } });
   let ctx = { feature: "project", target: "the project" };
-  return {
+  const API = {
     version: "0.1.0",
     project: PROJECT,
     /* reactions */
@@ -757,7 +841,18 @@ const EK = window.EK = (() => {
     on(ev, fn) { (handlers[ev] = handlers[ev] || []).push(fn); },
     /* context shown in the reaction bar */
     /* target is what gets stored; label (optional) is what the bar shows when the target is not readable as-is */
-    context(feature, target, hint, label) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = label || target; document.getElementById("hint").textContent = hint || ""; emit("ek:context", ctx); },
+    context(feature, target, hint, label) { ctx = { feature, target }; document.getElementById("ctxChip").textContent = label || target; document.getElementById("hint").textContent = hint || ""; const nm = document.getElementById("lgName"); if (nm) { const s = document.querySelector('section[data-feature="' + CSS.escape(current) + '"]'); const shown = String(label || target || ""); nm.textContent = shown.toLowerCase() === String((s && s.dataset.title) || "").toLowerCase() ? "" : shown; } emit("ek:context", ctx); },
+    /* full-screen legend: a feature says where the visitor is in its sequence ("2 / 6"); cleared on every section change */
+    legend(pos) { const p = document.getElementById("lgPos"); if (p) p.textContent = pos ? String(pos) : ""; },
+    /* true while the current section is shown full screen (it has an .ek-stage); features size their views to it */
+    isFull: () => document.body.classList.contains("ek-full"),
+    /* EK.float(el, {label, group, open}): el folds to a small tab labelled `label` (string, or set later with
+       .label(text)). Folded floats show only the tab; a tap opens it, its own fold button or a tap on the graphic
+       folds it. Floats with the same group open and fold together (one caption per scene). peek(ms) opens it and
+       folds it again after ms unless the visitor is using it. While the tour runs every float stays open. */
+    float(el, opts) { opts = opts || {}; return floatBox(el, opts); },
+    /* the reaction box: small by default; open(true, focus) opens it (and focuses the note when asked) */
+    barOpen(on, focus) { return barToggle(on, focus); },
     /* true once a feature has registered a voice kind on the bar; copy that mentions speaking should check this */
     hasKind(kind) { return !!kinds[kind]; },
     ctx: () => ctx,
@@ -765,6 +860,9 @@ const EK = window.EK = (() => {
     /* navigation */
     show(id) { if (!document.querySelector('section[data-feature="' + CSS.escape(id) + '"]')) id = "welcome"; current = id;
       document.querySelectorAll("section[data-feature]").forEach(s => s.hidden = s.dataset.feature !== id);
+      const sec = document.querySelector('section[data-feature="' + CSS.escape(id) + '"]'), full = !!(sec && sec.querySelector(".ek-stage"));
+      document.body.classList.toggle("ek-full", full); document.body.classList.remove("ek-nav-open");
+      legendFor(sec, full);
       document.querySelectorAll("#nav button").forEach(b => { if (b.dataset.go === id) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
       try { history.replaceState(null, "", "#" + id); } catch (e) {} window.scrollTo({ top: 0 }); emit("ek:show", id); },
     current: () => current,
@@ -776,9 +874,9 @@ const EK = window.EK = (() => {
       const w = document.createElement("span"); w.className = "kind"; w.appendChild(b); if (opts && opts.caption) { const c = document.createElement("small"); c.textContent = String(opts.caption).slice(0, 12); c.setAttribute("aria-hidden", "true"); w.appendChild(c); }
       document.getElementById("kinds").appendChild(w); return b; },
     /* the extra row is a drawer: while it is open the note field and Add give way, so there is one text box and one primary button */
-    barSlot(show) { const s = document.getElementById("barSlot"); if (show != null) { s.classList.toggle("show", !!show); document.getElementById("bar").classList.toggle("has-drawer", !!show); emit("ek:bar", !!show); } return s; },
+    barSlot(show) { const s = document.getElementById("barSlot"); if (show != null) { if (show) barToggle(true, false); s.classList.toggle("show", !!show); document.getElementById("bar").classList.toggle("has-drawer", !!show); emit("ek:bar", !!show); } return s; },
     /* focusing the note closes any drawer first (its owner hears 'ek:bar' false and resets itself) */
-    focusNote() { const bar = document.getElementById("bar"); if (bar.classList.contains("has-drawer")) { document.getElementById("barSlot").classList.remove("show"); bar.classList.remove("has-drawer"); emit("ek:bar", false); } document.getElementById("note").focus(); },
+    focusNote() { const bar = document.getElementById("bar"); barToggle(true, false); if (bar.classList.contains("has-drawer")) { document.getElementById("barSlot").classList.remove("show"); bar.classList.remove("has-drawer"); emit("ek:bar", false); } document.getElementById("note").focus(); },
     /* stage fitting: size el (class ek-stage) to the viewport between the sticky header (phones) and the bar,
        re-size when the bar grows, and on phones scroll the page so el sits under the header when its section
        shows. Returns {size, settle}. opts.onResize runs after every size change (re-snap, redraw). */
@@ -787,7 +885,7 @@ const EK = window.EK = (() => {
       const topH = () => phone() ? (hdr ? hdr.getBoundingClientRect().height : 0) : Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY));
       const mainEl = document.querySelector("main");
       const size = () => { const before = el.clientHeight; const barH = phone() ? Math.round(bar ? bar.getBoundingClientRect().height : 110) : 0; /* from 900px the bar sits in the rail, not over the stage */ el.style.setProperty("--ek-top", Math.round(topH()) + "px"); el.style.setProperty("--ek-bar", barH + "px"); if (mainEl) mainEl.style.paddingBottom = phone() ? (barH + 12) + "px" : ""; /* the page must stay tall enough to scroll the stage under the header */ if (opts.onResize && el.clientHeight !== before) { try { opts.onResize(); } catch (e) { console.error("[ek] onResize", e); } } };
-      const settle = () => { if (!phone() || current !== featureId) return; const se = document.scrollingElement || document.documentElement; const max = Math.max(0, se.scrollHeight - window.innerHeight); const y = Math.min(max, Math.max(0, el.getBoundingClientRect().top + window.scrollY - topH())); if (Math.abs(window.scrollY - y) > 4) window.scrollTo({ top: y, behavior: "auto" }); };
+      const settle = () => { if (!phone() || current !== featureId || document.body.classList.contains("ek-full")) return;  /* a full-screen stage is fixed; nothing to scroll to */ const se = document.scrollingElement || document.documentElement; const max = Math.max(0, se.scrollHeight - window.innerHeight); const y = Math.min(max, Math.max(0, el.getBoundingClientRect().top + window.scrollY - topH())); if (Math.abs(window.scrollY - y) > 4) window.scrollTo({ top: y, behavior: "auto" }); };
       if ("ResizeObserver" in window && bar) new ResizeObserver(size).observe(bar);
       window.addEventListener("resize", size);
       // the bar's height changes when its context text wraps; ResizeObserver needs a rendering opportunity, a timer does not
@@ -806,8 +904,63 @@ const EK = window.EK = (() => {
       document.getElementById("tourStart") && (document.getElementById("tourStart").hidden = !tourSteps.length); return tourSteps.length; },
     tourSteps: () => tourSteps.slice(),
     /* the tour runner tells the bus when it starts and ends; features need not know */
-    tourRunning(on) { if (on != null) tourOn = !!on; return tourOn; }
+    tourRunning(on) { if (on != null) { tourOn = !!on; document.body.classList.toggle("ek-touring", tourOn); if (tourOn) { floats.forEach(f => f.open()); legendOpen(false); } else floats.forEach(f => f.close()); } return tourOn; }
   };
+
+  /* ---- legend (full-screen sections) ---- */
+  function legendFor(sec, full) {
+    const lg = document.getElementById("legend"); if (!lg) return;
+    document.getElementById("lgPos").textContent = ""; document.getElementById("lgName").textContent = "";
+    document.getElementById("lgTitle").textContent = sec ? (sec.dataset.title || sec.dataset.feature) : "";
+    const more = document.getElementById("legendMore"); more.textContent = "";
+    if (sec) { const h = sec.querySelector(":scope > h2"), l = sec.querySelector(":scope > .lede"); if (h) { const b = document.createElement("b"); b.textContent = h.textContent; b.style.display = "block"; b.style.marginBottom = "4px"; more.appendChild(b); } if (l) { const p = document.createElement("p"); p.textContent = l.textContent; more.appendChild(p); }
+      /* the privacy text and Remove all live on Start; from a full-screen section this is the way back to them */
+      if (sec.dataset.feature !== "welcome") { const b = document.createElement("button"); b.type = "button"; b.className = "lg-priv"; b.textContent = "Your reactions and privacy"; b.onclick = () => { API.show("welcome"); const pv = document.querySelector(".privacy"); if (pv) pv.scrollIntoView({ block: "center" }); }; more.appendChild(b); } }
+    legendOpen(false); if (full && more.textContent && !tourOn) {  /* the tour has its own words; the legend stays one line */ legendOpen(true); clearTimeout(lg._t); lg._t = setTimeout(() => { if (!lg.matches(":hover") && !lg.contains(document.activeElement)) legendOpen(false); }, 4000); }
+  }
+  function legendOpen(on) { const lg = document.getElementById("legend"); if (!lg) return; lg.classList.toggle("open", !!on); document.getElementById("legendText").setAttribute("aria-expanded", on ? "true" : "false"); }
+
+  /* ---- floats ---- */
+  const floats = []; const groups = {};
+  const CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>', FOLD = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>';
+  function floatBox(el, opts) {
+    if (!el || el._ekFloat) return el && el._ekFloat;
+    el.classList.add("ek-float");
+    const tab = document.createElement("button"); tab.type = "button"; tab.className = "ek-float-tab"; tab.innerHTML = CHEV; const lab = document.createElement("span"); tab.appendChild(lab);
+    const fold = document.createElement("button"); fold.type = "button"; fold.className = "ek-float-close"; fold.innerHTML = FOLD; fold.setAttribute("aria-label", "Fold this away");
+    el.insertBefore(tab, el.firstChild); el.appendChild(fold);
+    let t = 0;
+    const api = {
+      el, group: opts.group || null,
+      isOpen: () => !el.classList.contains("ek-float--min"),
+      label(text) { lab.textContent = text || ""; tab.setAttribute("aria-label", "Show " + (text || "details")); return api; },
+      open(focus) { clearTimeout(t); set(true); if (focus) { const f = [...el.querySelectorAll("button:not(.ek-float-tab):not(.ek-float-close),input,select,textarea,[tabindex]")].find(x => x.getClientRects().length && !x.disabled) || fold; f.focus({ preventScroll: true }); } return api; },  /* the first visible control, else the fold button: never the page body */
+      close() { clearTimeout(t); if (tourOn) return api; set(false); return api; },
+      /* arrival peek: at most four seconds; on a phone a panel (no group) stays folded so the graphic gets the screen, and only captions peek */
+      peek(ms) { if (window.innerWidth < 900 && !api.group) return api.close(); api.open(); t = setTimeout(() => { if (!el.matches(":hover") && !el.contains(document.activeElement)) api.close(); }, Math.min(ms || 4000, 4000)); return api; }
+    };
+    function set(on) { const list = api.group ? (groups[api.group] || [api]) : [api]; list.forEach(f => f.el.classList.toggle("ek-float--min", !on)); }
+    tab.onclick = () => api.open(true); fold.onclick = () => { api.close(); tab.focus({ preventScroll: true }); };
+    el.addEventListener("keydown", e => { if (e.key === "Escape" && api.isOpen()) { e.stopPropagation(); api.close(); tab.focus({ preventScroll: true }); } });
+    api.label(opts.label || ""); if (api.group) (groups[api.group] = groups[api.group] || []).push(api);
+    floats.push(api); el._ekFloat = api; if (opts.open === false) set(false);
+    return api;
+  }
+  /* the first section's ek:show fires before the feature scripts have made their floats: once the page has loaded,
+     the floats of a full-screen section opened by a link get the same arrival peek as one reached from the menu */
+  window.addEventListener("load", () => { if (!document.body.classList.contains("ek-full")) return; const sec = document.querySelector('section[data-feature="' + CSS.escape(current) + '"]'); const seen = new Set();
+    floats.forEach(f => { if (!sec || !sec.contains(f.el) || f.el.offsetParent === null && !f.isOpen()) return; if (f.group) { if (seen.has(f.group)) return; seen.add(f.group); } if (f.isOpen()) f.peek(6000); }); });
+  /* a tap on the graphic itself folds the floats out of the way (full screen only) */
+  document.addEventListener("pointerdown", e => { if (!document.body.classList.contains("ek-full") || tourOn) return; const st = e.target.closest && e.target.closest(".ek-stage"); if (!st || e.target.closest(".ek-float,#bar,#legend,button,a,input,select,textarea,label,summary,details")) return; floats.forEach(f => { if (f.isOpen() && st.contains(f.el)) f.close(); }); legendOpen(false); }, true);
+
+  /* ---- the reaction box: small until it is wanted ---- */
+  function barToggle(on, focus) { const bar = document.getElementById("bar"), btn = document.getElementById("barOpen"); if (!bar) return false;
+    if (on === false && bar.classList.contains("has-drawer")) return true;
+    /* opening the box in full screen folds the section's floats: the box already names what the reaction is about */
+    if (on && !tourOn && document.body.classList.contains("ek-full")) { const sec = document.querySelector('section[data-feature="' + CSS.escape(current) + '"]'); floats.forEach(f => { if (sec && sec.contains(f.el) && f.isOpen()) f.close(); }); }  /* "Say why" sits in a caption: that caption folds too */
+    if (on != null) { bar.classList.toggle("min", !on); btn.setAttribute("aria-expanded", on ? "true" : "false"); if (on && focus) document.getElementById("note").focus({ preventScroll: true }); emit("ek:barsize", !!on); }
+    return !bar.classList.contains("min"); }
+  return API;
 })();
 
 (function nav() {
@@ -823,13 +976,29 @@ const EK = window.EK = (() => {
   EK.on("ek:show", id => { const s = document.querySelector('section[data-feature="' + CSS.escape(id) + '"]'); if (s && id !== "welcome") EK.context(id, s.dataset.title || id, ""); nav.querySelector('button[data-go="' + CSS.escape(id) + '"]') && nav.querySelector('button[data-go="' + CSS.escape(id) + '"]').scrollIntoView({ block: "nearest", inline: "nearest" }); });
   window.__hash0 = location.hash; const h = (location.hash || "").slice(1);
   EK.show(h && h !== "tour" ? h : "welcome");
+  requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.add("ek-ready")));
   window.addEventListener("hashchange", () => { const id = (location.hash || "").slice(1); if (id && id !== EK.current() && document.querySelector('section[data-feature="' + CSS.escape(id) + '"]')) EK.show(id); });
 })();
 
 (function bar() {
   const form = document.getElementById("noteForm"), note = document.getElementById("note");
   const QUESTION = PROJECT.first_question || "";
-  form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v, tour: false }); note.value = ""; EK.toast("Added to " + c.target); });
+  form.addEventListener("submit", e => { e.preventDefault(); const v = note.value.trim(); if (!v) return; const c = EK.ctx(); EK.react({ feature: c.feature, target: c.target, kind: "note", value: v, tour: false }); note.value = ""; EK.toast("Added to " + c.target); setTimeout(() => { if (!note.value) { EK.barOpen(false); document.getElementById("barOpen").focus({ preventScroll: true }); } }, 700); });
+  // small until wanted: the React button opens it; its fold button, Escape, or a tap elsewhere with nothing typed folds it
+  const barEl = document.getElementById("bar"), openBtn = document.getElementById("barOpen");
+  openBtn.addEventListener("click", () => EK.barOpen(true, true));
+  document.getElementById("barMin").addEventListener("click", () => { EK.barOpen(false); openBtn.focus({ preventScroll: true }); });
+  barEl.addEventListener("keydown", e => { if (e.key === "Escape" && EK.barOpen() && !barEl.classList.contains("has-drawer")) { e.stopPropagation(); EK.barOpen(false); openBtn.focus({ preventScroll: true }); } });
+  document.addEventListener("pointerdown", e => { if (!EK.barOpen() || barEl.contains(e.target) || note.value.trim() || barEl.classList.contains("has-drawer") || EK.tourRunning()) return; const intro = document.getElementById("intro"); if (intro && !intro.hidden) return; EK.barOpen(false); }, true);
+  // the legend's menu button opens the sections; the legend text opens the section's heading and intro
+  const lgMenu = document.getElementById("legendMenu"), lgText = document.getElementById("legendText"), lg = document.getElementById("legend"), hdr = document.querySelector("header.top");
+  const navOpen = on => { document.body.classList.toggle("ek-nav-open", on); lgMenu.setAttribute("aria-expanded", on ? "true" : "false"); if (on) { const cur = document.querySelector('#nav button[aria-current="page"]') || document.querySelector("#nav button"); cur && cur.focus({ preventScroll: true }); } };
+  lgMenu.addEventListener("click", () => navOpen(!document.body.classList.contains("ek-nav-open")));
+  lgText.addEventListener("click", () => { const on = !lg.classList.contains("open"); lg.classList.toggle("open", on); lgText.setAttribute("aria-expanded", on ? "true" : "false"); });
+  /* after a choice the drawer closes; focus goes to the menu button (full screen) or the chosen nav item, never a hidden button */
+  document.getElementById("nav").addEventListener("click", e => { const was = document.body.classList.contains("ek-nav-open"); navOpen(false); if (!was) return; const b = e.target.closest("button"); if (document.body.classList.contains("ek-full")) lgMenu.focus({ preventScroll: true }); else if (b) b.focus({ preventScroll: true }); });
+  document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if (document.body.classList.contains("ek-nav-open")) { navOpen(false); lgMenu.focus(); } else if (lg.classList.contains("open")) { lg.classList.remove("open"); lgText.setAttribute("aria-expanded", "false"); } });
+  document.addEventListener("pointerdown", e => { if (document.body.classList.contains("ek-nav-open") && !hdr.contains(e.target) && !lgMenu.contains(e.target)) navOpen(false); }, true);
   // On the welcome page the note is about the project's first decision, so it carries context too.
   const onShow = id => { if (id === "welcome") { EK.context("project", QUESTION ? "the first question" : "the project", QUESTION ? "— " + QUESTION : ""); note.placeholder = QUESTION || "Type a reaction…"; } else note.placeholder = "Type a reaction…"; };
   EK.on("ek:show", onShow); onShow(EK.current());
@@ -861,7 +1030,7 @@ const EK = window.EK = (() => {
 
 /* --bar-h: the bar's measured height, so the desktop rail reserves exactly what the docked bar covers */
 (function barHeight() {
-  const bar = document.getElementById("bar"), set = () => document.documentElement.style.setProperty("--bar-h", Math.round(bar.getBoundingClientRect().height) + "px");
+  const bar = document.getElementById("bar"), set = () => { const r = bar.getBoundingClientRect(); document.documentElement.style.setProperty("--bar-h", Math.round(r.height) + "px"); document.documentElement.style.setProperty("--bar-w", Math.round(r.width) + "px"); };
   if ("ResizeObserver" in window) new ResizeObserver(set).observe(bar); window.addEventListener("resize", set); set();
 })();
 
@@ -873,7 +1042,7 @@ const EK = window.EK = (() => {
   const place = () => { const h = Math.round(bar.getBoundingClientRect().height); box.style.setProperty("--intro-bottom", (h + 30) + "px"); };
   function close() { if (box.hidden) return; box.hidden = true; bar.classList.remove("ek-spot"); document.body.classList.remove("intro-open"); if (app) app.inert = false; window.removeEventListener("resize", place); try { localStorage.setItem(key, "1"); } catch (e) {}
     /* focus goes where the intro pointed; on a phone that would open the keyboard, so there it goes to the page */
-    if (window.innerWidth >= 900) document.getElementById("note").focus({ preventScroll: true }); else if (document.activeElement) document.activeElement.blur(); }
+    if (window.innerWidth >= 900) document.getElementById("barOpen").focus({ preventScroll: true }); else if (document.activeElement) document.activeElement.blur(); }
   x.onclick = close;
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !box.hidden) close(); });
   place(); window.addEventListener("resize", place);
@@ -1021,7 +1190,10 @@ const EK = window.EK = (() => {
   /* ---- sheet ---- */
   function showSheet(i) { si = i; const s = sheet(); img.setAttribute("href", s.src); img.setAttribute("width", s.w); img.setAttribute("height", s.h); [...$("dmChips").querySelectorAll(".dm-chip")].forEach((c, k) => c.setAttribute("aria-pressed", String(k === i)));
     $("dmMeta").textContent = (s.text ? s.text + " " : "") + (s.slide != null ? "From the presentation, slide " + s.slide + "." : "Slide not recorded."); closeLabel(); fit(); redrawLive(); renderMine();
-    if (EK.current() === "markup") EK.context("markup", s.name, "\u2014 draw on it, then say what your marks mean"); }
+    if (panel) panel.label("Sheets \u00b7 " + s.name);
+    if (EK.current() === "markup") { EK.context("markup", s.name, "\u2014 draw on it, then say what your marks mean"); if (EK.legend) EK.legend((i + 1) + " / " + S.length); } }
+  /* full screen: the sheet list and save panel folds to a tab named after the sheet; drawing on the sheet folds it */
+  const panel = EK.float ? EK.float(card, { label: "Sheets" }) : null;
   $("dmChips").addEventListener("click", e => { const b = e.target.closest(".dm-chip"); if (b) showSheet(+b.dataset.s); });
 
   /* ---- tools ---- */
@@ -1033,7 +1205,9 @@ const EK = window.EK = (() => {
   function pathEl(pts, cls) { const p = document.createElementNS(NS, "path"); p.setAttribute("d", pts.map((q, i) => (i ? "L" : "M") + (q[0] * sheet().w).toFixed(1) + " " + (q[1] * sheet().h).toFixed(1)).join(" ")); p.setAttribute("stroke-width", strokeW()); if (cls) p.setAttribute("class", cls); return p; }
   function textEl(t) { const e = document.createElementNS(NS, "text"); e.setAttribute("x", (t.x * sheet().w).toFixed(1)); e.setAttribute("y", (t.y * sheet().h).toFixed(1)); e.setAttribute("font-size", Math.max(12, sheet().w / 45)); e.textContent = t.t; return e; }
   function redrawLive() { live.textContent = ""; cur().strokes.forEach(s => live.appendChild(pathEl(s.pts))); cur().texts.forEach(t => live.appendChild(textEl(t))); dirty(); }
-  function dirty() { const n = cur().strokes.length + cur().texts.length; $("dmSave").disabled = !n; $("dmClear").hidden = !n; $("dmSave").textContent = n ? "Save my marks (" + n + ")" : "Save my marks"; hint(); }
+  function dirty() { const n = cur().strokes.length + cur().texts.length; $("dmSave").disabled = !n; $("dmClear").hidden = !n; $("dmSave").textContent = n ? "Save my marks (" + n + ")" : "Save my marks"; hint();
+    /* the folded tab says what to do next: save while there are unsaved marks, else which sheet this is */
+    if (panel) { panel.label(n ? "Save my marks (" + n + ")" : "Sheets \u00b7 " + sheet().name); panel.el.classList.toggle("dm-unsaved", !!n); } }
   $("dmUndo").addEventListener("click", () => { const c = cur(); if (c.texts.length && (!c.strokes.length || c.texts[c.texts.length - 1].at > c.strokes[c.strokes.length - 1].at)) c.texts.pop(); else c.strokes.pop(); redrawLive(); });
   $("dmClear").addEventListener("click", () => { const c = cur(); if (c.strokes.length + c.texts.length === 0 || confirm("Clear the marks you have not saved on this sheet?")) { c.strokes = []; c.texts = []; redrawLive(); } });
 
@@ -1094,9 +1268,9 @@ const EK = window.EK = (() => {
 
   /* ---- sizing ---- */
   let viewW = 0;
-  function layoutView(force) { if (window.innerWidth >= 900) view.style.height = ""; else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * 0.52) + "px"; } fit(); }
+  function layoutView(force) { if (window.innerWidth >= 900 || (EK.isFull && EK.isFull())) view.style.height = ""; else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * 0.52) + "px"; } fit(); }
   EK.fitStage(stageEl, "markup", { onResize: () => layoutView(false) });
-  EK.on("ek:show", id => { if (id === "markup") { layoutView(true); fit(); if (EK.current() === "markup") EK.context("markup", sheet().name, "\u2014 draw on it, then say what your marks mean"); hint(); } });
+  EK.on("ek:show", id => { if (id === "markup") { layoutView(true); fit(); if (EK.current() === "markup") { EK.context("markup", sheet().name, "\u2014 draw on it, then say what your marks mean"); if (EK.legend) EK.legend((si + 1) + " / " + S.length); } if (panel && EK.isFull && EK.isFull()) panel.peek(6000); hint(); } });
   if ("ResizeObserver" in window) new ResizeObserver(() => fit()).observe(view);
   setMode("pen"); layoutView(true); showSheet(0);
   /* extension point: other features show a sheet by name (ek-list-reactions' "Show on plan") */
@@ -1240,7 +1414,12 @@ const EK = window.EK = (() => {
   const stage = EK.fitStage(root, "places", { onResize: () => { if (scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); } });
   const settle = () => stage.settle();
 
+  /* full screen: every caption folds to a tab with its place's name; they open and fold together */
+  const caps = scenes.map(s => { const c = s.querySelector(".pl-cap"), nm = s.querySelector(".pl-name"); return c && EK.float ? EK.float(c, { group: "places-cap", label: nm ? nm.textContent : s.dataset.target }) : null; });
+  const views = document.querySelector(".pl-views-wrap"); if (views && EK.float) EK.float(views, { label: "Views", open: false });
   function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
+    if (EK.current() === "places" && EK.legend) EK.legend((i + 1) + " / " + scenes.length);
+    if (EK.current() === "places" && EK.isFull && EK.isFull() && caps[i]) caps[i].peek(6000);
     dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
     if (EK.current() === "places") EK.context("places", target(i), "\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \u00b7 scroll for the next " + C.noun : " \u00b7 the last " + C.noun)); }
   function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
@@ -1275,6 +1454,7 @@ const EK = window.EK = (() => {
         else if (r.kind === "voice") d.textContent = "Unsupported voice note";
         else if (r.value && typeof r.value.text === "string") { d.textContent = r.value.text; const sp = document.createElement("small"); sp.textContent = r.value.via === "voice" ? " (spoken)" : ""; d.appendChild(sp); } else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
         box.appendChild(d); });
+      if (caps[i]) { const nm = s.querySelector(".pl-name"); caps[i].label((nm ? nm.textContent : t) + (v ? " \u00b7 \u2713 " + (v === "keep" ? C.said_keep : C.said_change) : " \u00b7 Your view?")); }  /* the folded tab invites a response */
       chip.hidden = !notes.length; chip.querySelector("b").textContent = notes.length; chip.querySelector(".pl-cn").textContent = notes.length === 1 ? "note" : "notes";
       if (dots[i]) dots[i].setAttribute("aria-label", t + (v ? ", you said " + (v === "keep" ? C.said_keep : C.said_change) : "") + (notes.length ? ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + " on this device" : "")); }); }
   EK.on("ek:reaction", render); render();

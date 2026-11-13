@@ -229,6 +229,14 @@ STYLE = """<style data-feature="timeline">
 .tl-rail button:focus-visible{outline:3px solid var(--marker);outline-offset:-3px}
 @media(min-width:900px){.tl-rail{right:16px} .tl-rail button span{display:inline;opacity:.8} .tl-rail button[aria-current="true"] span{opacity:1}}
 @media(prefers-reduced-motion:reduce){.tl{scroll-snap-type:none;scroll-behavior:auto} .tl-rail button[aria-current="true"]::after{transform:none}}
+/* full screen (shell 2026-11-13): the picture fills the screen; the caption folds to a tab with the year, clear of the
+   legend and the reaction button; the rail shows only the current label */
+body.ek-full .tl-scene{padding:var(--ek-safe-top) 16px calc(var(--bar-h,52px) + 24px)}
+@media(min-width:900px){body.ek-full .tl-scene{padding:var(--ek-safe-top) 32px calc(var(--bar-h,52px) + 28px)}}
+body.ek-full .tl-cap{max-height:calc(100% - 8px);overflow:auto;padding-right:44px}
+body.ek-full .tl-rail{position:fixed}  /* the wrapper has no height once the stage is fixed to the screen */
+body.ek-full .tl-rail button span{display:none !important} body.ek-full .tl-rail button[aria-current="true"] span{display:inline !important}
+@media(max-width:599px){body.ek-full .tl-rail button[aria-current="true"] span{display:none !important}}
 </style>"""
 
 
@@ -250,8 +258,12 @@ SCRIPT = """<script data-feature="timeline">
   const stage = EK.fitStage(root, "timeline", { onResize: () => { if (scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); } });
   const settle = () => stage.settle();
 
+  /* full screen: every caption folds to a tab with its year; they open and fold together */
+  const caps = scenes.map((s, i) => { const c = s.querySelector(".tl-cap"); return c && EK.float ? EK.float(c, { group: "timeline-cap", label: chipLabel(i) }) : null; });
   function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
     dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
+    if (EK.current() === "timeline" && EK.legend) EK.legend((i + 1) + " / " + scenes.length);
+    if (EK.current() === "timeline" && EK.isFull && EK.isFull() && caps[i]) caps[i].peek(6000);
     if (EK.current() === "timeline") EK.context("timeline", target(i), "\\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \\u00b7 scroll for the next moment" : " \\u00b7 the last moment so far"), chipLabel(i)); }
   function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
   root.addEventListener("scroll", () => { if (!root._settled) { root._settled = true; settle(); } }, { passive: true });

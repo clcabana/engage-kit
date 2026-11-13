@@ -263,6 +263,10 @@ STYLE = """<style data-feature="massing">
 .ms-card{flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:thin;background:var(--card);color:var(--ink);border:1px solid var(--line);border-width:1px 0 0;padding:10px 16px 14px;display:flex;flex-direction:column;gap:8px}
 @media(max-width:899px){.ms-card{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent)} .ms-card.at-end{-webkit-mask-image:none;mask-image:none}}
 @media(min-width:900px){.ms{flex-direction:row} .ms-view{height:100%} .ms-card{flex:0 0 340px;width:340px;border-width:0 0 0 1px;gap:10px}}
+/* full screen (shell 2026-11-13): the model fills the screen; the options card is a float that folds to a tab */
+body.ek-full .ms{display:block} body.ek-full .ms-view{position:absolute;inset:0;height:100% !important} body.ek-full .ms-hud{top:var(--ek-safe-top)}
+body.ek-full .ms-card{position:absolute;z-index:3;right:12px;left:auto;top:var(--ek-safe-top);bottom:auto;width:340px;max-width:calc(100% - 24px);max-height:calc(100% - var(--ek-safe-top) - 12px);border:1px solid var(--line);border-radius:var(--radius,6px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--float);padding:12px 44px 14px 14px;-webkit-mask-image:none;mask-image:none}
+@media(max-width:899px){ body.ek-full .ms-card{left:12px;right:12px;width:auto;top:auto;bottom:calc(var(--bar-h,52px) + 24px);max-height:55%} body.ek-full .ms-card.ek-float--min{left:auto} }
 .ms-about{font-size:13px;line-height:1.35}
 .ms-tabs{display:flex;gap:6px;flex-wrap:wrap} .ms-tabs button{flex:1 1 90px;min-height:44px;text-align:left;display:flex;flex-direction:column;gap:2px;padding:6px 10px}
 .ms-tabs button small{font-weight:400;font-size:12px;color:inherit;opacity:.8} .ms-tabs button[aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -376,7 +380,9 @@ SCRIPT = """<script data-feature="massing">
   /* ---- sizing: phones get a fixed-pixel view height per show; desktop the card is a side column ---- */
   let viewW = 0;
   /* phones: half the stage for the model; the card below holds tabs, vote, sun and the study note without an inner fold on a 812 px screen */
-  function layoutView(force) { if (window.innerWidth >= 900) { view.style.height = ""; } else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * (h < 520 ? 0.42 : 0.5)) + "px"; } if (gl) resize(); }
+  const msPanel = (card && EK.float) ? EK.float(card, { label: "Options" }) : null;  /* full screen: the options card folds to a tab */
+  EK.on("ek:show", id => { if (id === "massing" && msPanel && EK.isFull && EK.isFull()) msPanel.peek(6000); });
+  function layoutView(force) { if (window.innerWidth >= 900 || (EK.isFull && EK.isFull())) { view.style.height = ""; } else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * (h < 520 ? 0.42 : 0.5)) + "px"; } if (gl) resize(); }
   const atEnd = () => card.classList.toggle("at-end", card.scrollHeight - card.clientHeight - card.scrollTop < 8);
   card.addEventListener("scroll", atEnd, { passive: true }); EK.on("ek:show", id => { if (id === "massing") setTimeout(atEnd, 100); });
   EK.fitStage(stageEl, "massing", { onResize: () => layoutView(false) });

@@ -207,6 +207,18 @@ STYLE = """<style data-feature="markup">
 .dm-mem .it img,.dm-mem .it svg{width:64px;height:48px;object-fit:cover;border-radius:4px;background:var(--card);display:block} .dm-mem .it small{display:block;color:var(--mute);font-size:12px}
 .dm-mem .it button{min-height:44px;padding:6px 10px;font-size:13px;border-color:transparent;background:transparent;color:var(--mute)}
 .dm-print{display:none}
+/* full screen (shell 2026-11-13): the sheet fills the screen on every width; the sheet list and save panel is a float
+   (top-right on desktop, above the reaction button on a phone) that folds to a tab named after the sheet */
+body.ek-full .dm-view{flex:1 1 auto !important;height:100% !important}
+.dm-card.dm-unsaved > .ek-float-tab{background:var(--marker);color:var(--on-marker);border-color:var(--marker)}
+body.ek-full .dm-tools{top:var(--ek-safe-top);left:12px}
+body.ek-full .dm-hud,body.ek-full .dm-label{bottom:calc(var(--bar-h,52px) + 24px)}
+body.ek-full .dm-card{position:absolute;z-index:3;right:12px;left:auto;top:var(--ek-safe-top);bottom:auto;width:320px;max-width:calc(100% - 24px);max-height:calc(100% - var(--ek-safe-top) - 12px);border:1px solid var(--line);border-radius:var(--radius,6px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--float);padding:12px 44px 14px 14px}
+@media(max-width:899px){
+  body.ek-full .dm-card{left:12px;right:12px;width:auto;top:auto;bottom:calc(var(--bar-h,52px) + 24px);max-height:55%}
+  body.ek-full .dm-card.ek-float--min{left:auto}
+  body.ek-full .dm-chips{margin:0;padding:2px 0}
+}
 @media print{ body > *{display:none !important} body > .app{display:block !important} .app > *{display:none !important} main{display:block !important;padding:0 !important} main > *{display:none !important} section[data-feature="markup"]{display:block !important} section[data-feature="markup"] > *{display:none !important} .dm-print.on{display:block !important;page-break-inside:avoid} .dm-print.on img{width:100%;max-height:90vh;object-fit:contain} .dm-print.on figcaption{font:12px sans-serif;color:#444;margin-top:6px} }
 </style>"""
 
@@ -237,7 +249,10 @@ SCRIPT = """<script data-feature="markup">
   /* ---- sheet ---- */
   function showSheet(i) { si = i; const s = sheet(); img.setAttribute("href", s.src); img.setAttribute("width", s.w); img.setAttribute("height", s.h); [...$("dmChips").querySelectorAll(".dm-chip")].forEach((c, k) => c.setAttribute("aria-pressed", String(k === i)));
     $("dmMeta").textContent = (s.text ? s.text + " " : "") + (s.slide != null ? "From the presentation, slide " + s.slide + "." : "Slide not recorded."); closeLabel(); fit(); redrawLive(); renderMine();
-    if (EK.current() === "markup") EK.context("markup", s.name, "\\u2014 draw on it, then say what your marks mean"); }
+    if (panel) panel.label("Sheets \\u00b7 " + s.name);
+    if (EK.current() === "markup") { EK.context("markup", s.name, "\\u2014 draw on it, then say what your marks mean"); if (EK.legend) EK.legend((i + 1) + " / " + S.length); } }
+  /* full screen: the sheet list and save panel folds to a tab named after the sheet; drawing on the sheet folds it */
+  const panel = EK.float ? EK.float(card, { label: "Sheets" }) : null;
   $("dmChips").addEventListener("click", e => { const b = e.target.closest(".dm-chip"); if (b) showSheet(+b.dataset.s); });
 
   /* ---- tools ---- */
@@ -249,7 +264,9 @@ SCRIPT = """<script data-feature="markup">
   function pathEl(pts, cls) { const p = document.createElementNS(NS, "path"); p.setAttribute("d", pts.map((q, i) => (i ? "L" : "M") + (q[0] * sheet().w).toFixed(1) + " " + (q[1] * sheet().h).toFixed(1)).join(" ")); p.setAttribute("stroke-width", strokeW()); if (cls) p.setAttribute("class", cls); return p; }
   function textEl(t) { const e = document.createElementNS(NS, "text"); e.setAttribute("x", (t.x * sheet().w).toFixed(1)); e.setAttribute("y", (t.y * sheet().h).toFixed(1)); e.setAttribute("font-size", Math.max(12, sheet().w / 45)); e.textContent = t.t; return e; }
   function redrawLive() { live.textContent = ""; cur().strokes.forEach(s => live.appendChild(pathEl(s.pts))); cur().texts.forEach(t => live.appendChild(textEl(t))); dirty(); }
-  function dirty() { const n = cur().strokes.length + cur().texts.length; $("dmSave").disabled = !n; $("dmClear").hidden = !n; $("dmSave").textContent = n ? "Save my marks (" + n + ")" : "Save my marks"; hint(); }
+  function dirty() { const n = cur().strokes.length + cur().texts.length; $("dmSave").disabled = !n; $("dmClear").hidden = !n; $("dmSave").textContent = n ? "Save my marks (" + n + ")" : "Save my marks"; hint();
+    /* the folded tab says what to do next: save while there are unsaved marks, else which sheet this is */
+    if (panel) { panel.label(n ? "Save my marks (" + n + ")" : "Sheets \\u00b7 " + sheet().name); panel.el.classList.toggle("dm-unsaved", !!n); } }
   $("dmUndo").addEventListener("click", () => { const c = cur(); if (c.texts.length && (!c.strokes.length || c.texts[c.texts.length - 1].at > c.strokes[c.strokes.length - 1].at)) c.texts.pop(); else c.strokes.pop(); redrawLive(); });
   $("dmClear").addEventListener("click", () => { const c = cur(); if (c.strokes.length + c.texts.length === 0 || confirm("Clear the marks you have not saved on this sheet?")) { c.strokes = []; c.texts = []; redrawLive(); } });
 
@@ -310,9 +327,9 @@ SCRIPT = """<script data-feature="markup">
 
   /* ---- sizing ---- */
   let viewW = 0;
-  function layoutView(force) { if (window.innerWidth >= 900) view.style.height = ""; else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * 0.52) + "px"; } fit(); }
+  function layoutView(force) { if (window.innerWidth >= 900 || (EK.isFull && EK.isFull())) view.style.height = ""; else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * 0.52) + "px"; } fit(); }
   EK.fitStage(stageEl, "markup", { onResize: () => layoutView(false) });
-  EK.on("ek:show", id => { if (id === "markup") { layoutView(true); fit(); if (EK.current() === "markup") EK.context("markup", sheet().name, "\\u2014 draw on it, then say what your marks mean"); hint(); } });
+  EK.on("ek:show", id => { if (id === "markup") { layoutView(true); fit(); if (EK.current() === "markup") { EK.context("markup", sheet().name, "\\u2014 draw on it, then say what your marks mean"); if (EK.legend) EK.legend((si + 1) + " / " + S.length); } if (panel && EK.isFull && EK.isFull()) panel.peek(6000); hint(); } });
   if ("ResizeObserver" in window) new ResizeObserver(() => fit()).observe(view);
   setMode("pen"); layoutView(true); showSheet(0);
   /* extension point: other features show a sheet by name (ek-list-reactions' "Show on plan") */

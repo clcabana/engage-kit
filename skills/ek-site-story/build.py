@@ -316,7 +316,7 @@ STYLE = """<style data-feature="places">
 .pl-rail button:hover{background:rgba(255,255,255,.12)}
 .pl-rail button::after{content:"";flex:0 0 auto;width:10px;height:10px;border-radius:5px;background:#F7F6F2;opacity:.7}
 .pl-rail button span{display:none;white-space:nowrap}
-.pl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3)}
+.pl-rail button[aria-current="true"]::after{opacity:1;background:var(--marker);transform:scale(1.3);box-shadow:0 0 0 2px #F7F6F2}
 /* phones: dots only (the caption already carries the name); labels from 600 px */
 @media(min-width:600px){.pl-rail button:hover span,.pl-rail button[aria-current="true"] span,.pl-rail button:focus-visible span{display:inline}}
 .pl-rail button[aria-current="true"] span{font-weight:500}
@@ -330,6 +330,20 @@ STYLE = """<style data-feature="places">
 .pl-view{flex:0 0 auto;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--ink);font-size:14px;white-space:nowrap}
 .pl-view:hover{border-color:var(--ink)} .pl-view:focus-visible{outline:3px solid var(--marker);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.pl{scroll-snap-type:none;scroll-behavior:auto} .pl-rail button[aria-current="true"]::after{transform:none}}
+/* full screen (shell 2026-11-13): the picture fills the screen; the caption folds to a tab with the place's name and
+   sits clear of the legend (top) and the reaction button (bottom-left); the rail shows only the current name */
+body.ek-full .pl-scene{padding:var(--ek-safe-top) 16px calc(var(--bar-h,52px) + 24px)}
+@media(min-width:900px){body.ek-full .pl-scene{padding:var(--ek-safe-top) 32px calc(var(--bar-h,52px) + 28px)}}
+body.ek-full .pl-cap{max-height:calc(100% - 8px);padding-right:44px}
+body.ek-full .pl-rail{position:fixed}  /* the wrapper has no height once the stage is fixed to the screen */
+body.ek-full .pl-views-wrap.ek-float--min{right:auto}
+body.ek-full .pl-rail button span{display:none !important} body.ek-full .pl-rail button[aria-current="true"] span{display:inline !important}
+@media(max-width:599px){body.ek-full .pl-rail button[aria-current="true"] span{display:none !important}}
+body.ek-full .pl-views-wrap{position:fixed;z-index:3;top:var(--ek-safe-top);left:12px;right:72px;margin:0;background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;padding:10px 44px 10px 12px;box-shadow:var(--float)}
+body:not(.ek-full) .pl-views-wrap > .ek-float-tab, body:not(.ek-full) .pl-views-wrap > .ek-float-close{display:none !important}
+body:not(.ek-full) .pl-views-wrap.ek-float--min > :not(.ek-float-tab){display:revert !important}
+body:not(.ek-full) .pl-cap > .ek-float-tab, body:not(.ek-full) .pl-cap > .ek-float-close{display:none !important}
+body:not(.ek-full) .pl-cap.ek-float--min > :not(.ek-float-tab){display:revert !important}
 </style>"""
 
 
@@ -351,7 +365,12 @@ SCRIPT = """<script data-feature="places">
   const stage = EK.fitStage(root, "places", { onResize: () => { if (scenes[active]) root.scrollTo({ top: scenes[active].offsetTop, behavior: "auto" }); } });
   const settle = () => stage.settle();
 
+  /* full screen: every caption folds to a tab with its place's name; they open and fold together */
+  const caps = scenes.map(s => { const c = s.querySelector(".pl-cap"), nm = s.querySelector(".pl-name"); return c && EK.float ? EK.float(c, { group: "places-cap", label: nm ? nm.textContent : s.dataset.target }) : null; });
+  const views = document.querySelector(".pl-views-wrap"); if (views && EK.float) EK.float(views, { label: "Views", open: false });
   function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
+    if (EK.current() === "places" && EK.legend) EK.legend((i + 1) + " / " + scenes.length);
+    if (EK.current() === "places" && EK.isFull && EK.isFull() && caps[i]) caps[i].peek(6000);
     dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
     if (EK.current() === "places") EK.context("places", target(i), "\\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \\u00b7 scroll for the next " + C.noun : " \\u00b7 the last " + C.noun)); }
   function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
@@ -386,6 +405,7 @@ SCRIPT = """<script data-feature="places">
         else if (r.kind === "voice") d.textContent = "Unsupported voice note";
         else if (r.value && typeof r.value.text === "string") { d.textContent = r.value.text; const sp = document.createElement("small"); sp.textContent = r.value.via === "voice" ? " (spoken)" : ""; d.appendChild(sp); } else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
         box.appendChild(d); });
+      if (caps[i]) { const nm = s.querySelector(".pl-name"); caps[i].label((nm ? nm.textContent : t) + (v ? " \\u00b7 \\u2713 " + (v === "keep" ? C.said_keep : C.said_change) : " \\u00b7 Your view?")); }  /* the folded tab invites a response */
       chip.hidden = !notes.length; chip.querySelector("b").textContent = notes.length; chip.querySelector(".pl-cn").textContent = notes.length === 1 ? "note" : "notes";
       if (dots[i]) dots[i].setAttribute("aria-label", t + (v ? ", you said " + (v === "keep" ? C.said_keep : C.said_change) : "") + (notes.length ? ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + " on this device" : "")); }); }
   EK.on("ek:reaction", render); render();

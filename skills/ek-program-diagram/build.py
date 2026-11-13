@@ -124,6 +124,10 @@ STYLE = """<style data-feature="program">
 .pg-card{flex:1 1 auto;min-height:0;overflow:auto;background:var(--card);color:var(--ink);border:1px solid var(--line);border-width:1px 0 0;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
 @media(max-width:899px){.pg svg{flex:0 0 auto}}  /* phones: the script sets the map's height in px once per show, so bar growth only shrinks the card */
 @media(min-width:900px){.pg{flex-direction:row} .pg svg{flex:1;height:100%} .pg-card{flex:0 0 340px;width:340px;border-width:0 0 0 1px}}
+/* full screen (shell 2026-11-13): the diagram fills the screen; the space card and the ranking are floats that fold to a tab */
+body.ek-full .pg{display:block} body.ek-full .pg svg{position:absolute;inset:0;width:100%;height:100% !important}
+body.ek-full .pg-card{position:absolute;z-index:3;right:12px;left:auto;top:var(--ek-safe-top);bottom:auto;width:340px;max-width:calc(100% - 24px);max-height:calc(100% - var(--ek-safe-top) - 12px);border:1px solid var(--line);border-radius:var(--radius,6px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--float);padding:12px 44px 14px 14px}
+@media(max-width:899px){ body.ek-full .pg-card{left:12px;right:12px;width:auto;top:auto;bottom:calc(var(--bar-h,52px) + 24px);max-height:55%} body.ek-full .pg-card.ek-float--min{left:auto} }
 .pg-card[hidden],.pg-ctl[hidden],.pg-card .chip[hidden]{display:none} .pg-card .pg-name:empty,.pg-card p:empty{display:none}
 .pg-kicker{font-size:13px;color:var(--mute);letter-spacing:.02em} .pg-name{font-size:28px;font-weight:500;line-height:1.05} .pg-name-sm{font-size:18px}
 .pg-card p{max-width:52ch} .pg-card small{color:var(--mute);font-size:14px} .pg-card small:empty{display:none}
@@ -201,6 +205,7 @@ SCRIPT = """<script data-feature="program">
     $("pgCtl").querySelector('[data-d="1"]').setAttribute("aria-label", "Bigger by " + STEP + " square metres"); $("pgCtl").querySelector('[data-d="-1"]').setAttribute("aria-label", "Smaller by " + STEP + " square metres");
     $("pgCtl").hidden = false; $("pgReset").hidden = !d; $("pgRanked").hidden = !rk; $("pgRanked").textContent = rk ? "You ranked this #" + rk + " (this phone)" : "";
     EK.context("program", name, "\\u2014 tap + or \\u2212 to change its size");
+    if (pgPanel) { pgPanel.label(s.name); if (EK.isFull && EK.isFull() && EK.current() === "program") pgPanel.open(); }
     const g = svg.querySelector('g[data-n="' + CSS.escape(name) + '"]'); if (g && document.activeElement && document.activeElement.closest && !document.activeElement.closest(".pg-card")) g.focus({ preventScroll: true }); }
 
   $("pgCtl").querySelectorAll("[data-d]").forEach(b => b.addEventListener("click", () => { if (!sel) return EK.toast("Tap a space first"); const dlt = (+b.dataset.d) * STEP; if (Math.abs(rawDelta(sel) + dlt) > CAP) return EK.toast("That is as far as the control goes (\\u00b1" + CAP + " m\\u00b2). Write a note for more."); EK.react({ feature: "program", target: sel, kind: "edit", value: { delta: dlt } }); EK.toast((dlt > 0 ? "Bigger" : "Smaller") + " by " + Math.abs(dlt) + " m\\u00b2 \\u2014 saved on this phone"); }));
@@ -215,7 +220,10 @@ SCRIPT = """<script data-feature="program">
   /* phones: the map gets a fixed pixel height when the section shows (or the width changes), so the bar growing
      only shrinks the card, and the blocks never move under the finger; while ranking the map gives up room */
   let mapW = 0;
-  function layoutMap(force) { if (window.innerWidth >= 900) { svg.style.height = ""; return; } const ranking = !rankBox.hidden; if (force || window.innerWidth !== mapW || svg.dataset.mode !== (ranking ? "rank" : "map")) { mapW = window.innerWidth; svg.dataset.mode = ranking ? "rank" : "map"; svg.style.height = Math.round(stageEl.clientHeight * (ranking ? 0.36 : 0.56)) + "px"; draw(); } }
+  /* full screen: the card and the ranking fold together; choosing a space opens the card on it (a tap on the map folds
+     floats first, then selects: the card must come back with the space in it) */
+  var pgPanel = EK.float ? EK.float(card, { group: "program-card", label: "Spaces" }) : null; if (EK.float) EK.float(rankBox, { group: "program-card", label: "Ranking" });
+  function layoutMap(force) { if (window.innerWidth >= 900 || (EK.isFull && EK.isFull())) { svg.style.height = ""; if (window.innerWidth < 900) draw(); return; } const ranking = !rankBox.hidden; if (force || window.innerWidth !== mapW || svg.dataset.mode !== (ranking ? "rank" : "map")) { mapW = window.innerWidth; svg.dataset.mode = ranking ? "rank" : "map"; svg.style.height = Math.round(stageEl.clientHeight * (ranking ? 0.36 : 0.56)) + "px"; draw(); } }
   EK.on("ek:reaction", () => { draw(); if (sel) select(sel); });
   EK.on("ek:show", id => { if (id === "program") { layoutMap(true); draw(); if (sel) select(sel); else EK.context("program", "the program", "\\u2014 tap a space"); } });
   EK.fitStage(stageEl, "program", { onResize: () => { layoutMap(false); if (window.innerWidth >= 900) draw(); } });

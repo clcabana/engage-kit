@@ -61,6 +61,7 @@ STYLE = """<style data-feature="pins">
 .pn-ask[hidden],.pn-sel[hidden],.pn-sub[hidden],.pn-bad[hidden],.pn-head[hidden]{display:none}
 .pn-ask input{font:inherit;font-size:16px;font-weight:300;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);min-height:44px;width:100%;box-sizing:border-box}
 .pn-ask.pn-top{bottom:auto;top:10px}
+body.ek-full .pn-ask{z-index:4;bottom:calc(var(--bar-h,52px) + 24px);max-height:calc(100% - var(--ek-safe-top) - var(--bar-h,52px) - 36px)} body.ek-full .pn-ask.pn-top{top:var(--ek-safe-top);bottom:auto}  /* full screen: clear of the legend and the reaction button */
 .pn-ask .pn-row{flex-wrap:nowrap} .pn-ask .pn-row .kicker{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* one scrolling row per chip set, so the field stays small over a phone-sized view */
 .pn-kinds{display:flex;flex-wrap:nowrap;gap:6px;overflow-x:auto;scrollbar-width:none;flex:0 0 auto} .pn-kinds::-webkit-scrollbar{display:none}

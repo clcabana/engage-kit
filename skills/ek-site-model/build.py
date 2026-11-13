@@ -410,7 +410,7 @@ def section_html(data: dict, brief: dict) -> str:
         f'      <div class="sm-view" id="smView">\n'
         f'        <canvas id="smCanvas" tabindex="0" aria-label="3D site model. Drag to turn; arrow keys turn, plus and minus zoom, 0 resets the view, Tab reaches the building buttons."></canvas>\n'
         f'        <div class="sm-labels" id="smLabels" aria-hidden="true"></div>\n'
-        f'        <details class="sm-ovl sm-viewbox" id="smViewBox"><summary>View</summary><div class="sm-vb">\n'
+        f'        <details class="sm-ovl sm-viewbox" id="smViewBox"><summary>Display</summary><div class="sm-vb">\n'
         f'          <label><input type="checkbox" id="smTrees" checked> trees</label>\n'
         f'          <label><input type="checkbox" id="smLabelsOn" checked> labels</label>\n'
         f'          <label><input type="checkbox" id="smShadows" checked> shadows</label>\n'
@@ -489,6 +489,16 @@ STYLE = """<style data-feature="model">
 .sm-vjson{display:block;width:100%;min-height:80px;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:6px 8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:var(--radius,6px)}
 .sm-views[hidden],.sm-views [hidden]{display:none}
 @media(min-width:900px){.sm-vlabel{display:block} .sm-vstep{display:none} .sm-vlist{flex-wrap:wrap;overflow:visible}}
+/* full screen (shell 2026-11-13): the model fills the screen on every width; the card is a float (top-right on desktop,
+   above the reaction button on a phone) that folds to a tab named after the building or view; View sits under the legend */
+body.ek-full .sm{display:block}
+body.ek-full .sm-view{position:absolute;inset:0;height:100% !important}
+body.ek-full .sm-viewbox{top:var(--ek-safe-top);left:12px}
+body.ek-full .sm-card{position:absolute;z-index:3;right:12px;left:auto;top:var(--ek-safe-top);bottom:auto;width:340px;max-width:calc(100% - 24px);max-height:calc(100% - var(--ek-safe-top) - 12px);border:1px solid var(--line);border-radius:var(--radius,6px);background:var(--sheet-a);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:var(--float);padding:12px 44px 14px 14px}
+@media(max-width:899px){
+  body.ek-full .sm-card{left:12px;right:12px;width:auto;top:auto;bottom:calc(var(--bar-h,52px) + 24px);max-height:55%}
+  body.ek-full .sm-card.ek-float--min{left:auto}
+}
 </style>"""
 
 
@@ -496,6 +506,8 @@ SCRIPT = """<script data-feature="model">
 (function siteModel() {
   const SM = %(data)s;  /* model buffers (base64 numbers) and building labels; rendered with textContent only */
   const stageEl = document.getElementById("sm"), view = document.getElementById("smView"), canvas = document.getElementById("smCanvas"), card = document.getElementById("smCard"), lblBox = document.getElementById("smLabels"), fb = document.getElementById("smFallback");
+  /* full screen: the card folds to a tab named after the chosen building; turning the model folds it */
+  const smPanel = (card && EK.float) ? EK.float(card, { label: "Buildings and views" }) : null;
   if (!stageEl || !view || !canvas || !card) return;
   const $ = id => document.getElementById(id);
   const T = window.THREE;
@@ -617,6 +629,7 @@ SCRIPT = """<script data-feature="model">
     $("smAbout").hidden = !!b; $("smChips").hidden = !!b; if (!b) card.scrollTop = 0;
     /* one way to react at a time: the augment row (pins) belongs to the overview, the votes to a chosen building */
     $("smSlot").hidden = !!b;
+    if (smPanel) { smPanel.label(b ? b.label : "Buildings and views"); if (b && EK.isFull && EK.isFull()) smPanel.open(); }
     if (b) { $("smName").textContent = b.label; const v = b.view; $("smMeta").textContent = (v ? "The presentation gives this building a view of " + bearingWord(v.bearing) + (v.slide ? " (slide " + v.slide + ")" : "") + "." : "The presentation gives no view bearing for this building; Stand here looks south.") + " Drag the model to look at it from every side.";
       if (EK.current() === "model") EK.context("model", b.label, "\\u2014 does its spot work, and why?"); }
     else { if (EK.current() === "model") EK.context("model", "the model", "\\u2014 tap a building to react to it"); }
@@ -664,6 +677,7 @@ SCRIPT = """<script data-feature="model">
   const vList = $("smVList");
   function markView(i) { vchips.forEach((c, j) => c.setAttribute("aria-pressed", String(j === i))); if (i < 0) { if ($("smVText")) $("smVText").textContent = ""; return; }
     vi = i; if ($("smVText")) $("smVText").textContent = V[i].text || "";
+    if (EK.current() === "model" && EK.legend) EK.legend("view " + (i + 1) + " / " + V.length);
     const c = vchips[i]; if (c && vList && vList.scrollWidth > vList.clientWidth) { const cr = c.getBoundingClientRect(), lr = vList.getBoundingClientRect(); vList.scrollLeft += cr.left - lr.left - (lr.width - cr.width) / 2; } }
   function goView(i) { const v = V[i]; if (!v) return false;
     if (!gl) { if (v.building) select(byLabel(v.building)); markView(i); return false; }
@@ -718,9 +732,10 @@ SCRIPT = """<script data-feature="model">
 
   /* ---- sizing: phones get a fixed-pixel view per show, desktop a side card ---- */
   let viewW = 0;
-  function layoutView(force) { if (window.innerWidth >= 900) view.style.height = ""; else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * (h < 520 ? 0.5 : 0.56)) + "px"; } if (gl) render(); }
+  function layoutView(force) { if (window.innerWidth >= 900 || (EK.isFull && EK.isFull())) view.style.height = ""; else if (force || window.innerWidth !== viewW) { viewW = window.innerWidth; const h = stageEl.clientHeight; view.style.height = Math.round(h * (h < 520 ? 0.5 : 0.56)) + "px"; } if (gl) render(); }
   EK.fitStage(stageEl, "model", { onResize: () => layoutView(false) });
-  EK.on("ek:show", id => { if (id === "model") { layoutView(true); if (gl) render(); select(sel, true); } });
+  EK.on("ek:show", id => { if (id === "model") { layoutView(true); if (gl) render(); select(sel, true); if (smPanel && EK.isFull && EK.isFull()) smPanel.peek(6000);
+    try { if (EK.legend && Array.isArray(V) && V.length && typeof vi === "number" && vi >= 0) EK.legend("view " + (vi + 1) + " / " + V.length); } catch (e) {} } });  /* the legend is cleared on every show */
   layoutView(true); if (EK.current() === "model") select(null);
 
   EK.feature = EK.feature || {}; EK.feature.model = { buildings: B, select: l => select(byLabel(l)), selected: () => sel, overview, fallback: !gl, render: () => render(), rebuild: () => build(), renderer: gl ? renderer : null, camera: gl ? camera : null, canvas, view,

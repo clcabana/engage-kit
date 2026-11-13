@@ -58,6 +58,19 @@ Every feature skill, and the three QC agents, rely on exactly this.
   use the tokens, never fixed colours. Phones: a strip floating 12 px off the bottom. From 900 px: a square
   (`--bar-size`, 216 px) docked bottom-left in the navigation rail, widening while a drawer is open; stages
   (`EK.fitStage`) no longer reserve room for it on desktop.
+- Full screen for graphics (2026-11-13, the person's rule: presentation material always gets the whole screen).
+  A section whose content contains an `.ek-stage` is shown full screen: `body.ek-full`, the stage fixed to the
+  viewport, the header/rail hidden behind a menu button, and the section's `h2` and `.lede` moved into the
+  **legend**, a small pill top-left ("Views · 2 / 6 · From the street at dusk") that opens for four seconds on
+  arrival and on a tap. Features must: keep top overlays below `var(--ek-safe-top)` and bottom overlays above
+  `calc(var(--bar-h) + 24px)`; call `EK.legend("i / n")` when the visitor moves through a sequence; size their view to
+  the whole stage when `EK.isFull()`; and wrap every caption or panel over the graphic in `EK.float(el, {label,
+  group?, open?})`, which folds it to a small labelled tab (its own fold button, Escape, or a tap on the graphic folds
+  it; `peek(ms)` shows it on arrival and folds it again; the tour keeps every float open). Reading sections keep
+  the normal layout.
+- The reaction bar is small by default (2026-11-13): a "React" button bottom-left that opens into the box on tap,
+  `EK.focusNote()` and drawers open it, and it folds after a reaction, on its fold button, on Escape, or when the
+  visitor taps elsewhere with nothing typed. `EK.barOpen(on, focus)` opens or folds it.
 - First-visit intro (2026-11-13): on a device's first open the page dims, the bar is outlined and lifted above
   the dim, and a card next to it (above it on a phone) says what the bar does and repeats the privacy text. The X
   or Escape closes it and `localStorage['ek:<slug>:intro-seen']` keeps it closed; a `#tour` link skips it. The
