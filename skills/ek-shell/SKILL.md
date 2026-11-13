@@ -51,9 +51,18 @@ Every feature skill, and the three QC agents, rely on exactly this.
   on `EK`. Full-bleed inside `main`: use the shell's `ek-bleed` class (`margin:0 -16px; width:calc(100% + 32px)`
   and, from 900 px, `-32px` / `+ 64px`) to cancel the shell's `main` padding.
 - Look (from Massing Studio, 2026-11-06): body weight 300, headings 500 with tight tracking, `.kicker` for
-  11 px uppercase labels, `.card` and the bar as sheets with `--float` shadow; the bar floats 12 px off the
-  bottom as a translucent blurred sheet (`--sheet-a`). Feature CSS keeps weights within 300–500 and uses
-  the tokens; nothing pure white or black.
+  11 px uppercase labels, `.card` as a sheet with `--float` shadow. Feature CSS keeps weights within 300–500
+  and uses the tokens; nothing pure white or black.
+- The reaction bar (2026-11-13) always contrasts with the page: `#bar` re-declares the opposite theme's tokens
+  (dark on a light page, light on a dark one), so anything a feature mounts in `#barSlot` inverts with it and must
+  use the tokens, never fixed colours. Phones: a strip floating 12 px off the bottom. From 900 px: a square
+  (`--bar-size`, 216 px) docked bottom-left in the navigation rail, widening while a drawer is open; stages
+  (`EK.fitStage`) no longer reserve room for it on desktop.
+- First-visit intro (2026-11-13): on a device's first open the page dims, the bar is outlined and lifted above
+  the dim, and a card next to it (above it on a phone) says what the bar does and repeats the privacy text. The X
+  or Escape closes it and `localStorage['ek:<slug>:intro-seen']` keeps it closed; a `#tour` link skips it. The
+  bar stays usable while it is open (so the dialog is not `aria-modal`); the rail reserves the bar's measured
+  height (`--bar-h`).
 - Two optional hooks on the welcome page: `#welcomeImage` (a site plan or key drawing) and `#welcomeExtra`
   (a strip of option thumbnails, say). Leave them empty rather than fill them with text.
 - Optional cover: manifest `project.cover` = `{"image": "<path relative to the manifest>", "alt": "…"}` puts one
