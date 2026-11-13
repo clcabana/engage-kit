@@ -22,6 +22,8 @@ drawing, a labelled axon or plan is right here, unlike the site story), `source_
 Images follow the kit's image rules (containment under `--root`, SVG checks, rasters re-encoded through
 Pillow at up to 1400 px). Up to eight sheets.
 
+**Demo mode.** `brief.demo: true` (exactly `true`) marks a public demonstration that nobody collects from: the copy stops promising a team that will collect (the lede, the paper-sketch line and the tour). Leave it out for a real project.
+
 ## Markup it writes
 ```html
 <section data-feature="markup" data-title="Mark up plans" hidden>

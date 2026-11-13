@@ -39,6 +39,18 @@ Brief field read, `site.views[]` (optional; up to 8):
   otherwise it calls `standAt(bearing, building)` and toasts "<building> is not in the model yet; looking that
   way from the site's centre". Both calls switch to the model section themselves.
 
+## Wording for a story that is not "the site as it is"
+`brief.places_story` (optional object) replaces the section's fixed wording, for example when the pictures are
+the proposal's own renders shown to a client. Keys, all optional, plain text: `nav` (the navigation label, 24
+characters), `heading`, `lede` (may contain `{v}`, replaced by "type" or "speak or type"), `question`, `keep`,
+`change` (the two buttons), `said_keep`, `said_change` (how a choice is read back; default the button text),
+`why` (the bar's prompt after "Say why"), `noun`, `nouns` ("view", "views"), `tour_vote`, `tour_intro`
+(tour sentences). A missing or unusable key keeps the default and warns; unknown keys are ignored with a
+warning (`note` is allowed). **The recorded values stay `keep` and `change`** whatever the buttons say, so
+merged records compare across projects; `ek-feedback-synthesis` reads the same field for its labels.
+
+**Demo mode.** `brief.demo: true` (exactly `true`) marks a public demonstration that nobody collects from: the copy stops promising a team that will collect (the tour's last step). Leave it out for a real project.
+
 ## Markup it writes
 ```html
 <section data-feature="places" data-title="The site" hidden>

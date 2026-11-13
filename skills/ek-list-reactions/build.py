@@ -146,8 +146,12 @@ def groups_from_brief(brief: dict, wanted: list[str], warnings: list[str], lists
                 text = text[:MAX_TEXT].rstrip() + "…"
             note = str(it.get("note") or "").strip()[:200]
             tags = clean_tags(it.get("tags"), warnings, f"{where}[{i}] ({name})") if gid not in GROUPS else []
-            items.append({"name": name, "text": text if not tbc else tbc_text, "tbc": tbc,
-                          "slide": slide_of(it.get("source_slide"), warnings, f"{where}[{i}] ({name})"),
+            # source (optional, as in ek-about): the attribution line for an item that is not on a numbered slide
+            # (a poster, a report page). It replaces "From the presentation, slide N"; such an item needs no source_slide.
+            source = it.get("source")
+            source = " ".join(source.split())[:120] if isinstance(source, str) else ""
+            items.append({"name": name, "text": text if not tbc else tbc_text, "tbc": tbc, "source": source,
+                          "slide": None if source else slide_of(it.get("source_slide"), warnings, f"{where}[{i}] ({name})"),
                           "contested": bool(it.get("contested")), "note": note, "tags": tags})
         if not items:
             if gid not in GROUPS:
@@ -192,8 +196,10 @@ def section_html(groups: list[dict]) -> str:
             note = f'<small class="ls-note">{html.escape(it["note"])}</small>' if it["note"] else ""
             ct = '<span class="chip ls-ct">Still being discussed</span>' if it["contested"] else ""
             # A placeholder is never attributed to the presentation: the name is the slide's, the wording is not.
+            if it["source"] and not it["tbc"]:
+                slide_txt = it["source"][0].lower() + it["source"][1:]   # data-slide feeds the bar's context line
             src = (f"Wording not yet confirmed by the design team; the name is from the presentation, {slide_txt}" if it["tbc"]
-                   else f"From the presentation, {slide_txt}")
+                   else it["source"] or f"From the presentation, {slide_txt}")
             tags_attr = (f' data-tags="{html.escape(json.dumps(it["tags"], ensure_ascii=False))}"' if it["tags"] else "")
             tl = (g["tag_label"] + ": ") if g["tag_label"] else ""
             tags_html = ('<span class="ls-tags">' + "".join(f'<span class="ls-tag">{html.escape(tl + t)}</span>' for t in it["tags"]) + "</span>"
@@ -426,8 +432,8 @@ SCRIPT = """<script data-feature="list">
     { go: "list", do: () => { if (tabs.length) showGroup(first.dataset.g); if (firstLi) openItem(firstLi); }, undo: () => closeAll(), text: "Priorities: " + (named.length > 2 ? named.slice(0, -1).join(", ") + " and " + named[named.length - 1] : named.join(" and ")) + (custom ? "" : ", in the design team\\u2019s own words") + ". Tap one to read it and say what you think." }
   ];
   const ranker = groups.find(g => g._rank), marker = groups.find(g => g.querySelector(".ls-matter"));
-  if (ranker) steps.push({ go: "list", do: () => { if (tabs.length) showGroup(ranker.dataset.g); ranker._rank.open(); }, undo: () => ranker._rank.close(), text: "Then rank the ones that matter most to you: tap them in order and save. Your ranking stays on this phone until the team collects it." });
-  if (marker) steps.push({ go: "list", do: () => { if (tabs.length) showGroup(marker.dataset.g); openItem(marker.querySelector(".ls-item")); }, undo: () => closeAll(), text: gTitle(marker) + " has no ranking: mark the items that matter to you, one by one" + (marker._filter ? ", and use the chips to show only some of them" : "") + ". Marks stay on this phone until the team collects them." });
+  if (ranker) steps.push({ go: "list", do: () => { if (tabs.length) showGroup(ranker.dataset.g); ranker._rank.open(); }, undo: () => ranker._rank.close(), text: "Then rank the ones that matter most to you: tap them in order and save. Your ranking stays on this phone" + (LS.demo ? "; this is a demonstration, so nobody collects it." : " until the team collects it.") });
+  if (marker) steps.push({ go: "list", do: () => { if (tabs.length) showGroup(marker.dataset.g); openItem(marker.querySelector(".ls-item")); }, undo: () => closeAll(), text: gTitle(marker) + " has no ranking: mark the items that matter to you, one by one" + (marker._filter ? ", and use the chips to show only some of them" : "") + ". Marks stay on this phone" + (LS.demo ? "; this is a demonstration, so nobody collects them." : " until the team collects them.") });
   if (groups.length > 1 && groups[1] !== marker && groups[1] !== ranker) steps.push({ go: "list", do: () => showGroup(groups[1].dataset.g, true), undo: () => showGroup(first.dataset.g), text: "The second list works the same way: " + gTitle(groups[1]).toLowerCase() + "." });
   EK.registerTour(steps);
 })();
@@ -480,6 +486,7 @@ def main(argv=None) -> int:
         sys.exit("the brief has no principles, no program items and no usable lists; ek-project-manifest should not have installed ek-list-reactions")
     data = {"groups": [{"id": g["id"], "title": g["title"], "n": len(g["items"])} | ({"custom": True, "rank": g["rank"]} if g["custom"] else {})
                        | ({"plan": g["plan_sheet"]} if g["plan_sheet"] else {}) for g in groups]}
+    data["demo"] = brief.get("demo") is True   # a public demonstration: the tour must not promise a team that collects
     new_doc = splice(doc, section_html(groups), STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
     args.out.write_text(new_doc, encoding="utf-8", newline="\n")
     for w in warnings:

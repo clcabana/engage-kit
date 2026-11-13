@@ -15,6 +15,10 @@ python skills/ek-feedback-synthesis/build.py --brief work/brief.json --manifest 
 Replaces the `synthesis` slot, inserts `<style data-feature="synthesis">` and `<script data-feature="synthesis">`,
 idempotent. Reads `brief.decision_points` (section 2 of the document) and `manifest.install` (section titles).
 
+**Demo mode.** `brief.demo: true` (exactly `true`) marks a public demonstration that nobody collects from: the copy stops promising a team that will collect (the lede, the export card, which becomes "Download your record", and the tour; `manifest.demo` works too). Leave it out for a real project.
+
+The places section's title and its two choice labels follow `brief.places_story` when `ek-site-story` uses it. "voice clips included" is said only when `ek-voice-reactions` is installed.
+
 ## In-tool view
 - Three figures: reactions on this device, devices behind the counts (one, until a sync target exists; the
   copy says so), days spanned.

@@ -18,6 +18,10 @@ links the typeface from Google Fonts when it is one the script knows, and inline
 prints warnings to stderr (missing name, unknown skill, more than 5 public sections, unknown typeface) and
 never guesses silently. A sample input lives in `skills/ek-shell/sample/brief.riverside.json`.
 
+**Demo mode.** `brief.demo: true` (exactly `true`) marks a public demonstration that nobody collects from: the copy stops promising a team that will collect (the privacy card says "This is a public demonstration: no design team collects what you add"; `manifest.demo` works too). Leave it out for a real project.
+
+It is not `sample`, which says the project's names and numbers are invented.
+
 ## Contract
 Every feature skill, and the three QC agents, rely on exactly this.
 

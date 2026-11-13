@@ -137,9 +137,12 @@ def sheets_from_brief(brief: dict, root: Path, warnings: list[str]) -> list[dict
     return out
 
 
-def section_html(sheets: list[dict]) -> str:
+def section_html(sheets: list[dict], demo: bool = False) -> str:
     chips = "".join(f'<button type="button" class="dm-chip" data-s="{i}" aria-pressed="{"true" if i == 0 else "false"}">{html.escape(s["name"])}</button>' for i, s in enumerate(sheets))
-    lede = "Draw straight on the design team's drawings: pick a sheet, mark what you would change or keep, save, then say what the marks mean. Or print a sheet, sketch on paper and add a photo of it. Marks stay on this phone until the team collects them."
+    # demo (brief.demo): a public demonstration nobody collects from; the copy must not promise a team that will.
+    lede = ("Draw straight on the design team's drawings: pick a sheet, mark what you would change or keep, save, then say what the marks mean. Or print a sheet, sketch on paper and add a photo of it. "
+            + ("Marks stay on this phone; this is a demonstration, so nobody collects them." if demo else "Marks stay on this phone until the team collects them."))
+    paper = ("the photo stays on this phone." if demo else "the photo stays on this phone until you hand it to the team.")
     return (
         f'<section data-feature="markup" data-title="Mark up plans" hidden>\n'
         f'  <h2>Mark up the drawings</h2>\n'
@@ -165,7 +168,7 @@ def section_html(sheets: list[dict]) -> str:
         f'        <div class="dm-slot" data-slot="plan-list"></div>\n'
         f'        <div class="row"><button type="button" class="primary" id="dmSave" disabled>Save my marks</button><button type="button" id="dmClear" hidden>Start again</button></div>\n'
         f'        <div class="row dm-paper"><label class="dm-file"><input type="file" id="dmPhoto" accept="image/*" capture="environment"><span>Add a photo of a sketch</span></label><button type="button" id="dmPrint">Print this sheet</button></div>\n'
-        f'        <small class="dm-meta">Rather draw on paper? Print the sheet, sketch, photograph only the paper; the photo stays on this phone until you hand it to the team.</small>\n'
+        f'        <small class="dm-meta">Rather draw on paper? Print the sheet, sketch, photograph only the paper; {paper}</small>\n'
         f'        <div class="dm-mem" id="dmMem" role="list" aria-label="Your markups on this sheet"></div>\n'
         f'      </div>\n'
         f'    </div>\n'
@@ -318,7 +321,7 @@ SCRIPT = """<script data-feature="markup">
 
   EK.registerTour([
     { go: "markup", do: () => { showSheet(0); setMode("pen"); }, text: "Mark up the drawings: " + S.length + " sheet" + (S.length === 1 ? "" : "s") + " from the presentation. Draw with a finger what you would keep or change, then save and say what it means." },
-    { go: "markup", do: () => $("dmPrint").focus(), text: "Rather draw on paper? Print the sheet, sketch, and add a photo of it here. It is kept on this phone until the team collects it." }
+    { go: "markup", do: () => $("dmPrint").focus(), text: "Rather draw on paper? Print the sheet, sketch, and add a photo of it here. It is kept on this phone" + (DM.demo ? "; this is a demonstration, so nobody collects it." : " until the team collects it.") }
   ]);
 })();
 </script>"""
@@ -354,7 +357,8 @@ def main(argv=None) -> int:
     if not sheets:
         sys.exit("no usable sheets (brief.sheets[] or site.plan_image); ek-project-manifest should not have installed ek-drawing-markup")
     data = {"sheets": [{"name": s["name"], "w": s["w"], "h": s["h"], "slide": s["slide"], "text": s["text"], "src": s["src"]} for s in sheets]}
-    new_doc = splice(doc, section_html(sheets), STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
+    data["demo"] = brief.get("demo") is True
+    new_doc = splice(doc, section_html(sheets, data["demo"]), STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
     args.out.write_text(new_doc, encoding="utf-8", newline="\n")
     for w in warnings:
         log(f"warning: {w}")

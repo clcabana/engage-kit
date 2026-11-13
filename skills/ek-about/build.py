@@ -125,9 +125,14 @@ def blocks_from_brief(brief: dict, warnings: list[str]) -> list[dict]:
             text = (head[:sp] if sp > MAX_TEXT * 0.8 else head).rstrip() + "\u2026"
             cut = True
         note = " ".join(str(b.get("note") or "").split())[:300]
+        # source (optional): the attribution line for a block that is not from the presentation (for example
+        # "Written by the design team for this page"). It replaces "From the presentation, slide N"; a block with a
+        # source needs no source_slide. Plain text, escaped on the way in.
+        source = b.get("source")
+        source = " ".join(source.split())[:120] if isinstance(source, str) else ""
         out.append({"title": title, "paras": paragraphs_of(text, warnings, f"about.blocks[{i}] ({title})"),
-                    "slide": slide_of(b.get("source_slide"), warnings, f"about.blocks[{i}] ({title})"),
-                    "note": note, "cut": cut})
+                    "slide": None if source else slide_of(b.get("source_slide"), warnings, f"about.blocks[{i}] ({title})"),
+                    "note": note, "cut": cut, "source": source})
     if len(out) > MAX_BLOCKS:
         warnings.append(f"{len(out)} blocks; only the first {MAX_BLOCKS} are shown")
         out = out[:MAX_BLOCKS]
@@ -159,7 +164,7 @@ def block_html(k: int, b: dict, indent: str, extra_class: str = "") -> str:
         f'{indent}<article class="ab-block{extra_class}" id="abBlock-{k}" aria-labelledby="abT-{k}">\n'
         f'{indent}  <h3 class="kicker ab-t" id="abT-{k}">{html.escape(b["title"])}</h3>\n'
         + para_html(b, indent + "  ") + cut + "\n"
-        f'{indent}  <small class="ab-src">From the presentation, {html.escape(slide_txt)}</small>{note}\n'
+        f'{indent}  <small class="ab-src">{html.escape(b.get("source") or ("From the presentation, " + slide_txt))}</small>{note}\n'
         f'{indent}</article>'
     )
 

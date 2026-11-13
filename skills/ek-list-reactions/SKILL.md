@@ -45,6 +45,12 @@ Brief fields read:
   `ek-drawing-markup` falls back to `site.plan_image`) on which the items are drawn; a name that is not a
   sheet is dropped with a warning. `brief.lists_note` is provenance for the team and is not rendered.
 
+**Source line.** An item may carry `source` (plain text, 120 characters) in place of `source_slide`, as in
+`ek-about`: the attribution shown under the item when it is not on a numbered slide ("From the presentation
+poster"). A placeholder item ("[wording to confirm]") keeps the standard line.
+
+**Demo mode.** `brief.demo: true` (exactly `true`) marks a public demonstration that nobody collects from: the copy stops promising a team that will collect (the tour's ranking and marking steps). Leave it out for a real project.
+
 ## Markup it writes
 ```html
 <section data-feature="list" data-title="Priorities" hidden>

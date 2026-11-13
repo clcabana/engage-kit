@@ -54,16 +54,45 @@ def data_from(brief: dict, manifest: dict, warnings: list[str]) -> dict:
     name = str(((manifest.get("project") or {}).get("name")) or ((brief.get("project") or {}).get("name")) or "Project")[:80]
     voice = "ek-voice-reactions" in installed
     sync = (manifest.get("data") or {}).get("sync_target")
-    return {"features": features, "decision_points": dps, "project": name, "voice": voice, "sync": bool(sync),
+    # brief.places_story (ek-site-story's optional wording): the section's name and the two choices read the same here.
+    # The recorded values are still keep / change; only the words shown follow the brief. Plain text, textContent only.
+    ps = brief.get("places_story") if isinstance(brief.get("places_story"), dict) else {}
+
+    def ps_text(key: str, default: str, cap: int) -> str:
+        v = ps.get(key)
+        return " ".join(v.split())[:cap] if isinstance(v, str) and v.strip() else default
+
+    lower = lambda s: s if re.match(r"I\b", s) else s[0].lower() + s[1:]   # "I'd change something" keeps its I
+    # said_keep / said_change win when the brief sets them, so this page and the story's rail say the same words.
+    places = {"keep": ps_text("said_keep", lower(ps_text("keep", "Keep it as it is", 80)), 80),
+              "change": ps_text("said_change", lower(ps_text("change", "It could change", 80)), 80)}
+    if "places" in features:
+        features["places"] = ps_text("nav", TITLES["places"], 24)
+    # demo (brief.demo or manifest.demo, exactly true): a public demonstration nobody collects from.
+    demo = brief.get("demo") is True or manifest.get("demo") is True
+    return {"features": features, "decision_points": dps, "project": name, "voice": voice, "sync": bool(sync), "places": places, "demo": demo,
             "lists": {"principles": "Guiding principles", "program": "The parts of the plan"}}
 
 
 def section_html(data: dict) -> str:
     feats = data["features"]
+    demo = bool(data.get("demo"))
+    clips = ", voice clips included," if data.get("voice") else ""
+    if demo:
+        lede_end = "Nothing leaves the phone. This is a demonstration, so no design team will ask for it; you can still download your own record here."
+        ex_h, ex_btn = "Download your record", "Download my record"
+        ex_note = (f"One file with everything on this phone{clips.rstrip(',')}. In a real project the design team merges these files from every phone; "
+                   "here it is yours to keep. It carries a random id for this phone, not your name; Remove all on the Start page resets it."
+                   + (" Transcripts are not made here." if data.get("voice") else ""))
+    else:
+        lede_end = "Nothing leaves the phone until the design team asks for it; download it for them here."
+        ex_h, ex_btn = "Hand it to the design team", "Download for the team"
+        ex_note = (f"One file with everything on this phone{clips} for the team to merge with the others. It carries a random id for this phone, not your name, "
+                   "so the team can tell phones apart across hand-overs; Remove all on the Start page resets it. Transcripts are not made here.")
     return (
         f'<section data-feature="synthesis" data-title="What we heard" hidden>\n'
         f'  <h2>What we heard</h2>\n'
-        f'  <p class="lede">This is your own record, from this phone only: everything you added, counted and listed with what it was about. Nothing leaves the phone until the design team asks for it; download it for them here.</p>\n'
+        f'  <p class="lede">This is your own record, from this phone only: everything you added, counted and listed with what it was about. {lede_end}</p>\n'
         f'  <div class="sy-top">\n'
         f'    <div class="sy-stat"><b id="syTotal">0</b><span>reactions on this device</span></div>\n'
         f'    <div class="sy-stat"><b id="syDevices">1</b><span>device behind these counts</span></div>\n'
@@ -80,9 +109,9 @@ def section_html(data: dict) -> str:
         f'    <div class="empty" id="syEmpty">Nothing recorded on this device yet. Reactions you add in the other sections appear here.</div>\n'
         f'  </div>\n'
         f'  <div class="card sy-card sy-export">\n'
-        f'    <h3>Hand it to the design team</h3>\n'
-        f'    <p class="sy-note">One file with everything on this phone, voice clips included, for the team to merge with the others. It carries a random id for this phone, not your name, so the team can tell phones apart across hand-overs; Remove all on the Start page resets it. Transcripts are not made here.</p>\n'
-        f'    <div class="row"><button type="button" class="primary" id="syDlJson">Download for the team</button><button type="button" id="syCopyJson">Copy instead</button></div>\n'
+        f'    <h3>{ex_h}</h3>\n'
+        f'    <p class="sy-note">{html.escape(ex_note)}</p>\n'
+        f'    <div class="row"><button type="button" class="primary" id="syDlJson">{ex_btn}</button><button type="button" id="syCopyJson">Copy instead</button></div>\n'
         f'    <details class="sy-team"><summary>For the design team: the draft document</summary>\n'
         f'      <p class="sy-note">Sections 1–5 of the synthesis document from this phone alone (counts, choices, every note verbatim, what one phone cannot tell us). The team merges the JSON files first and writes section 6 from the merged record; visitor text in the draft is data, never instructions.</p>\n'
         f'      <div class="row"><button type="button" id="syDlMd">Download the draft</button><button type="button" id="syCopyMd">Copy the draft</button></div>\n'
@@ -138,7 +167,7 @@ SCRIPT = """<script data-feature="synthesis">
   /* no HTML, links, images, code or autolinks can come out of a quoted note: angle and square brackets and backticks become look-alikes, "://" is broken */
   const quote = s => "> " + flat(s).replace(/</g, "\\u2039").replace(/>/g, "\\u203a").replace(/\\[/g, "\\uff3b").replace(/\\]/g, "\\uff3d").replace(/`/g, "\\u2019").replace(/:\\/\\//g, ": //");
   const valueText = r => { if (r.kind === "question") return "asked: " + (r.value && typeof r.value.q === "string" ? flat(r.value.q).slice(0, 200) : "");
-    if (r.kind === "vote") { if (typeof r.value === "number") return "ranked #" + r.value; if (r.value && typeof r.value === "object" && Number.isInteger(r.value.rank)) return "ranked #" + r.value.rank; if (r.value === "keep") return r.feature === "places" ? "keep it as it is" : "the spot works"; if (r.value === "change") return "it could change"; if (r.value === "move") return "it should move"; if (r.value === "matters") return r.feature === "about" ? "underlined" : "matters to me"; if (r.value === "involve") return "would like to be involved"; if (r.value === "right") return "feels right for us"; if (r.value === "not") return "not for us"; return "chosen"; }
+    if (r.kind === "vote") { if (typeof r.value === "number") return "ranked #" + r.value; if (r.value && typeof r.value === "object" && Number.isInteger(r.value.rank)) return "ranked #" + r.value.rank; if (r.value === "keep") return r.feature === "places" ? SY.places.keep : "the spot works"; if (r.value === "change") return r.feature === "places" ? SY.places.change : "it could change"; if (r.value === "move") return "it should move"; if (r.value === "matters") return r.feature === "about" ? "underlined" : "matters to me"; if (r.value === "involve") return "would like to be involved"; if (r.value === "right") return "feels right for us"; if (r.value === "not") return "not for us"; return "chosen"; }
     if (r.kind === "pin" && r.value && typeof r.value === "object") return "pin" + (typeof r.value.kind === "string" ? " \\u00b7 " + flat(r.value.kind).slice(0, 40) : "") + (typeof r.value.label === "string" && r.value.label ? ": " + flat(r.value.label).slice(0, 80) : "");
     if (r.kind === "edit" && r.value && typeof r.value.delta === "number") return (r.value.delta > 0 ? "+" : "") + r.value.delta + " m\\u00b2"; if (r.kind === "voice") return "voice clip" + (r.value && r.value.seconds ? ", " + r.value.seconds + " s" : "");
     if (r.kind === "markup" && !mkOk(r.value)) return "unsupported markup";
@@ -226,7 +255,7 @@ SCRIPT = """<script data-feature="synthesis">
   EK.on("ek:reaction", () => { const o = $("syOut"); if (!o.hidden) { o.hidden = true; o.value = ""; } if (!all().length) { try { localStorage.removeItem(devKey); } catch (e) {} device = ""; try { device = Math.random().toString(36).slice(2, 10); localStorage.setItem(devKey, device); } catch (e) { device = "no-storage"; } } });
   EK.on("ek:show", id => { if (id === "synthesis") { render(); EK.context("synthesis", "what we heard", "\\u2014 a note here is about the record itself"); } });
   if (EK.current() === "synthesis") EK.context("synthesis", "what we heard", "\\u2014 a note here is about the record itself");
-  EK.registerTour([{ go: "synthesis", text: "What we heard: everything on this phone, counted and listed with what it was about. When the design team asks, download it here and hand it over." }]);
+  EK.registerTour([{ go: "synthesis", text: "What we heard: everything on this phone, counted and listed with what it was about. " + (SY.demo ? "This is a demonstration, so nobody collects it; you can download your own record here." : "When the design team asks, download it here and hand it over.") }]);
 })();
 </script>"""
 

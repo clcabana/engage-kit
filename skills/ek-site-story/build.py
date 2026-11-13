@@ -190,7 +190,60 @@ def views_html(views: list[dict]) -> str:
             f'  <div class="pl-views" id="plViews" role="group" aria-labelledby="plViewsK">{btns}</div></div>\n')
 
 
-def section_html(places: list[dict], views: list[dict] | None = None) -> str:
+COPY_DEFAULT = {
+    "nav": "The site",
+    "heading": "The site as it is",
+    "lede": "A walk through the places on the site, in the design team's own pictures. For each one, say whether it must stay as it is, and {v} why.",
+    "question": "Must this stay as it is?",
+    "keep": "Keep it as it is",
+    "change": "It could change",
+    "said_keep": "keep it",
+    "said_change": "it could change",
+    "why": "why must it stay, or what could change?",
+    "noun": "place",
+    "nouns": "places",
+    "tour_vote": "For each place, say whether it must stay as it is. One tap; tap again to take it back.",
+    "tour_intro": "",   # empty: the script's own sentence ("<nav>: N <nouns> in the design team's own pictures. …")
+}
+COPY_MAX = {"nav": 24, "lede": 300, "tour_vote": 200, "tour_intro": 200, "noun": 20, "nouns": 20}
+
+
+def story_copy(brief: dict, warnings: list[str]) -> dict:
+    """brief.places_story (optional): the section's wording, for a story that is not 'the site as it is' (for
+    example the proposal's own views shown to a client). Every key is optional; a missing or unusable one keeps
+    the default. The recorded values stay 'keep' / 'change' whatever the buttons say. Plain text only: every
+    string is escaped on the way into the markup and travels to the script as JSON."""
+    copy = dict(COPY_DEFAULT)
+    raw = brief.get("places_story")
+    if raw is None:
+        return copy
+    if not isinstance(raw, dict):
+        warnings.append("places_story is not an object; default wording kept")
+        return copy
+    for k in COPY_DEFAULT:
+        if k not in raw:
+            continue
+        v = raw[k]
+        cap = COPY_MAX.get(k, 80)
+        if not isinstance(v, str) or not v.strip():
+            warnings.append(f"places_story.{k} is not a non-empty string; default kept")
+            continue
+        v = " ".join(v.split())
+        if len(v) > cap:
+            warnings.append(f"places_story.{k} cut at {cap} characters")
+            v = v[:cap].rstrip()
+        copy[k] = v
+    for said, label in (("said_keep", "keep"), ("said_change", "change")):
+        if label in raw and said not in raw:
+            copy[said] = copy[label] if re.match(r"I\b", copy[label]) else copy[label][0].lower() + copy[label][1:]   # "I'd change something" keeps its I
+    for k in raw:
+        if k not in COPY_DEFAULT and k != "note":
+            warnings.append(f"places_story.{k} is not a known key; ignored")
+    return copy
+
+
+def section_html(places: list[dict], views: list[dict] | None = None, copy: dict | None = None) -> str:
+    c = copy or COPY_DEFAULT
     n = len(places)
     scenes = []
     for i, p in enumerate(places):
@@ -205,25 +258,26 @@ def section_html(places: list[dict], views: list[dict] | None = None) -> str:
             f'        <span class="pl-name">{html.escape(p["name"])}</span>\n'
             f'        {text}\n'
             f'        <small class="pl-src">From the presentation, {html.escape(slide_txt)}</small>\n'
-            f'        <div class="pl-q">Must this stay as it is?</div>\n'
-            f'        <div class="row pl-votes" role="group" aria-label="{html.escape(p["name"])}: must this stay as it is?"><button type="button" class="pl-vote" data-v="keep" aria-pressed="false">Keep it as it is</button><button type="button" class="pl-vote" data-v="change" aria-pressed="false">It could change</button></div>\n'
+            f'        <div class="pl-q">{html.escape(c["question"])}</div>\n'
+            f'        <div class="row pl-votes" role="group" aria-label="{html.escape(p["name"])}: {html.escape(c["question"][0].lower() + c["question"][1:])}"><button type="button" class="pl-vote" data-v="keep" aria-pressed="false">{html.escape(c["keep"])}</button><button type="button" class="pl-vote" data-v="change" aria-pressed="false">{html.escape(c["change"])}</button></div>\n'
             f'        <div class="row"><button type="button" class="primary pl-say">Say why</button><span class="chip pl-count" hidden><b>0</b> <span class="pl-cn">notes</span> on this device</span></div>\n'
             f'        <div class="pl-mem" role="list" aria-label="Your notes on {html.escape(p["name"])}"></div>\n'
             f'      </div>\n'
             f'    </article>'
         )
     rail = "".join(f'<button type="button" data-i="{i}" aria-label="{html.escape(p["name"])}"><span>{html.escape(p["name"])}</span></button>' for i, p in enumerate(places))
-    lede = "A walk through the places on the site, in the design team's own pictures. For each one, say whether it must stay as it is, and {v} why."
+    lede_v = lambda v: html.escape(c["lede"].replace("{v}", v))   # replace, not format: the wording may come from the brief
+    nouns_cap = c["nouns"][0].upper() + c["nouns"][1:]
     return (
-        f'<section data-feature="places" data-title="The site" hidden>\n'
-        f'  <h2>The site as it is</h2>\n'
-        f'  <p class="lede" data-with-voice="{html.escape(lede.format(v="speak or type"))}" data-without-voice="{html.escape(lede.format(v="type"))}">{html.escape(lede.format(v="type"))}</p>\n'
+        f'<section data-feature="places" data-title="{html.escape(c["nav"])}" hidden>\n'
+        f'  <h2>{html.escape(c["heading"])}</h2>\n'
+        f'  <p class="lede" data-with-voice="{lede_v("speak or type")}" data-without-voice="{lede_v("type")}">{lede_v("type")}</p>\n'
         + views_html(views or []) +
         f'  <div class="pl-wrap ek-bleed">\n'
-        f'  <div class="pl ek-stage" id="pl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="The site, {n} places. Use the arrow keys to move between them.">\n'
+        f'  <div class="pl ek-stage" id="pl" tabindex="0" role="region" aria-roledescription="scrolling story" aria-label="{html.escape(c["nav"])}, {n} {html.escape(c["nouns"])}. Use the arrow keys to move between them.">\n'
         + "\n".join(scenes) + "\n"
         f'  </div>\n'
-        f'  <nav class="pl-rail" id="plRail" aria-label="Places">{rail}</nav>\n'
+        f'  <nav class="pl-rail" id="plRail" aria-label="{html.escape(nouns_cap)}">{rail}</nav>\n'
         f'  </div>\n'
         f'</section>'
     )
@@ -281,7 +335,8 @@ STYLE = """<style data-feature="places">
 
 SCRIPT = """<script data-feature="places">
 (function siteStory() {
-  const PL = %(data)s;  /* counts only */
+  const PL = %(data)s;  /* the count and the section's wording (plain text; shown with textContent / toasts only) */
+  const C = PL.copy;
   const root = document.getElementById("pl"), rail = document.getElementById("plRail");
   if (!root || !rail) return;
   const scenes = [...root.querySelectorAll(".pl-scene")], dots = [...rail.querySelectorAll("button")];
@@ -298,7 +353,7 @@ SCRIPT = """<script data-feature="places">
 
   function setActive(i, fromScroll) { if (i === active && armed) return; active = i; armed = true;
     dots.forEach((d, k) => k === i ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current"));
-    if (EK.current() === "places") EK.context("places", target(i), "\\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \\u00b7 scroll for the next place" : " \\u00b7 the last place")); }
+    if (EK.current() === "places") EK.context("places", target(i), "\\u2014 " + slideOf(i) + (i < scenes.length - 1 ? " \\u00b7 scroll for the next " + C.noun : " \\u00b7 the last " + C.noun)); }
   function go(i, focus) { i = Math.max(0, Math.min(scenes.length - 1, i)); root.scrollTo({ top: scenes[i].offsetTop, behavior: reduced ? "auto" : "smooth" }); setActive(i); settle(); if (focus) root.focus({ preventScroll: true }); }
   root.addEventListener("scroll", () => { if (!root._settled) { root._settled = true; settle(); } }, { passive: true });
 
@@ -319,8 +374,8 @@ SCRIPT = """<script data-feature="places">
       const rec = EK.react({ feature: "places", target: t, kind: "vote", value: v });
       if (!rec) { EK.toast("Could not save on this phone (storage full?)"); return; }
       old.forEach(r => EK.remove(r.id));
-      EK.toast(v === "keep" ? "Keep it as it is \\u2014 saved on this phone" : "It could change \\u2014 saved on this phone"); }));
-    const say = s.querySelector(".pl-say"); say.addEventListener("click", () => { setActive(i); EK.context("places", target(i), "\\u2014 " + slideOf(i) + " \\u00b7 why must it stay, or what could change?"); EK.focusNote(); EK.toast(hasVoice() ? "Speak or type below" : "Type below"); }); });
+      EK.toast((v === "keep" ? C.keep : C.change) + " \\u2014 saved on this phone"); }));
+    const say = s.querySelector(".pl-say"); say.addEventListener("click", () => { setActive(i); EK.context("places", target(i), "\\u2014 " + slideOf(i) + " \\u00b7 " + C.why); EK.focusNote(); EK.toast(hasVoice() ? "Speak or type below" : "Type below"); }); });
 
   function render() { const R = mine();
     scenes.forEach((s, i) => { const t = target(i); const notes = R.filter(r => r.target === t && r.kind !== "vote"), v = voteOf(t); const box = s.querySelector(".pl-mem"), chip = s.querySelector(".pl-count");
@@ -332,7 +387,7 @@ SCRIPT = """<script data-feature="places">
         else if (r.value && typeof r.value.text === "string") { d.textContent = r.value.text; const sp = document.createElement("small"); sp.textContent = r.value.via === "voice" ? " (spoken)" : ""; d.appendChild(sp); } else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
         box.appendChild(d); });
       chip.hidden = !notes.length; chip.querySelector("b").textContent = notes.length; chip.querySelector(".pl-cn").textContent = notes.length === 1 ? "note" : "notes";
-      if (dots[i]) dots[i].setAttribute("aria-label", t + (v ? (v === "keep" ? ", you said keep it" : ", you said it could change") : "") + (notes.length ? ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + " on this device" : "")); }); }
+      if (dots[i]) dots[i].setAttribute("aria-label", t + (v ? ", you said " + (v === "keep" ? C.said_keep : C.said_change) : "") + (notes.length ? ", " + notes.length + " note" + (notes.length === 1 ? "" : "s") + " on this device" : "")); }); }
   EK.on("ek:reaction", render); render();
 
   /* views the presentation gives: open the model there. EK.feature.model.stand / standAt are looked up at click time */
@@ -359,9 +414,9 @@ SCRIPT = """<script data-feature="places">
   /* the demo tap never touches a choice the visitor already made: with one in place the step only shows the control */
   let tourDemo = false;
   EK.registerTour([
-    { go: "places", do: () => go(0), text: "The site: " + PL.count + " places in the design team\\u2019s own pictures. Scroll, or use the dots, to walk through." },
-    { go: "places", do: () => { const b = scenes[0] && scenes[0].querySelector('.pl-vote[data-v="keep"]'); if (!b) return; if (voteOf(target(0))) { tourDemo = false; b.focus(); return; } tourDemo = true; b.click(); }, undo: () => { if (!tourDemo) return; tourDemo = false; mine().filter(r => r.kind === "vote" && r.target === target(0)).forEach(r => EK.remove(r.id)); }, text: "For each place, say whether it must stay as it is. One tap; tap again to take it back." },
-    { go: "places", do: () => { const b = scenes[0] && scenes[0].querySelector(".pl-say"); if (b) b.focus(); }, text: "Then say why. Your note is tied to that place and stays on this phone until the team collects it." }
+    { go: "places", do: () => go(0), text: C.tour_intro || (C.nav + ": " + PL.count + " " + C.nouns + " in the design team\\u2019s own pictures. Scroll, or use the dots, to walk through.") },
+    { go: "places", do: () => { const b = scenes[0] && scenes[0].querySelector('.pl-vote[data-v="keep"]'); if (!b) return; if (voteOf(target(0))) { tourDemo = false; b.focus(); return; } tourDemo = true; b.click(); }, undo: () => { if (!tourDemo) return; tourDemo = false; mine().filter(r => r.kind === "vote" && r.target === target(0)).forEach(r => EK.remove(r.id)); }, text: C.tour_vote },
+    { go: "places", do: () => { const b = scenes[0] && scenes[0].querySelector(".pl-say"); if (b) b.focus(); }, text: "Then say why. Your note is tied to that " + C.noun + (PL.demo ? " and stays on this phone; this is a demonstration, so nobody collects it." : " and stays on this phone until the team collects it.") }
   ]);
 })();
 </script>"""
@@ -397,8 +452,10 @@ def main(argv=None) -> int:
     if not places:
         sys.exit("brief.places has no usable places; ek-project-manifest should not have installed ek-site-story")
     views = views_from_brief(brief, warnings)
-    data = {"count": len(places)}
-    new_doc = splice(doc, section_html(places, views),STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
+    copy = story_copy(brief, warnings)
+    data = {"count": len(places), "demo": brief.get("demo") is True,
+            "copy": {k: copy[k] for k in ("nav", "keep", "change", "said_keep", "said_change", "why", "noun", "nouns", "tour_vote", "tour_intro")}}
+    new_doc = splice(doc, section_html(places, views, copy), STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))
     args.out.write_text(new_doc, encoding="utf-8", newline="\n")
     img_bytes = sum(len(p["img"]) for p in places)
     if img_bytes > IMG_BUDGET:

@@ -293,13 +293,20 @@ def build(brief: dict, manifest: dict, warnings: list[str], base: Path | None = 
     speak = "ek-voice-reactions" in installed
     p_keep = "Everything you add is kept on this phone."
     p_none = " Nothing is sent anywhere."
-    p_team = (" The design team collects it from the device and adds it to the record; until then you can remove it all here. "
-              "No name or contact is asked for; please don't add other people's.")
+    # demo (brief.demo or manifest.demo, exactly true): a public demonstration that nobody collects from. The copy must
+    # not promise a team that will come for the reactions (security, 2026-11-13). The feature skills read brief.demo.
+    demo = brief.get("demo") is True or manifest.get("demo") is True
+    p_team = ((" This is a public demonstration: no design team collects what you add. It stays in this browser until you remove it here. "
+               if demo else
+               " The design team collects it from the device and adds it to the record; until then you can remove it all here. ")
+              + "No name or contact is asked for; please don't add other people's.")
     p_ask = " If you use Ask, your question is sent to an AI service (Anthropic) to be answered." if ai_user else ""
     p_speak = (" If you use Speak, your browser sends the sound to Google (Chrome) or Apple (Safari) to turn it into words"
                + (", and the words go to the AI service to be tidied" if ai_user else "") + ".")
     p_ai = " The design team may use an AI service (Anthropic) to help read the collected reactions; your words are sent to it then." if ai_team else ""
-    p_id = " An export carries a random id for this phone, not your name, so the team can tell phones apart; Remove all resets it." if "ek-feedback-synthesis" in installed else ""
+    p_id = ((" An export carries a random id for this phone, not your name; Remove all resets it." if demo else
+             " An export carries a random id for this phone, not your name, so the team can tell phones apart; Remove all resets it.")
+            if "ek-feedback-synthesis" in installed else "")
     privacy_text = p_keep + ("" if (ai_user or ai_team) else p_none) + p_team + p_ask + p_ai + p_id
     privacy_text_voice = p_keep + p_team + p_ask + (p_speak if speak else "") + p_ai + p_id
     # Primary button: the section that answers the first decision point; else the first installed section.

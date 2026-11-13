@@ -21,6 +21,11 @@ into `#welcomeExtra`, after the `ek-process-timeline` strip when there is one. R
 paragraphs, blocks cut) to stdout and warnings to stderr. Idempotent: it removes its own
 `<style data-feature="about">` / `<script data-feature="about">` and its own Start block before inserting.
 
+**Source line.** A block may carry `source` (plain text, 120 characters): the attribution shown under it in
+place of "From the presentation, slide N", for text that is not on a numbered slide (a poster) or was written by
+the team for the page ("From the design team, written for this page"). A block with `source` needs no
+`source_slide`. Never use it to present the team's words as the presentation's.
+
 ## Markup (inside `#welcomeExtra`)
 ```html
 <!-- ek:start-about -->
