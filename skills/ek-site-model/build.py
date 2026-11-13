@@ -371,6 +371,11 @@ def about_text(data: dict, brief: dict) -> str:
             if re.search(r"\bnot (?:modelled|in the (?:file|model))\b", s, re.I):
                 not_in = " " + s.strip()[:240]
                 break
+    # model_about (optional, plain text): the card's whole sentence, for a model that is NOT the team's working file as
+    # exported (for example a simplified massing made for the page). The page must say what the model is.
+    custom = brief.get("model_about")
+    if isinstance(custom, str) and custom.strip():
+        return " ".join(custom.split())[:400]
     return f"The design team's working model, as exported: {inside}.{not_in}"
 
 
@@ -378,6 +383,7 @@ def section_html(data: dict, brief: dict) -> str:
     n = len(data["buildings"])
     chips = "".join(f'<button type="button" class="sm-chip" data-b="{html.escape(b["label"])}" aria-pressed="false">{html.escape(b["label"])}</button>' for b in data["buildings"])
     about = about_text(data, brief)
+    each = "at the building" if n == 1 else "at each building"   # one building is not "each"
     vs = data.get("views") or []
     home = next((i for i, v in enumerate(vs) if v["kind"] == "overview"), 0 if vs and vs[0]["kind"] == "orbit" else -1)
     vchips = "".join(f'<button type="button" class="sm-chip sm-vchip" data-vi="{i}" aria-pressed="{"true" if i == home else "false"}" tabindex="{0 if i == max(home, 0) else -1}">{html.escape(v["name"])}</button>'
@@ -404,7 +410,7 @@ def section_html(data: dict, brief: dict) -> str:
     return (
         f'<section data-feature="model" data-title="The model" hidden>\n'
         f'  <h2>The site in 3D</h2>\n'
-        f'  <p class="lede" data-with-voice="Turn the model, move the sun, stand at each building and look out. Then say whether its spot works for you, and speak or type why." data-without-voice="Turn the model, move the sun, stand at each building and look out. Then say whether its spot works for you, and type why.">Turn the model, move the sun, stand at each building and look out. Then say whether its spot works for you, and type why.</p>\n'
+        f'  <p class="lede" data-with-voice="Turn the model, move the sun, stand {each} and look out. Then say whether its spot works for you, and speak or type why." data-without-voice="Turn the model, move the sun, stand {each} and look out. Then say whether its spot works for you, and type why.">Turn the model, move the sun, stand {each} and look out. Then say whether its spot works for you, and type why.</p>\n'
         f'  <div class="sm-wrap ek-bleed">\n'
         f'    <div class="sm ek-stage" id="sm">\n'
         f'      <div class="sm-view" id="smView">\n'
@@ -754,7 +760,7 @@ SCRIPT = """<script data-feature="model">
   /* ---- tour ---- */
   const first = B[0];
   EK.registerTour([
-    { go: "model", do: () => overview(), text: "The model: the site as the design team has it today, with the sun where you put it. Drag to turn it, pinch to zoom." },
+    { go: "model", do: () => overview(), text: (SM.simplified ? "The model: a simple massing of the site, with the sun where you put it." : "The model: the site as the design team has it today, with the sun where you put it.") + " Drag to turn it, pinch to zoom." },
     { go: "model", do: () => { if (first) { select(first); if (gl) flyTo(first); } }, undo: () => select(prevSel && prevSel !== first ? prevSel : null), text: first ? "Tap a building to pick it out. " + first.label + ": say whether its spot works, and why." : "No proposed buildings are in the model yet." },
     { go: "model", do: () => { if (first) { select(first); $("smStand").click(); } }, undo: () => overview(), text: first ? "Stand here puts you at its floor, looking out the way the presentation says it faces. Drag to look around." : "" }
   ].filter(s => s.text));
@@ -818,6 +824,7 @@ def main(argv=None) -> int:
         if override is None:
             warnings.append("site.model_views_file not used; falling back to site.model_views or the default views")
     data["views"] = model_views(brief, data, warnings, override)
+    data["simplified"] = isinstance(brief.get("model_about"), str) and bool(brief["model_about"].strip())   # the tour says so too
     views_from = "--views" if args.views is not None else ("site.model_views_file" if override is not None else
                   ("site.model_views" if isinstance((brief.get("site") or {}).get("model_views"), list) else "defaults"))
     new_doc = splice(doc, section_html(data, brief), STYLE, SCRIPT.replace("%(data)s", json_inline(data), 1))

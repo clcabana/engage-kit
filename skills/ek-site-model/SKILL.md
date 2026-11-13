@@ -56,6 +56,11 @@ that field. Precedence: `--views`, then `site.model_views_file`, then `site.mode
 `--views` file stops the build with nothing written; a bad `site.model_views_file` is warned and the build falls
 back. The build's JSON line says `views_from`.
 
+**A model that is not the working file.** `brief.model_about` (optional, plain text, 400 characters) replaces the card's
+sentence "The design team's working model, as exported: …" when the model is something else, for example a simplified
+massing made for the page; the tour then says "a simple massing of the site". Say what is in it and what is not. With
+one proposed building the lede says "stand at the building", not "at each building".
+
 ## Markup it writes
 ```html
 <section data-feature="model" data-title="The model" hidden>
