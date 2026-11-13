@@ -124,3 +124,12 @@ history rewrite and a force push; nothing has been rewritten.
 Decided 2026-11-13 by the project owner: leave the history as it is. The disclosure stands and is accepted. If
 that changes, the rewrite has to cover every commit from the lock-page commit onward, and every clone and fork
 made before it keeps the old lines.
+
+### Hosting decision changed (2026-11-13)
+
+The real project will be hosted from a separate public repository on the owner's own GitHub account, not from an
+organisation. The upload folder is built and checked locally; nothing has been uploaded and the repository does
+not exist yet (that step is the owner's). Accepted consequence: every Pages site on that account shares one web
+address, so the account's other pages can read what the tool saves in a browser. The showcase link in the kit's
+README and the copy under `docs/p/` still point at the kit's own Pages until the new address is live.
+Neither new locked page has been opened with its passphrase.

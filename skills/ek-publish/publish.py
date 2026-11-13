@@ -104,10 +104,11 @@ def beginner_route(repo: str, pages_dir: str, links: dict, local_pages: Path) ->
     owner, name = repo.split("/", 1)
     return [
         f"1. Create a GitHub account at https://github.com/signup (free).",
-        f"2. If the tool is for a closed group, create a free organisation for this project: your picture (top right) →"
-        f" Your organizations → New organization → Free, named `{owner}`. Its pages get their own web address"
-        f" ({owner.lower()}.github.io), which keeps this group's data apart from any other pages you publish.",
-        f"3. Create a repository in it: + (top right) → New repository → owner `{owner}`, name `{name}`, Public (free"
+        f"2. `{owner}` is the owner in publish.repo. If that is your own account, skip this step and know that every"
+        f" Pages site on one account shares one web address ({owner.lower()}.github.io): your other pages there can read"
+        f" what this tool saves in the browser. For a closed group, a free organisation of that name keeps it apart"
+        f" (your picture, top right → Your organizations → New organization → Free).",
+        f"3. Create a repository: + (top right) → New repository → owner `{owner}`, name `{name}`, Public (free"
         f" Pages needs a public repository; a locked portal is stored only as ciphertext) → Create repository.",
         f"4. Upload the pages folder: in the new repository, Add file → Upload files, and drag in the whole"
         f" `{pages_dir}` folder from {local_pages.parent} (the folder itself, so the repository shows `{pages_dir}/`)."
@@ -345,7 +346,8 @@ def publish(args, mpath: Path) -> int:
               f" {mpath.parent})")
         if inside(pass_dir, publish_root) or inside(pass_dir, out_dir):
             return fail("publish.passphrases_dir is inside a folder that gets published or built; move it outside")
-        if inside(pass_dir, root) and "projects" not in pass_dir.relative_to(root).parts:
+        # judged from the kit folder, not --root: a project's --root is often already inside projects/
+        if inside(pass_dir, KIT) and "projects" not in pass_dir.relative_to(KIT).parts:
             print("[publish] warning: passphrases_dir is inside the kit folder and not under the gitignored projects/; make sure it is never committed")
         for p in ("user", "admin"):
             if locks[p] and portals[p].get("published") and not (pass_dir / f"{p}.txt").is_file():

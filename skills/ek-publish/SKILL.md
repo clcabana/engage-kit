@@ -64,7 +64,10 @@ Re-running is safe: same paths, same passphrases (read from their files), fresh 
 1. Create a GitHub account (github.com, free).
 2. If the tool is for a closed group, create a free **organisation** for the project (your picture → Your
    organizations → New organization → Free). Its pages get their own web address (`<org>.github.io`), which keeps
-   this group's data apart from your other pages. Use it as the `owner` in `publish.repo`.
+   this group's data apart from your other pages. Use it as the `owner` in `publish.repo`. A separate repository on
+   your **own account** also works and is simpler, but every Pages site on one account shares one address
+   (`<you>.github.io`): your other pages there can read what the tool saves in the browser, so the gate offers no
+   "remember" and an admin should not tick "Keep on this computer" for the key. Say this to the person; it is their call.
 3. Create a **public** repository in it (+ → New repository). Free Pages needs a public repository; a locked portal
    is stored there only as ciphertext.
 4. Upload the `docs` folder (the pages folder) through the website: **Add file → Upload files**, drag in the folder,
