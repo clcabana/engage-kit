@@ -73,7 +73,9 @@ section[data-feature] > h2:first-child{font-size:30px;letter-spacing:-.02em}
 .ek-stage{height:calc(100dvh - var(--ek-top,0px) - var(--ek-bar,110px) - 24px);min-height:320px;max-height:900px}
 @media(max-width:899px){.ek-stage{min-height:240px}}  /* room for the bar's extra row (consent, review) on a phone */
 /* ===== ek-shell: reaction bar (shared by every feature): a floating sheet ===== */
-#bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;z-index:6;box-shadow:var(--float)}
+#bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));background:var(--sheet-a);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;z-index:6;box-shadow:var(--float);max-height:55vh;overflow-y:auto;overscroll-behavior:contain}
+#bar.has-drawer #note,#bar.has-drawer #noteForm > button[type=submit]{display:none}
+#bar .kinds .kind{display:inline-flex;flex-direction:column;align-items:center;gap:2px} #bar .kinds .kind small{font-size:11px;line-height:1;color:var(--mute)}
 #bar .ctx{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--mute)}
 #bar .ctx .chip{background:var(--soft);font-weight:400}
 #bar form{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
@@ -147,7 +149,7 @@ const PROJECT = {{PROJECT_JSON}};
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 const EK = window.EK = (() => {
   const key = "ek:" + PROJECT.slug; let list = []; const handlers = {}; const kinds = {}; let tourSteps = []; let current = "welcome"; let tourOn = false;
-  const KINDS = ["voice", "note", "pin", "vote", "edit", "submission", "markup"];
+  const KINDS = ["voice", "note", "pin", "vote", "edit", "submission", "markup", "question"];  /* question: a visitor's question to the chat and its answer, so the team learns what keeps being asked */
   // A stored record is trusted only if it has the shape react() produces; anything else (tampered store,
   // another page on the same origin) is dropped so one bad entry cannot brick the page.
   const valid = r => !!r && typeof r === "object" && typeof r.feature === "string" && typeof r.target === "string" && KINDS.indexOf(r.kind) >= 0 && typeof r.id === "string" && typeof r.ts === "string";
@@ -193,9 +195,13 @@ const EK = window.EK = (() => {
     registerKind(kind, opts) { if (KINDS.indexOf(kind) < 0 || kinds[kind]) return null; kinds[kind] = opts || {};
       const b = document.createElement("button"); b.type = "button"; b.dataset.kind = kind; b.textContent = (opts && opts.icon) || kind; b.setAttribute("aria-label", (opts && opts.label) || kind);
       if (opts && opts.mount) opts.mount(b, document.getElementById("barSlot")); else if (opts && opts.onActivate) b.addEventListener("click", () => opts.onActivate(ctx));
-      document.getElementById("kinds").appendChild(b); return b; },
-    barSlot(show) { const s = document.getElementById("barSlot"); if (show != null) { s.classList.toggle("show", !!show); emit("ek:bar", !!show); } return s; },
-    focusNote() { document.getElementById("note").focus(); },
+      /* a round icon alone reads as "help": opts.caption puts one plain word under it ("Ask", "Speak") */
+      const w = document.createElement("span"); w.className = "kind"; w.appendChild(b); if (opts && opts.caption) { const c = document.createElement("small"); c.textContent = String(opts.caption).slice(0, 12); c.setAttribute("aria-hidden", "true"); w.appendChild(c); }
+      document.getElementById("kinds").appendChild(w); return b; },
+    /* the extra row is a drawer: while it is open the note field and Add give way, so there is one text box and one primary button */
+    barSlot(show) { const s = document.getElementById("barSlot"); if (show != null) { s.classList.toggle("show", !!show); document.getElementById("bar").classList.toggle("has-drawer", !!show); emit("ek:bar", !!show); } return s; },
+    /* focusing the note closes any drawer first (its owner hears 'ek:bar' false and resets itself) */
+    focusNote() { const bar = document.getElementById("bar"); if (bar.classList.contains("has-drawer")) { document.getElementById("barSlot").classList.remove("show"); bar.classList.remove("has-drawer"); emit("ek:bar", false); } document.getElementById("note").focus(); },
     /* stage fitting: size el (class ek-stage) to the viewport between the sticky header (phones) and the bar,
        re-size when the bar grows, and on phones scroll the page so el sits under the header when its section
        shows. Returns {size, settle}. opts.onResize runs after every size change (re-snap, redraw). */

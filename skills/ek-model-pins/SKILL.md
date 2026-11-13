@@ -55,3 +55,9 @@ model's (the model re-inserts itself right after the shared `lib-three` tag). Br
 - Pins are this device's own (single-device store); the card says so wherever it counts them.
 - Pin objects live in the model's `scene` (not its rebuilt group), share three geometries, and recolour from the
   tokens on every draw (`--marker` ball, `--ink` stem), so theme changes and model rebuilds keep them.
+
+## Brief flags for the program chips
+`program[].in_model: true` marks an element the model already carries under another label (the deck's
+"retreat cabins" are the model's "Hermitage cabin" instances), and `program[].pinnable: false` marks an
+element that is not placed with a pin (a road). Both are left out of "not in the model yet"; without the
+flags the build falls back to whole-word name matching against the model's labels.

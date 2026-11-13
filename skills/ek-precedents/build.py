@@ -315,7 +315,7 @@ SCRIPT = """<script data-feature="precedents">
     rs.forEach(r => { const d = document.createElement("div"); d.setAttribute("role", "listitem");
       if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\\/[\\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); const s = document.createElement("small"); s.textContent = (r.value.seconds || "?") + " s, voice"; d.appendChild(s); }
       else if (r.kind === "voice") d.textContent = "Unsupported voice note";
-      else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
+      else if (r.value && typeof r.value.text === "string") { d.textContent = r.value.text; const sp = document.createElement("small"); sp.textContent = r.value.via === "voice" ? " (spoken)" : ""; d.appendChild(sp); } else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
       box.appendChild(d); }); }
 
   const rankedBtn = sec.querySelector(".pc-ranked"), other = sec.querySelector(".pc-other");

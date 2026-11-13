@@ -1,13 +1,14 @@
-# Threat model: ek-voice-reactions (static review, 2026-10-26)
-
-- **Assets:** voice clips (base64 + mime + seconds + feature/target) in `localStorage['ek:<slug>']`; the consent flag `ek:consent`; the browser's per-origin microphone grant; the review-row blob URL before Keep.
-- **Actors:** recording resident; bystanders and minors in mic range; the next visitor on the same phone (plays every clip via timeline memories); a hostile visitor (tampers with storage, records others); the team collecting the device; the client; the model that wrote the code.
-- **Entry points:** microphone stream (`getUserMedia`, build.py:72); recorder mime string (build.py:92, trusted only after the `^audio/[\w.+-]+$` test in ek-timeline render, build.py:269); stored JSON (shell template.html:144 shape filter; value is not inspected); the bar context `EK.ctx()` written into `target`.
-- **Spoof:** n/a locally. No identity; a clip is as anonymous as its voice. Any visitor can record "as" anyone, which is the design.
-- **Tamper:** a same-origin page or devtools can rewrite `ek:<slug>`; render validates mime and base64 charset so the worst case is a non-playing `<audio>`. Duplicate Keep taps (build.py:92, no disable) can store the same clip twice.
-- **Repudiate:** no log; a resident cannot prove a clip was or was not theirs. Acceptable for anonymous engagement; the team's table script should not treat clips as attributed.
-- **Disclose:** every clip on the phone is playable by the next visitor and by whoever picks the phone up (ek-timeline render, no per-clip delete, Remove all wipes everyone's). Consent card never says this. Bystander and child voices can be captured; "Don't record other people" is the only guard.
-- **Deny:** `save()` swallows QuotaExceededError (template.html:145) and `react()` still returns the record (:157), so the guard at build.py:93-94 can pass, the toast says "kept", the list and counts show it, and the clip is gone on reload. The guard also counts only this slug, while the 5 MB quota is per origin (demo + output on one GitHub Pages host share it).
-- **Elevate:** none. No network calls, no eval/innerHTML, no credentials; build.py reads and writes `--out` only (build.py:128-134).
-- **Minors:** drop-in tables are open to children; flag to the team (parent present, or do not record).
-- **Hosting:** `getUserMedia` needs a secure context; HTTPS (GitHub Pages) or localhost works, a LAN `http://192.168…` server silently falls back to typed. file:// works in Chrome/Firefox, not reliably in Safari. Test on the actual table phones.
+# Threat model: ek-voice-reactions, dictation design (rewritten 2026-11-13; replaces the hold-to-record review)
+- **Assets:** a note `{text, via:'voice', transcript}` in `ek:<slug>` (text ≤ 1,200, transcript ≤ 2,400: every listening turn, final **and** interim words, joined); an opt-in clip `{mime, base64, seconds ≤ 60, note}`; the dictation audio while listening; the browser's mic permission; consent time (memory only, 10 min).
+- **Actors:** the speaker; bystanders and minors in mic range; the next visitor on a shared phone; Google (Chrome's Web Speech service receives the audio), Apple (Safari/iOS dictation, server-side unless on-device), other browser makers; Anthropic + Cloudflare when the assistant redraft is on (proxy mode); the team; a hostile visitor.
+- **Entry points:** SpeechRecognition results (build.py:136), the spoken words sent to `EK.chat.ask` with the bar target (150-153), the assistant's draft (into `textarea.value`), MediaRecorder output (178).
+- **Disclose (transcript, BLOCKING):** the consent card says "You read and edit the text before it is added", but `transcript` (168) keeps the raw words as heard, interim words included, even when she edits a name or a sentence out; it goes to the team in every export. Fix: do not store `transcript` (keep `{text, via}`), or show it under the draft and say "the words as first heard are kept too, for the team to check the typing".
+- **Disclose (audio):** consent (91) says "some browsers, Chrome among them, send the sound to their maker's speech service": true but vague; name it: "Chrome sends it to Google, Safari to Apple". The redraft line says "the service the design team chose": name Anthropic. HANDOFF must list both flows; neither is there today.
+- **Disclose (clip):** off unless ticked; stored as base64 next to the note, playable by the next visitor of a shared phone and in every export; budget check before storing (180). Bystander and child voices: "don't speak about other people by name" is the only guard; flag minors to the team.
+- **Prompt injection:** spoken text can steer only her own redraft, which she sees, edits and confirms before `Add this`; output is `.value`, never markup. OK.
+- **Tamper:** `btn.innerHTML`/`talk.innerHTML` are a constant SVG; all else `textContent`. Pass.
+- **Deny:** listening stops after 8 s silence or 60 s; redraft times out at 30 s and falls back to the verbatim words; storage-full returns a message, the text never lost for a refused clip.
+- **Spoof / repudiate:** n/a: no identity; the edited text is what she confirmed, the transcript is not (see above).
+- **Elevate:** none: build.py rewrites `--out` only; no network from Python; listening starts only on a tap.
+- **Hosting:** SpeechRecognition and getUserMedia need HTTPS; Firefox has no SpeechRecognition (falls back to "type instead").
+- **Real project:** not installed (typing only), so none of these flows exist there.

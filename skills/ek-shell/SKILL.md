@@ -84,7 +84,12 @@ EK.toast(msg)                                 // 1.8 s status message, aria-live
 EK.registerKind(kind, {icon, label, onActivate(ctx)} | {icon, label, mount(button, slotEl)})
                                               // adds one round button to the bar; mount() gets the button and the
                                               //   bar's extra row (#barSlot) for its own UI; second registration ignored
-EK.barSlot(show?)                             // the extra row under the note field; show true/false toggles it
+EK.barSlot(show?)                             // the extra row under the note field, used as a drawer; show true/false toggles
+                                              //   it, sets #bar.has-drawer (the note field and Add are hidden while a drawer is
+                                              //   open) and emits 'ek:bar'. A drawer's owner listens for 'ek:bar' false to reset
+                                              //   itself, because EK.focusNote() closes any open drawer. The bar is capped at
+                                              //   55vh and scrolls inside itself. registerKind's opts.caption puts one word under
+                                              //   the round button ("Ask", "Speak").
 EK.focusNote()                                // put the cursor in the note field (after a pin, say)
 EK.fitStage(el, featureId, {onResize?})       // el gets class ek-stage (height = viewport − sticky header − bar) inside an
                                               //   ek-bleed wrapper (full width of main); re-sizes when the bar grows; on phones
@@ -97,6 +102,11 @@ EK.registerTour([{go, text, do?, undo?}])     // append steps; the shell plays t
                                               //   do); on exit only tour:true records made during the tour are removed
 EK.tourRunning()                              // true while the tour plays
 ```
+- `PROJECT.chat` is the manifest's `chat` block (`mode: "proxy" | "direct"`, `proxy_url`, `provider`, `model`), never a
+  key; `PROJECT.portal` is `"user"` or `"admin"`. `ek-chat` provides `EK.chat = { configured(), ask({system, messages,
+  onToken}) → Promise<string>, open(), setKey(k) }` on the bar; `ek-admin` owns the `admin` slot (admin portal only).
+- Kinds: `voice, note, pin, vote, edit, submission, markup, question` (`question` = `{q, a, at}` from the chat, so the
+  team learns what is asked).
 - Reaction schema (`project.config.json → reaction_schema`): `{feature, target, kind, value, ts}` plus `id`.
   `target` must say what the reaction is about (an option id, a year, a program name, a pin path).
 - Storage: `localStorage['ek:' + project.slug]`, JSON array, every read/write in try/catch; storage absent →

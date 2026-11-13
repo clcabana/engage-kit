@@ -12,11 +12,20 @@ delegate, supervise, and decide.
 - `agents/qc-critic.md`, `agents/qc-debugger.md` and `agents/qc-security.md` — read all three before the first review.
 
 ## Run order
+0. **Accounts first.** Before ingest, in one short message, ask about the accounts that take time to set up so they
+   are ready when the build ends (`ek-project-manifest` step 0): GitHub (or the creator's own host); an Anthropic
+   account with a separate key and a monthly spending limit, only if they want the assistant; Cloudflare, only if
+   visitors should be able to ask the assistant. Say plainly that the recommended start is both portals locked and
+   the assistant for the team only, and that the admin portal need not be hosted at all: opened from the creator's
+   own computer it is the strongest separation. Never ask for a key or a password.
 1. **Ingest.** Run `ek-ingest-presentation`. Output: `work/brief.json` (project facts, audience, decision
    points, candidate features, extracted images). Stop and show the person a 10-line summary.
 2. **Manifest.** Run `ek-project-manifest`. Output: `project.config.json` with the features to install and
    a one-sentence reason for each. **Ask the person to confirm the feature list before continuing.** A
    feature nobody will use is cost without value; a missing feature is a decision that cannot be heard.
+   In the same message ask the **kickoff questions** (`ek-project-manifest` step 5): GitHub Pages or own domain,
+   user portal public or passphrase, admin portal passphrase, chat (none / proxy / direct admin-only). The answers
+   become the manifest's `publish` and `chat` blocks; never ask for or accept an API key.
 3. **Shell.** Run `ek-shell`. Output: `output/index.html` with navigation, project header, the reaction
    bar, and empty slots for each installed feature.
 4. **Features, one at a time, in manifest order.** For each installed feature skill:
@@ -30,6 +39,12 @@ delegate, supervise, and decide.
    features emit.
 7. **Final review.** All three QC agents review the whole tool once (not feature by feature). Then write
    `output/HANDOFF.md`: what was installed, what was skipped and why, known issues, how to host it.
+8. **Publish.** Run `ek-publish`: it builds the user portal and the admin portal, locks each as the `publish` block
+   says, places them for the host, and writes the private project README (`output/README.md`, never published) with
+   both links. Show the person the two links, where the passphrase files are, and the printed step-by-step hosting
+   route (or the upload folder). Uploading, committing and pushing stay the person's step. **Never pass `--run-gh`**:
+   it creates a public repository with the person's account and only runs after they type the repository name in
+   their own terminal.
 
 ## Supervision rules
 - Delegate with a complete brief: the feature's slice of `work/brief.json`, the manifest entry, the shell's

@@ -36,6 +36,11 @@ def program_names(brief: dict, warnings: list[str]) -> list[str]:
         name = p.get("name") if isinstance(p, dict) else p if isinstance(p, str) else None
         if not isinstance(name, str):
             continue
+        # The team's model labels and the deck's names differ ("Three Monastic Retreat Cabins" are the "Hermitage cabin"
+        # instances), and some program elements are not buildings (a road). The brief says so explicitly:
+        # in_model: true = already in the model; pinnable: false = not something to place with a pin.
+        if isinstance(p, dict) and (p.get("in_model") is True or p.get("pinnable") is False):
+            continue
         name = " ".join(name.split())[:MAX_NAME]
         if name and name.lower() not in seen:
             seen.add(name.lower())
@@ -215,7 +220,7 @@ SCRIPT = r"""<script data-feature="pins">
     mem.textContent = ""; const p = byId(selId); if (!p) return;
     EK.reactions().filter(r => r.feature === "model" && r.target === p.target && r.kind !== "pin").forEach(r => { const d = el("div"); d.setAttribute("role", "listitem");
       if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\/[\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); d.appendChild(el("small", null, (r.value.seconds || "?") + " s, voice")); }
-      else d.textContent = r.kind === "voice" ? "Unsupported voice note" : typeof r.value === "string" ? r.value : "Unsupported note"; mem.appendChild(d); }); }
+      else if (r.kind !== "voice" && r.value && typeof r.value.text === "string") { d.textContent = r.value.text; const sp = document.createElement("small"); sp.textContent = r.value.via === "voice" ? " (spoken)" : ""; d.appendChild(sp); } else d.textContent = r.kind === "voice" ? "Unsupported voice note" : typeof r.value === "string" ? r.value : "Unsupported note"; mem.appendChild(d); }); }
 
   EK.on("ek:reaction", () => { load(); if (selId && !byId(selId)) { selId = null; sel.hidden = true; } renderCard(); draw(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && EK.current() === "model" && (armed || pending)) { closeAsk(); arm(false); } });

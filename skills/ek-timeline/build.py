@@ -274,7 +274,7 @@ SCRIPT = """<script data-feature="timeline">
       mine.forEach(r => { const d = document.createElement("div"); d.setAttribute("role", "listitem");
         if (r.kind === "voice" && r.value && typeof r.value.mime === "string" && /^audio\\/[\\w.+-]+$/.test(r.value.mime) && typeof r.value.base64 === "string" && /^[A-Za-z0-9+\\/=]+$/.test(r.value.base64)) { const a = document.createElement("audio"); a.controls = true; a.src = "data:" + r.value.mime + ";base64," + r.value.base64; d.appendChild(a); const t = document.createElement("small"); t.textContent = (r.value.seconds || "?") + " s, voice"; d.appendChild(t); }
         else if (r.kind === "voice") d.textContent = "Unsupported voice note";
-        else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
+        else if (r.value && typeof r.value.text === "string") { d.textContent = r.value.text; const sp = document.createElement("small"); sp.textContent = r.value.via === "voice" ? " (spoken)" : ""; d.appendChild(sp); } else d.textContent = typeof r.value === "string" ? r.value : "Unsupported note";
         box.appendChild(d); });
       if (chip) { chip.hidden = !mine.length; chip.querySelector("b").textContent = mine.length; chip.querySelector(".tl-n").textContent = mine.length === 1 ? "memory" : "memories"; }
       if (dots[i]) dots[i].setAttribute("aria-label", label(i) + (mine.length ? ", " + mine.length + " memor" + (mine.length === 1 ? "y" : "ies") + " on this device" : "")); }); }

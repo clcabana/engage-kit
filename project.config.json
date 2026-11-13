@@ -3,33 +3,106 @@
     "name": "Riverside Community Hub",
     "client": "[Client name]",
     "phase": "Pre-design — design options (steps 5–8 of the consultation workflow)",
-    "audience": ["residents", "user groups", "client steering committee"],
-    "palette": { "paper": "#F7F6F2", "ink": "#23241F", "marker": "#E8642C", "plan": "#2E5E8C" },
+    "audience": [
+      "residents",
+      "user groups",
+      "client steering committee"
+    ],
+    "palette": {
+      "paper": "#F7F6F2",
+      "ink": "#23241F",
+      "marker": "#E8642C",
+      "plan": "#2E5E8C"
+    },
     "typeface": "Archivo",
     "language": "plain, public-facing; architect vocabulary only in the designer notes"
   },
-  "source": { "deck": "input/pre-design-deck.pdf", "ingested": "work/brief.json" },
+  "source": {
+    "deck": "input/pre-design-deck.pdf",
+    "ingested": "work/brief.json"
+  },
   "install": [
-    { "skill": "ek-shell", "reason": "required container" },
-    { "skill": "ek-about", "reason": "sample: the deck's narrative as reactable paragraphs" },
-    { "skill": "ek-process-timeline", "reason": "sample: the gates ahead and where the project stands" },
-    { "skill": "ek-precedents", "reason": "sample: the references the team looked at, as a gallery to react to" },
-    { "skill": "ek-model-pins", "reason": "sample: pins on the site model for location-specific comments" },
-    { "skill": "ek-timeline", "reason": "deck has 6 dated site/community events; residents asked for context" },
-    { "skill": "ek-site-story", "reason": "three photographed places on the site that the options treat differently; residents should say what must stay" },
-    { "skill": "ek-site-model", "reason": "sample: a synthetic site model (skills/ek-site-model/sample_model.py) so the viewer can be shown; a real project exports the team's Rhino file", "model": "skills/ek-shell/sample/model.riverside.json" },
-    { "skill": "ek-list-reactions", "reason": "the program as a ranked list in the team's words, for the user groups who rank rather than resize (sample: exercises the skill)" },
-    { "skill": "ek-site-massing-3d", "reason": "three massing options are the main decision gate" },
-    { "skill": "ek-program-diagram", "reason": "program areas are still contested; sizes need to be felt, not read" },
-    { "skill": "ek-voice-reactions", "reason": "drop-in sessions; typing on phones suppresses responses" },
-    { "skill": "ek-massing-markup", "reason": "client wants location-specific comments on the massing" },
-    { "skill": "ek-drawing-markup", "reason": "drop-in sessions with printed plans on the table" },
-    { "skill": "ek-feedback-synthesis", "reason": "required for the synthesis document at step 7" }
+    {
+      "skill": "ek-shell",
+      "reason": "required container"
+    },
+    {
+      "skill": "ek-about",
+      "reason": "sample: the deck's narrative as reactable paragraphs"
+    },
+    {
+      "skill": "ek-process-timeline",
+      "reason": "sample: the gates ahead and where the project stands"
+    },
+    {
+      "skill": "ek-precedents",
+      "reason": "sample: the references the team looked at, as a gallery to react to"
+    },
+    {
+      "skill": "ek-model-pins",
+      "reason": "sample: pins on the site model for location-specific comments"
+    },
+    {
+      "skill": "ek-timeline",
+      "reason": "deck has 6 dated site/community events; residents asked for context"
+    },
+    {
+      "skill": "ek-site-story",
+      "reason": "three photographed places on the site that the options treat differently; residents should say what must stay"
+    },
+    {
+      "skill": "ek-site-model",
+      "reason": "sample: a synthetic site model (skills/ek-site-model/sample_model.py) so the viewer can be shown; a real project exports the team's Rhino file",
+      "model": "skills/ek-shell/sample/model.riverside.json"
+    },
+    {
+      "skill": "ek-list-reactions",
+      "reason": "the program as a ranked list in the team's words, for the user groups who rank rather than resize (sample: exercises the skill)"
+    },
+    {
+      "skill": "ek-site-massing-3d",
+      "reason": "three massing options are the main decision gate"
+    },
+    {
+      "skill": "ek-program-diagram",
+      "reason": "program areas are still contested; sizes need to be felt, not read"
+    },
+    {
+      "skill": "ek-massing-markup",
+      "reason": "client wants location-specific comments on the massing"
+    },
+    {
+      "skill": "ek-drawing-markup",
+      "reason": "drop-in sessions with printed plans on the table"
+    },
+    {
+      "skill": "ek-feedback-synthesis",
+      "reason": "required for the synthesis document at step 7"
+    }
   ],
   "skip": [
-    { "skill": "ek-model-roundtrip", "reason": "still an instruction draft (no build.py); installing it would put an empty 'not built yet' section in the nav" },
-    { "skill": "ek-submissions-gallery", "reason": "still an instruction draft; needs round-trip or markup submissions to gather" },
-    { "skill": "ek-live-questionnaire", "reason": "no scheduled live session; use the reaction bar instead" }
+    {
+      "skill": "ek-voice-reactions",
+      "reason": "the person's decision, 2026-11-13: the open sample carries no chat and no dictation, so no API key or speech service is ever involved on a public page"
+    },
+    {
+      "skill": "ek-model-roundtrip",
+      "reason": "still an instruction draft (no build.py); installing it would put an empty 'not built yet' section in the nav"
+    },
+    {
+      "skill": "ek-submissions-gallery",
+      "reason": "still an instruction draft; needs round-trip or markup submissions to gather"
+    },
+    {
+      "skill": "ek-live-questionnaire",
+      "reason": "no scheduled live session; use the reaction bar instead"
+    }
   ],
-  "reaction_schema": { "feature": "string", "target": "string", "kind": "voice|note|pin|vote|edit|submission|markup", "value": "any", "ts": "ISO-8601" }
+  "reaction_schema": {
+    "feature": "string",
+    "target": "string",
+    "kind": "voice|note|pin|vote|edit|submission|markup",
+    "value": "any",
+    "ts": "ISO-8601"
+  }
 }
