@@ -28,9 +28,7 @@ people who open it.
 ## Live links
 
 - **[Engage Kit info page →](https://clcabana.github.io/engage-kit/)** the demo video, why it exists, how it works, and how to build one from your own deck.
-- **[Showcase project (private) →](https://clcabana.github.io/engage-kit/p/c2be2949/)** a real engagement tool built with Engage Kit.
-  It is encrypted: **please ask the author for the passphrase.**
-- **[Open sample →](https://clcabana.github.io/engage-kit/sample/)** a student studio project for a hypothetical design institute, built by the skills from its own deck; no passphrase needed.
+- **[Open sample →](https://clcabana.github.io/engage-kit/sample/)** a student studio project for a hypothetical design institute, built by the skills from its own deck.
   It opens on the design team's view with a **simulated** record built in (188 reactions from 20 visitors played by AI personas; not real feedback).
 
 Engage Kit is not an app. It is a small library of *skills* (plain-language instruction files) plus four
