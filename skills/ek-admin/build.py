@@ -67,6 +67,7 @@ def section_html() -> str:
         '  <h2>Admin</h2>\n'
         '  <p class="lede">Load the files the phones downloaded from What we heard, read them as one record, ask the assistant about it, and export the merged draft.</p>\n'
         '  <p class="kicker">Design team only</p>\n'
+        '  <div class="card ad-card ad-sim" id="adSim" hidden><h3 id="adSimTitle"></h3><p class="ad-note" id="adSimText"></p></div>\n'
         '  <div class="card ad-card">\n'
         '    <h3>1. Load exports</h3>\n'
         '    <p class="ad-note">Pick one or more JSON files from What we heard \u2192 Download (at most 50 files, 30 MB each). They are read and merged in this browser\'s memory only: nothing is uploaded, nothing is written into this browser\'s own record, and reloading the page forgets them. A reaction that appears in two files (same id and time) is counted once. A file from another project is refused.</p>\n'
@@ -87,6 +88,7 @@ def section_html() -> str:
         '      <div class="card ad-card"><h3>By kind</h3><div class="ad-bars" id="adByKind"></div></div>\n'
         '    </div>\n'
         '    <div id="adChoices" class="ad-choices"></div>\n'
+        '    <div class="card ad-card"><h3>Everything, by place</h3><p class="ad-note">Each part of the page with what every device left on it: choices, ranks, notes word for word, and every device\'s marks drawn together on each sheet (one colour per device). Open a place to read it.</p><div id="adPlaces" class="ad-places"></div></div>\n'
         '    <div class="card ad-card"><h3>Questions asked</h3><p class="ad-note">What visitors asked the assistant, grouped when the wording is the same apart from case and punctuation; newest first, each with the parts of the page it was asked from. A question the assistant did not answer is counted and marked “not answered”.</p><ol class="ad-q" id="adQuestions"></ol><div class="ad-note" id="adQNone">No questions in the loaded record.</div></div>\n'
         '    <details class="card ad-card ad-notes"><summary>Every note, verbatim, newest first <span class="chip" id="adNoteCount">0</span></summary><ol class="ad-list" id="adNotes"></ol></details>\n'
         '  </div>\n'
@@ -144,6 +146,13 @@ section[data-feature="admin"]{display:flex;flex-direction:column;gap:14px} secti
 .ad-confirm{display:grid;gap:8px;padding:10px 12px;border-left:3px solid var(--marker);background:var(--soft);border-radius:0 6px 6px 0;font-size:15px} .ad-confirm p{margin:0} .ad-confirm[hidden]{display:none}
 .ad-table th small{display:block;font-size:11px;text-transform:none;letter-spacing:0;font-weight:300}
 .ad-q .no{color:var(--marker)}
+.ad-sim{border-left:4px solid var(--marker)} .ad-sim[hidden]{display:none} .ad-sim .ad-note{color:var(--ink);font-size:15px}
+.ad-places{display:grid;gap:6px} .ad-places h4{margin-top:10px}
+.ad-place{border-top:1px solid var(--line)} .ad-place summary{cursor:pointer;min-height:44px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:6px 0;font-size:15px} .ad-place summary b{font-weight:500;overflow-wrap:anywhere} .ad-place summary small{color:var(--mute);font-size:13px}
+.ad-place-body{display:grid;gap:10px;padding:4px 0 14px} .ad-place-body p{margin:0;font-size:14px}
+.ad-thumb{display:block;max-width:min(100%,360px);max-height:240px;border-radius:6px;border:1px solid var(--line)}
+.ad-sheet{display:block;width:100%;height:auto;max-height:80vh;background:#fff;border:1px solid var(--line);border-radius:6px}
+.ad-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--mute)} .ad-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:baseline}
 .ad-out{width:100%;min-height:160px;font:13px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
 </style>"""
 
@@ -151,13 +160,17 @@ section[data-feature="admin"]{display:flex;flex-direction:column;gap:14px} secti
 SCRIPT = r"""<script data-feature="admin">
 (function admin() {
   const AD = __AD_DATA__;  /* feature titles, decision points, project name; DATA, rendered with textContent only */
+  const PRE = __AD_PRE__;  /* null, or a record built into the page (--preload): export objects plus the words that say what they are; DATA */
   const sec = document.querySelector('section[data-feature="admin"]'); if (!sec) return;
   /* defence in depth: the build refuses a user portal, and the page refuses too */
   if (!EK.project || EK.project.portal !== "admin") { sec.textContent = ""; const h = document.createElement("h2"); h.textContent = "Admin"; const p = document.createElement("p"); p.className = "lede"; p.textContent = "Not available in this build."; sec.append(h, p); return; }
   const $ = id => document.getElementById(id);
-  const F = AD.features; const title = f => F[f] || AD.titles[f] || f;
+  /* a section is called what its own page calls it (a project may rename one: "Views" for the site story), then the kit's name */
+  const F = AD.features; const own = Object.prototype.hasOwnProperty; const domTitle = Object.create(null);
+  document.querySelectorAll("section[data-feature]").forEach(s => { if (s.dataset.feature !== "welcome" && s.dataset.title) domTitle[s.dataset.feature] = s.dataset.title; });
+  const title = f => domTitle[f] || (own.call(F, f) ? F[f] : "") || (own.call(AD.titles, f) ? AD.titles[f] : "") || String(f);
   const KIND = { note: "note", voice: "voice", vote: "choice", edit: "size change", pin: "pin", submission: "submission", markup: "markup", question: "question" };
-  const DEV_RE = /^[A-Za-z0-9_-]{1,40}$/; const MAX_FILE = 30 * 1024 * 1024; const MAX_FILES = 50; const CAP = 60000;
+  const DEV_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$/; const FEAT_RE = /^[a-z][a-z0-9-]{0,39}$/;   /* neither can be "__proto__" */ const MAX_FILE = 30 * 1024 * 1024; const MAX_FILES = 50; const CAP = 60000;
   /* the team's portal opens on this section (a link with a hash still opens where it points); the visitors' sections stay in the nav */
   /* the shell has already written #welcome into the URL; window.__hash0 is the hash the page was opened with */
   const hash0 = typeof window.__hash0 === "string" ? window.__hash0 : location.hash;
@@ -192,12 +205,15 @@ SCRIPT = r"""<script data-feature="admin">
   /* ---- 1. load ---- */
   const files = []; /* {name, device, merged, recs:[{r, devs}], dropped, error, warn} */
   const KINDS = EK.kinds();
-  const validRec = r => !!r && typeof r === "object" && !Array.isArray(r) && typeof r.feature === "string" && r.feature.length <= 200 && typeof r.target === "string" && r.target.length <= 1000 && KINDS.indexOf(r.kind) >= 0 && typeof r.id === "string" && r.id.length <= 64 && typeof r.ts === "string" && r.ts.length <= 40;
+  const validRec = r => !!r && typeof r === "object" && !Array.isArray(r) && typeof r.feature === "string" && FEAT_RE.test(r.feature) && typeof r.target === "string" && r.target.length <= 1000 && KINDS.indexOf(r.kind) >= 0 && typeof r.id === "string" && r.id.length <= 64 && typeof r.ts === "string" && r.ts.length <= 40;
   const clean = r => ({ feature: r.feature, target: r.target, kind: r.kind, value: r.value === undefined ? null : r.value, id: r.id, ts: r.ts });
   async function readFile(f) {
     const e = { name: String(f.name || "file").slice(0, 120), device: "", merged: false, recs: [], dropped: 0, error: "", warn: "" };
     if (f.size > MAX_FILE) { e.error = "larger than 30 MB; not read"; return e; }
     let j; try { j = JSON.parse(await f.text()); } catch (x) { e.error = "not a JSON file"; return e; }
+    return ingest(j, e); }
+  /* one export object (a phone's file, or a device's record from a shared store) through the same checks */
+  function ingest(j, e) {
     if (!j || typeof j !== "object" || Array.isArray(j) || !Array.isArray(j.reactions)) { e.error = "not a What we heard export (no reactions list)"; return e; }
     if (typeof j.device !== "string" || !DEV_RE.test(j.device)) { e.error = "no valid device id"; return e; }
     if (typeof j.slug !== "string" || j.slug !== EK.project.slug) { e.error = "from another project (" + String(j.slug).slice(0, 40) + "), not merged"; return e; }
@@ -208,7 +224,13 @@ SCRIPT = r"""<script data-feature="admin">
     if (typeof j.count === "number" && j.count !== j.reactions.length) e.warn = "file says " + j.count + ", holds " + j.reactions.length;
     if (e.dropped) e.warn = (e.warn ? e.warn + "; " : "") + plural(e.dropped, "malformed record") + " skipped";
     return e; }
-  $("adFiles").addEventListener("change", async ev => { const list = [...(ev.target.files || [])]; ev.target.value = ""; const room = Math.max(0, MAX_FILES - files.length);
+  /* a shared store (ek-sync) hands over export objects instead of files; opts.replace drops what the same source loaded before */
+  const MAX_STORE = 500;
+  function load(list, opts) { opts = opts || {}; const src = String(opts.source || "shared record").slice(0, 40); if (!Array.isArray(list)) return 0;
+    if (opts.replace) for (let i = files.length - 1; i >= 0; i--) if (files[i].src === src) files.splice(i, 1);
+    let n = 0; list.slice(0, MAX_STORE).forEach(j => { const e = ingest(j, { name: src, device: "", merged: false, recs: [], dropped: 0, error: "", warn: "", src }); files.push(e); if (!e.error) n++; });
+    render(); return n; }
+  $("adFiles").addEventListener("change", async ev => { const list = [...(ev.target.files || [])]; ev.target.value = ""; const room = Math.max(0, MAX_FILES - files.filter(f => !f.src).length);
     for (const f of list.slice(0, room)) files.push(await readFile(f)); render(); const ok = files.filter(f => !f.error).length;
     EK.toast(list.length > room ? "At most " + MAX_FILES + " files: " + (list.length - room) + " not read" : ok + " of " + files.length + " file" + (files.length === 1 ? "" : "s") + " merged"); });
   $("adClear").addEventListener("click", () => { files.length = 0; render(); EK.toast("Loaded files forgotten"); });
@@ -235,9 +257,10 @@ SCRIPT = r"""<script data-feature="admin">
   function bars(el, groups, order) { el.textContent = ""; const keys = order || Object.keys(groups); const max = Math.max(1, ...keys.map(k => groups[k] ? groups[k].n : 0));
     keys.forEach(k => { const g = groups[k]; if (!g || !g.n) return; const row = document.createElement("div"); row.className = "ad-bar"; const l = document.createElement("span"); l.textContent = k; const t = document.createElement("div"); t.className = "t"; const i = document.createElement("i"); i.style.width = (g.n / max * 100) + "%"; t.appendChild(i); const b = document.createElement("b"); b.textContent = g.n; const s = document.createElement("small"); s.textContent = " " + fromDevs(g.d.size); b.appendChild(s); row.append(l, t, b); el.appendChild(row); });
     if (!el.children.length) { const s = document.createElement("span"); s.className = "ad-note"; s.textContent = "Nothing yet."; el.appendChild(s); } }
-  const tally = (rs, keyFn) => { const g = {}; rs.forEach(r => { const k = keyFn(r); (g[k] = g[k] || { n: 0, d: new Set() }).n++; g[k].d.add(r.d); }); return g; };
+  /* keys below are visitor text (targets, device ids): objects without a prototype, so no key can reach Object.prototype */
+  const tally = (rs, keyFn) => { const g = Object.create(null); rs.forEach(r => { const k = keyFn(r); (g[k] = g[k] || { n: 0, d: new Set() }).n++; g[k].d.add(r.d); }); return g; };
   /* the latest reaction per device and key: a visitor who changed their mind counts once, as they left it */
-  const latestPer = (rs, keyFn) => { const m = {}; rs.forEach(r => m[r.d + "\u0000" + keyFn(r)] = r); return Object.values(m); };
+  const latestPer = (rs, keyFn) => { const m = Object.create(null); rs.forEach(r => m[r.d + "\u0000" + keyFn(r)] = r); return Object.values(m); };
 
   /* which list an item belongs to, read from the Priorities section's own markup (as the synthesis does) */
   function listOf() { const listT = {}; document.querySelectorAll('section[data-feature="list"] .ls-group').forEach(g => { const it = g.querySelector(".ls-items"); const t = it ? (it.getAttribute("aria-label") || "").replace(/,\s*\d+ items$/, "") : ""; g.querySelectorAll(".ls-item").forEach(li => listT[li.dataset.target] = t || g.dataset.g); }); return listT; }
@@ -283,6 +306,55 @@ SCRIPT = r"""<script data-feature="admin">
     if (foot) { const p = document.createElement("p"); p.className = "ad-note"; p.textContent = foot; d.appendChild(p); } $("adChoices").appendChild(d); }
   const subList = items => { const ul = document.createElement("ul"); ul.className = "ad-sub"; items.forEach(([text, d]) => { const li = document.createElement("li"); li.textContent = "\u201c" + text + "\u201d \u2014 " + d; ul.appendChild(li); }); return ul; };
 
+  /* ---- everything, by place: each target with what every device left on it; a place's body is built when it is opened ---- */
+  const NS = "http://www.w3.org/2000/svg";
+  const hue = i => "hsl(" + Math.round((i * 137.5) % 360) + " 75% 38%)";
+  const sheetCache = new Map(); const openPlaces = new Set(); const MAX_DRAWN = 200;
+  /* the markup section owns the sheet images: ask it to show the sheet, read the image it put up, then put its first sheet back */
+  function sheetImage(name) { if (sheetCache.has(name)) return sheetCache.get(name); let o = null;
+    try { const fm = EK.feature && EK.feature.markup; const im = document.getElementById("dmImg"); const names = fm && im ? fm.sheets() : [];
+      if (names.indexOf(name) >= 0) { fm.show(name); const src = im.getAttribute("href") || "", w = +im.getAttribute("width"), h = +im.getAttribute("height"); fm.show(names[0]); if (/^data:image\/(jpeg|png|webp);base64,/.test(src) && w > 0 && h > 0) o = { src, w, h }; } } catch (e) { o = null; }
+    sheetCache.set(name, o); return o; }
+  function overlay(name, recs, di) { const im = sheetImage(name); const first = recs.find(r => r.kind === "markup" && mkOk(r.value));
+    const pos = n => typeof n === "number" && isFinite(n) && n > 0 && n < 100000; const w = im ? im.w : (first && pos(first.value.w) ? first.value.w : 1000), h = im ? im.h : (first && pos(first.value.h) ? first.value.h : 700);
+    const mk = (tag, at) => { const e = document.createElementNS(NS, tag); Object.keys(at).forEach(k => e.setAttribute(k, at[k])); return e; };
+    const svg = mk("svg", { viewBox: "0 0 " + w + " " + h, "class": "ad-sheet", role: "img", "aria-label": "Every device's marks on " + flat(name).slice(0, 80) });
+    if (im) svg.appendChild(mk("image", { href: im.src, width: w, height: h }));
+    const sw = Math.max(2, w / 320), fs = Math.max(12, w / 48);
+    recs.forEach(r => { if (r.kind !== "markup" || !mkOk(r.value)) return; const col = hue(di(r.d));
+      r.value.paths.forEach(p => { if (!p.pts.length) return; if (p.pts.length === 1) { svg.appendChild(mk("circle", { cx: (p.pts[0][0] * w).toFixed(1), cy: (p.pts[0][1] * h).toFixed(1), r: sw, fill: col })); return; }
+        svg.appendChild(mk("polyline", { points: p.pts.map(q => (q[0] * w).toFixed(1) + "," + (q[1] * h).toFixed(1)).join(" "), fill: "none", stroke: col, "stroke-width": sw, "stroke-linecap": "round", "stroke-linejoin": "round" })); });
+      r.value.texts.forEach(t => { const x = mk("text", { x: (t.x * w).toFixed(1), y: (t.y * h).toFixed(1), fill: col, "font-size": fs, "font-weight": 500, stroke: "#fff", "stroke-width": fs / 5, "paint-order": "stroke" }); x.textContent = flat(t.t).slice(0, 60); svg.appendChild(x); }); });
+    return svg; }
+  function placeBody(feature, target, recs, di) { const body = document.createElement("div"); body.className = "ad-place-body";
+    const line = t => { const p = document.createElement("p"); p.textContent = t; body.appendChild(p); };
+    if (feature === "places") { try { const im = document.querySelector('section[data-feature="places"] .pl-scene[data-target="' + CSS.escape(target) + '"] img'); const src = im ? (im.currentSrc || im.getAttribute("src") || "") : ""; if (/^data:image\/(jpeg|png|webp);base64,/.test(src)) { const t = document.createElement("img"); t.className = "ad-thumb"; t.alt = ""; t.src = src; body.appendChild(t); } } catch (e) {} }
+    const choice = latestPer(recs.filter(r => r.kind === "vote" && typeof r.value === "string"), () => "");
+    if (choice.length) { const g = Object.create(null); choice.forEach(r => { const w = SHORT[r.value] || valueText(r); (g[w] = g[w] || []).push(r.d); }); Object.keys(g).sort((a, b) => g[b].length - g[a].length).forEach(k => line(k + ": " + plural(g[k].length, "device") + " (" + g[k].join(", ") + ")")); }
+    const ranks = latestPer(recs.filter(r => r.kind === "vote" && Number.isInteger(r.value) && r.value > 0 && r.value < 100), () => "");
+    if (ranks.length) line("Ranked by " + plural(ranks.length, "device") + ": " + ranks.slice().sort((a, b) => a.value - b.value).map(r => "#" + r.value + " (" + r.d + ")").join(", "));
+    const allMarks = recs.filter(r => r.kind === "markup" && mkOk(r.value)); const marks = allMarks.slice(-MAX_DRAWN);   /* the newest; a flood cannot hang the page */
+    if (allMarks.length > marks.length) line("Showing the newest " + marks.length + " of " + allMarks.length + " sets of marks; all are in the JSON export.");
+    if (marks.length) { body.appendChild(overlay(target, marks, di)); const lg = document.createElement("div"); lg.className = "ad-legend"; [...new Set(marks.map(r => r.d))].forEach(d => { const s = document.createElement("span"); const i = document.createElement("i"); i.style.background = hue(di(d)); s.append(i, document.createTextNode(d)); lg.appendChild(s); }); body.appendChild(lg);
+      const labels = []; marks.forEach(r => r.value.texts.forEach(t => { if (flat(t.t)) labels.push([String(t.t), r.d]); })); if (labels.length) body.appendChild(subList(labels)); }
+    const photos = recs.filter(photoOk).length; if (photos) line(plural(photos, "photo") + " of a paper sketch (in the JSON export)");
+    const notes = recs.filter(isNote); if (notes.length) { const ol = document.createElement("ol"); ol.className = "ad-list"; notes.slice().reverse().forEach(r => { const li = document.createElement("li"); li.className = "ad-item"; const b = document.createElement("div"); b.className = "b"; b.textContent = noteText(r); const sm = document.createElement("small"); sm.textContent = (spoken(r) ? "spoken · " : "") + r.d + " · " + fmtTs(r.ts); li.append(b, sm); ol.appendChild(li); }); body.appendChild(ol); }
+    const other = recs.filter(r => r.kind === "pin" || r.kind === "edit" || r.kind === "voice"); other.forEach(r => line(valueText(r) + " (" + r.d + ")"));
+    return body; }
+  function places(R) { const box = $("adPlaces"); if (!box) return; box.textContent = ""; const devs = [...new Set(R.map(r => r.d))]; const di = d => Math.max(0, devs.indexOf(d));
+    const byF = Object.create(null); R.forEach(r => { if (r.kind === "question") return; const f = byF[r.feature] = byF[r.feature] || Object.create(null); (f[r.target] = f[r.target] || []).push(r); });
+    const order = Object.keys(F).concat(Object.keys(byF)).filter((v, i, a) => a.indexOf(v) === i).filter(f => byF[f]);
+    order.forEach(f => { const h = document.createElement("h4"); h.textContent = title(f); box.appendChild(h);
+      Object.keys(byF[f]).map(t => ({ t, recs: byF[f][t], nd: devCount(byF[f][t]) })).sort((a, b) => b.nd - a.nd || b.recs.length - a.recs.length).forEach(x => {
+        const det = document.createElement("details"); det.className = "ad-place"; const su = document.createElement("summary"); const b = document.createElement("b"); b.textContent = x.t; const sm = document.createElement("small");
+        const nn = x.recs.filter(isNote).length, nm = x.recs.filter(r => r.kind === "markup").length;
+        sm.textContent = [plural(x.recs.length, "reaction") + " " + fromDevs(x.nd), nn ? plural(nn, "note") : "", nm ? plural(nm, "set") + " of marks" : ""].filter(Boolean).join(" · "); su.append(b, sm); det.appendChild(su);
+        const key = f + "\u0000" + x.t; const fill = () => { if (det.dataset.built) return; det.dataset.built = "1"; det.appendChild(placeBody(f, x.t, x.recs, di)); };
+        det.addEventListener("toggle", () => { if (det.open) { openPlaces.add(key); fill(); } else openPlaces.delete(key); });
+        if (openPlaces.has(key)) { det.open = true; fill(); }   /* a refresh from the shared record keeps open places open */
+        box.appendChild(det); }); });
+    if (!box.children.length) { const s = document.createElement("span"); s.className = "ad-note"; s.textContent = "Nothing yet."; box.appendChild(s); } }
+
   function render() { const R = merged(); table(R); $("adRecord").hidden = !R.length && !files.length; const nd = devCount(R);
     $("adTotal").textContent = R.length; $("adDevs").textContent = nd; const s = span(R);
     if (s) { const days = Math.max(1, Math.round((s[1] - s[0]) / 864e5) + 1); $("adDays").textContent = days; $("adRange").textContent = (days === 1 ? "day, " + fmtDay(s[0]) : "days, " + fmtDay(s[0]) + " to " + fmtDay(s[1])); } else { $("adDays").textContent = "\u2014"; $("adRange").textContent = "no reactions"; }
@@ -294,6 +366,7 @@ SCRIPT = r"""<script data-feature="admin">
     const ed = edits(R); const ek = Object.keys(ed).filter(k => ed[k].net); if (ek.length) card(title("program") + " \u00b7 size changes (net)", ek.sort((a, b) => Math.abs(ed[b].net) - Math.abs(ed[a].net)).map(k => [k, (ed[k].net > 0 ? "+" : "") + ed[k].net + " m\u00b2", fromDevs(ed[k].d.size)]));
     const pins = R.filter(r => r.kind === "pin"); if (pins.length) { const pg = tally(pins, r => title(r.feature) + " \u00b7 " + pinPlace(r)); card("Pins", Object.keys(pg).sort((a, b) => pg[b].n - pg[a].n).map(k => [k, plural(pg[k].n, "pin"), fromDevs(pg[k].d.size)])); }
     const sh = sheets(R); const sk = Object.keys(sh); if (sk.length) card("Markup per sheet", sk.map(k => { const x = sh[k]; return [k, plural(x.strokes, "stroke") + " \u00b7 " + plural(x.labels.length, "label") + " \u00b7 " + plural(x.photos, "photo"), fromDevs(x.d.size), x.labels.length ? subList(x.labels.map(l => [l.t, l.d])) : null]; }));
+    places(R);
     /* questions */
     const qs = questions(R); const ol = $("adQuestions"); ol.textContent = ""; $("adQNone").hidden = !!qs.length;
     qs.forEach(g => { const li = document.createElement("li"); li.className = "ad-item"; const b = document.createElement("div"); b.className = "b"; b.textContent = g.text; const sm = document.createElement("small"); sm.textContent = ["asked " + plural(g.n, "time"), whereText(g.where), plural(g.d.size, "device"), "last " + fmtTs(g.last)].filter(Boolean).join(" \u00b7 "); li.append(b, sm);
@@ -308,7 +381,7 @@ SCRIPT = r"""<script data-feature="admin">
 
   /* ---- 3. ask the assistant ---- */
   /* noText: counts and choices only. No note, label or question wording; notes and questions as counts per section */
-  function compact(R, noText) { const devs = {}; R.forEach(r => { const x = devs[r.d] = devs[r.d] || { device: r.d, reactions: 0 }; x.reactions++; });
+  function compact(R, noText) { const devs = Object.create(null); R.forEach(r => { const x = devs[r.d] = devs[r.d] || { device: r.d, reactions: 0 }; x.reactions++; });
     const by = (g) => { const o = {}; Object.keys(g).forEach(k => o[k] = { count: g[k].n, devices: g[k].d.size }); return o; };
     const cut = s => String(s).slice(0, 2000);
     const c = { project: AD.project, total_reactions: R.length, devices: Object.values(devs), by_section: by(tally(R, r => title(r.feature))), by_kind: by(tally(R, r => KIND[r.kind] || r.kind)),
@@ -427,9 +500,17 @@ SCRIPT = r"""<script data-feature="admin">
   $("adDlJson").addEventListener("click", () => { if (!nothing()) download(exportJson(), "ek-" + EK.project.slug + "-merged-" + stamp() + ".json", "application/json"); });
   $("adDlMd").addEventListener("click", () => { if (!nothing()) download(exportMd(), "ek-" + EK.project.slug + "-merged-" + stamp() + ".md", "text/markdown"); });
   $("adCopyMd").addEventListener("click", () => { if (!nothing()) { show(exportMd()); copy(exportMd(), "Draft"); } });
-  EK.admin = { merged, exportJson, exportMd, systemPrompt: noText => systemPrompt(merged(), !!noText) };   /* for the team's own checks in the console */
+  EK.admin = { merged, load, exportJson, exportMd, systemPrompt: noText => systemPrompt(merged(), !!noText) };   /* for the team's own checks in the console */
 
   EK.on("ek:show", id => { if (id === "admin") { render(); EK.context("admin", "the merged record", "\u2014 a note here stays in this browser"); } });
+  /* a record built into the page (a public sample of the team's view): loaded through the same checks as a file, and
+     named for what it is before anything else on the section */
+  if (PRE && Array.isArray(PRE.exports)) { load(PRE.exports, { source: String(PRE.source || "built-in record") });
+    const str = (v, n) => typeof v === "string" ? v.slice(0, n) : "";
+    $("adSimTitle").textContent = str(PRE.title, 120) || "A record built into this page"; $("adSimText").textContent = str(PRE.note, 1200); $("adSim").hidden = false;
+    const le = sec.querySelector(".lede"), ki = sec.querySelector(".kicker"); if (le && str(PRE.lede, 400)) le.textContent = str(PRE.lede, 400); if (ki && str(PRE.kicker, 80)) ki.textContent = str(PRE.kicker, 80);
+    /* the visitors' first-visit card would cover the record this page opens on */
+    window.addEventListener("load", () => { const box = document.getElementById("intro"), x = document.getElementById("introClose"); if (EK.current() === "admin" && box && x && !box.hidden) x.click(); }); }
   render(); if (EK.current() === "admin") EK.context("admin", "the merged record", "\u2014 a note here stays in this browser");
   /* EK.chat may be defined by a script after this one */
   window.addEventListener("load", chatState); window.addEventListener("focus", chatState); ["focusin", "pointerenter"].forEach(ev => $("adAsk").addEventListener(ev, () => { if (!busy) chatState(); }));
@@ -456,6 +537,8 @@ def main(argv=None) -> int:
     ap.add_argument("--brief", type=Path, default=Path("work/brief.json"))
     ap.add_argument("--manifest", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--preload", type=Path, default=None,
+                    help='build a record into the page: a JSON file {"exports": [...], "note": "what it is", "title", "lede", "kicker", "source"}')
     args = ap.parse_args(argv)
     for p in (args.brief, args.manifest, args.out):
         if not p.is_file():
@@ -472,7 +555,25 @@ def main(argv=None) -> int:
         sys.exit("[ek-admin] refused: the shell in --out was built as a user portal; rebuild it with the admin manifest first.")
     warnings: list[str] = []
     data = data_from(brief, manifest, warnings)
-    new_doc = splice(doc, section_html(), STYLE, SCRIPT.replace("__AD_DATA__", json_inline(data), 1))
+    pre = None
+    if args.preload:
+        # A record built into the page, for a public sample of the team's view. It is published with the page, so it
+        # must not be anybody's real reactions: the file has to say what it is, and photos and voice are refused.
+        if not args.preload.is_file():
+            sys.exit(f"not a file: {args.preload}")
+        raw = json.loads(args.preload.read_text(encoding="utf-8-sig"))
+        if not isinstance(raw, dict) or not isinstance(raw.get("exports"), list) or not str(raw.get("note") or "").strip():
+            sys.exit("[ek-admin] refused: --preload needs {\"exports\": [...], \"note\": \"what this record is\"}; the note is shown above the record.")
+        exports = [e for e in raw["exports"] if isinstance(e, dict) and isinstance(e.get("reactions"), list)]
+        if any(isinstance(r, dict) and r.get("kind") in ("submission", "voice") for e in exports for r in e["reactions"]):
+            sys.exit("[ek-admin] refused: the preload record holds photos or voice clips; those are not built into a page.")
+        pre = {"exports": exports, "source": str(raw.get("source") or "built-in record")[:40], "title": str(raw.get("title") or "")[:120],
+               "note": str(raw["note"])[:1200], "lede": str(raw.get("lede") or "")[:400], "kicker": str(raw.get("kicker") or "")[:80]}
+        if len(json.dumps(pre)) > 3_000_000:
+            sys.exit("[ek-admin] refused: the preload record is over 3 MB.")
+        warnings.append(f"a record of {sum(len(e['reactions']) for e in exports)} reactions from {len(exports)} devices is built into the page and published with it")
+    script = SCRIPT.replace("__AD_DATA__", json_inline(data), 1).replace("__AD_PRE__", json_inline(pre), 1)
+    new_doc = splice(doc, section_html(), STYLE, script)
     args.out.write_text(new_doc, encoding="utf-8", newline="\n")
     for w in warnings:
         log(f"warning: {w}")

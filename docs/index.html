@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Engage Kit — build an engagement tool from your pre-design presentation</title>
+<title>Engage Kit — participatory design tools built from your own presentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,700;100,400;100,600&display=swap" rel="stylesheet">
 <style>
@@ -15,16 +15,17 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);f
 a{color:var(--plan)} h1,h2,h3{line-height:1.1;margin:0;font-weight:600} h1{font-size:clamp(34px,6vw,64px);font-stretch:87.5%;font-weight:700;max-width:18ch} h2{font-size:30px;font-stretch:87.5%} h3{font-size:19px}
 p{margin:0;max-width:62ch} .mute{color:var(--mute)}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-/* Cover: one full-bleed key image, the title, the premise */
-.cover{position:relative;height:100vh;height:100svh;min-height:480px;overflow:hidden;background:#1B1C19;color:#fff}
-.cover-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
-.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.25) 38%,rgba(0,0,0,0) 60%,rgba(0,0,0,.28) 100%);pointer-events:none}
-.cover-text{position:absolute;z-index:2;left:0;right:0;bottom:0;max-width:1080px;margin:0 auto;padding:0 20px calc(84px + env(safe-area-inset-bottom,0px));display:grid;gap:12px}
-.cover h1{font-size:clamp(60px,11vw,128px);font-stretch:87.5%;font-weight:700;line-height:.95;letter-spacing:-.01em;max-width:none;text-shadow:0 2px 24px rgba(0,0,0,.35)}
-.cover-text p{font-size:clamp(17px,2.4vw,22px);max-width:40ch;text-shadow:0 1px 12px rgba(0,0,0,.5)}
-.cover-cue{position:absolute;z-index:2;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);color:#fff;opacity:.8;width:44px;height:44px;display:grid;place-items:center}
-.cover-cue svg{width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.cover-cue:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:50%}
+/* Landing: the one-minute demo video, full width on a dark band, with the name and the menu above it */
+.lead{position:relative;background:#15150F;color:#fff;display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
+.lead-bar{display:flex;align-items:center;min-height:76px;padding:calc(8px + env(safe-area-inset-top,0px)) 20px 8px}
+.brand{color:#fff;text-decoration:none;font-size:22px;font-weight:700;font-stretch:87.5%;letter-spacing:-.01em;min-height:44px;display:inline-flex;align-items:center}
+.brand:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.lead-video{display:block;width:100%;flex:1 1 auto;min-height:0;max-height:calc(100svh - 150px);aspect-ratio:16/9;object-fit:contain;background:#15150F}
+.lead-note{max-width:none;margin:0;padding:12px 20px calc(16px + env(safe-area-inset-bottom,0px));font-size:15px;color:#C9C6BA}
+.lead-note a{color:#fff}
+@media(max-width:700px){.lead{min-height:0}.lead-video{max-height:none;flex:none}}
+.pull{margin:0;padding:4px 0 4px 18px;border-left:4px solid var(--marker);font-size:22px;font-weight:600;max-width:48ch}
+.limits{background:var(--soft);border-radius:8px;padding:20px;display:grid;gap:10px} .limits p{max-width:70ch}
 #menu{position:absolute;z-index:3;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:min(280px,calc(100vw - 32px));display:flex;flex-direction:column;align-items:flex-end}
 #menuBtn{display:inline-flex;appearance:none;background:rgba(20,20,18,.45);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:6px;min-width:44px;min-height:44px;padding:0 12px;font:inherit;font-size:15px;cursor:pointer;align-items:center;gap:8px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #menuBtn svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
@@ -51,31 +52,53 @@ pre.mermaid{background:none;border:none;padding:0}
 </style>
 </head>
 <body>
-<header class="cover" id="top">
-  <img class="cover-img" src="hero.svg" alt="">
+<header class="lead" id="top">
+  <div class="lead-bar"><a class="brand" href="#intro">Engage Kit</a></div>
   <div id="menu">
     <button id="menuBtn" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
       <svg class="bars" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       <svg class="x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       <span>Menu</span>
     </button>
-    <nav id="siteNav" aria-label="Page"><a href="#intro">Overview</a><a href="#why">Why</a><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#build">Build yours</a><a href="#demo">Showcase</a></nav>
+    <nav id="siteNav" aria-label="Page"><a href="#intro">Overview</a><a href="#why">Why participation</a><a href="#platforms">Why not a platform</a><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#build">Build yours</a><a href="#demo">Showcase</a></nav>
   </div>
-  <div class="cover-text">
-    <h1>Engage Kit</h1>
-    <p>Community Engagement Tool created by Claudio Cabana</p>
-  </div>
-  <a class="cover-cue" href="#intro" aria-label="Scroll to overview"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+  <video class="lead-video" id="demoVideo" src="engage-kit-demo.mp4" poster="demo-poster.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="One-minute demonstration of Engage Kit, without sound: a deck is handed to an AI model, the model builds a project's engagement site, and the design team reads every visitor's reactions in one record."></video>
+  <p class="lead-note">One minute, no sound. A deck goes to an AI model; the model builds that project's own site; the design team reads what every visitor left, and where. The reactions in the video are test data from simulated visitors, and the shared record it shows is a prototype. <a href="#intro">Read on</a></p>
 </header>
 
 <div class="wrap">
 <div class="hero" id="intro">
-  <h2>Your pre-design presentation is already the engagement tool. It just isn't interactive yet.</h2>
-  <p>Engage Kit is a library of skills and agents that any current AI model can read. It turns one project's deck into one project's engagement site, installing only the features that project's decisions need. No platform, no subscription, nothing that fits every project and therefore none.</p>
-  <div class="btns"><a class="btn primary" href="p/c2be2949/index.html">Open the showcase (passphrase)</a><a class="btn" href="sample/index.html">Try the open sample</a><a class="btn" href="#build">Build one from your deck</a></div>
+  <h2>Consultation that cannot change the design is a performance.</h2>
+  <p>Engage Kit is a kit for participatory design. It turns a project's own presentation into a site where the people who will live with the project can react to the actual drawings, views and model while those can still change, and where the design team reads exactly what was said and what it was about.</p>
+  <p>It is a library of skills and agents that any current AI model can read, not a platform. One project's deck becomes one project's tool, with only the features that project's decisions need.</p>
+  <div class="btns"><a class="btn primary" href="sample/index.html">Try the open sample</a><a class="btn" href="p/c2be2949/index.html">Open the showcase (passphrase)</a><a class="btn" href="#build">Build one from your deck</a></div>
+  <p class="mute">Created by Claudio Cabana.</p>
 </div>
 
 <section id="why">
+  <h2>Why consultation so often becomes a performance</h2>
+  <p>A lot of community consultation is held because it is required, at a point when the decisions are already made. People are shown finished work, asked what they think, and thanked. Then a report says the community was consulted. In 1969 Sherry Arnstein put consultation on the tokenism rungs of her ladder of citizen participation for this reason: people are heard, with no assurance that what they say will change anything.</p>
+  <p class="pull">The question is not whether people were asked. It is whether anything they said could have changed the design.</p>
+  <p>The performance usually has three parts.</p>
+  <div class="grid">
+    <div class="card"><h3>The decision came first</h3><p>The drawings arrive finished and the session asks for a reaction to them. There is no version of the afternoon in which the building moves.</p></div>
+    <div class="card"><h3>The format filters the answer</h3><p>A comment card, a dot on a board, a five-point scale. A design decision is spatial (where, how tall, what faces whom) and whatever does not fit the form is not recorded.</p></div>
+    <div class="card"><h3>The report replaces the voices</h3><p>What comes back is a summary and a count. Nobody can trace a conclusion to the words behind it, so nobody can check whether they were heard.</p></div>
+  </div>
+  <h3 style="margin-top:12px">What participatory design asks for instead</h3>
+  <div class="grid">
+    <div class="card"><h3>React to the work itself</h3><p>People mark up the team's own plans, turn the model, say whether a view works, and rank what matters, on their own phone and in their own time, early enough that the answer can matter.</p></div>
+    <div class="card"><h3>Every reaction keeps its place</h3><p>A note is recorded with what it was about: this view, this room, this line on this plan. The team reads everyone's marks drawn together on the drawing they were made on.</p></div>
+    <div class="card"><h3>The record stays readable</h3><p>Notes are kept word for word. Every count says how many devices are behind it, and every claim in the synthesis points back to the reactions it rests on.</p></div>
+  </div>
+  <div class="limits">
+    <h3>What a tool cannot do</h3>
+    <p>A tool does not make a process participatory. If the team has no room to change the design, no interface will create it. Engage Kit removes two excuses, that input was too hard to collect and too hard to read. Whether anything changes is still up to the people holding the pen.</p>
+    <p>It also hears only the people who open it. Who was not in the record is a question the team has to answer by other means.</p>
+  </div>
+</section>
+
+<section id="platforms">
   <h2>Why not just use a platform?</h2>
   <p>Projects move when there is trust that voices are heard, confidence in decision-making, and requirements that are met. Engagement platforms exist to help, and they are good at map surveys, idea walls, voting and automated reports. But in pre-design they get in the way in three specific ways.</p>
   <div class="grid">
@@ -170,11 +193,12 @@ mkdir input && cp ~/Desktop/pre-design-deck.pdf input/
   <p>It is private: the page is encrypted and opens with a passphrase the design team gives out. Neither this site nor the gate page names the client or the place.</p>
   <div class="btns"><a class="btn primary" href="p/c2be2949/index.html">Open the showcase</a><a class="btn" href="p/c2be2949/index.html#tour">With the tour</a></div>
   <h3 style="margin-top:12px">The open sample</h3>
-  <p>Pacific Design Institute, a student studio project for a hypothetical design research institute, built by the skills from the project's own deck and poster and open without a passphrase: the proposal in six views, the parts of the plan and the design moves as ranked lists, a 3D model of the building's outside among its neighbours, eight drawings to mark up, and "What we heard". It installs only what that project supports, so it has no history timeline or voice. Nobody collects what you add; it stays in your browser. The hand-built session-0 prototype is still at <a href="demo/index.html#tour">demo/</a>.</p>
-  <div class="btns"><a class="btn" href="sample/index.html">Try the sample</a><a class="btn" href="sample/index.html#tour">With the tour</a><a class="btn" href="../WORKPLAN.md">Read the work plan</a></div>
+  <p>Pacific Design Institute, a student studio project for a hypothetical design research institute, built by the skills from the project's own deck and poster and open without a passphrase: the proposal in six views, the parts of the plan and the design moves as ranked lists, a 3D model of the building's outside among its neighbours, eight drawings to mark up, and "What we heard". It installs only what that project supports, so it has no history timeline or voice. The sample opens on the design team's view, with a simulated record built in: 188 reactions left by 20 visitors played by AI personas, shown by section, by choice, and by the place each one was left, with their marks drawn together on the plans. None of it is real feedback. The visitors' sections are in the same menu. Nobody collects what you add; it stays in your browser. The hand-built session-0 prototype is still at <a href="demo/index.html#tour">demo/</a>.</p>
+  <p class="mute">The video at the top of this page shows a test build of the same project with a shared record: every device's reactions reach the design team as they are made. That part is a prototype. It has run only on the author's computer, and it is how the simulated record was collected; the open sample itself sends nothing anywhere.</p>
+  <div class="btns"><a class="btn" href="sample/index.html">Open the team's view</a><a class="btn" href="sample/index.html#welcome">Open as a visitor</a><a class="btn" href="sample/index.html#tour">With the tour</a><a class="btn" href="../WORKPLAN.md">Read the work plan</a></div>
 </section>
 
-<footer><div>Engage Kit · a studio experiment in building one tool per project · consultation in pre-design, steps 5–8 of the workflow</div></footer>
+<footer><div>Engage Kit · a studio experiment in participatory design: one tool per project, built from its own presentation · pre-design, steps 5–8 of the workflow</div></footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
 <script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"neutral"});}</script>
@@ -188,6 +212,8 @@ mkdir input && cp ~/Desktop/pre-design-deck.pdf input/
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&hdr.classList.contains("open")){setOpen(false);btn.focus();}});
   document.addEventListener("click",function(e){if(hdr.classList.contains("open")&&!hdr.contains(e.target)) setOpen(false);});
 })();
+/* the landing video plays by itself only for people who have not asked for reduced motion */
+(function(){var v=document.getElementById("demoVideo");if(!v) return;try{if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.pause();}}catch(e){}})();
 </script>
 </body>
 </html>

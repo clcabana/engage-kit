@@ -1,13 +1,38 @@
 # Engage Kit
 
-**Turn a pre-design presentation into a project-specific community and stakeholder engagement tool.**
+**A kit for participatory design: turn a project's own presentation into a tool where people react to the actual drawings, and the design team reads exactly what was said and where.**
+
+[![Watch the one-minute demo](docs/demo-poster.jpg)](https://clcabana.github.io/engage-kit/)
+
+*One-minute demo (no sound), on the [info page](https://clcabana.github.io/engage-kit/). The reactions in it are test data from simulated visitors, and the shared record it shows is a prototype.*
+
+## Why
+
+A lot of community consultation is a performance. It is held because it is required, at a point when the decisions
+are already made: people are shown finished work, handed a comment card, and thanked, and a report says the community
+was consulted. Sherry Arnstein put consultation on the tokenism rungs of her ladder of citizen participation (1969)
+for this reason: people are heard, with no assurance that what they say will change anything.
+
+Participatory design asks for something else, and Engage Kit is built around it:
+
+- **React to the work itself.** People mark up the team's own plans, turn the model, say whether a view works and
+  rank what matters, early enough that the answer can matter.
+- **Every reaction keeps its place.** A note is recorded with what it was about: this view, this room, this line on
+  this plan.
+- **The record stays readable.** Notes are kept word for word, every count says how many devices are behind it, and
+  every claim in the synthesis points back to the reactions it rests on.
+
+A tool does not make a process participatory. If the team has no room to change the design, no interface will create
+it. The kit removes two excuses, that input was too hard to collect and too hard to read. It also hears only the
+people who open it.
 
 ## Live links
 
-- **[Engage Kit info page →](https://clcabana.github.io/engage-kit/)** what it is, how it works, and how to build one from your own deck.
+- **[Engage Kit info page →](https://clcabana.github.io/engage-kit/)** the demo video, why it exists, how it works, and how to build one from your own deck.
 - **[Showcase project (private) →](https://clcabana.github.io/engage-kit/p/c2be2949/)** a real engagement tool built with Engage Kit.
   It is encrypted: **please ask the author for the passphrase.**
 - **[Open sample →](https://clcabana.github.io/engage-kit/sample/)** a student studio project for a hypothetical design institute, built by the skills from its own deck; no passphrase needed.
+  It opens on the design team's view with a **simulated** record built in (188 reactions from 20 visitors played by AI personas; not real feedback).
 
 Engage Kit is not an app. It is a small library of *skills* (plain-language instruction files) plus four
 *agents* (an orchestrator and three quality-control reviewers: design, technical, security) that any current AI model can read. You hand it
@@ -22,7 +47,7 @@ features your project needs. When models improve, the same skills produce a bett
 
 ```
 engage-kit/
-├── docs/index.html          ← the GitHub Pages site: "build your own tool" walkthrough
+├── docs/index.html          ← the GitHub Pages site: the demo video, the argument, "build your own tool" walkthrough
 ├── demo/index.html          ← working prototype: a sample engagement tool with 5 features installed
 ├── project.config.json      ← example manifest: which skills a project installs and why
 ├── agents/
