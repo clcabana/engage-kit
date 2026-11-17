@@ -10,8 +10,7 @@
 
 A lot of community consultation is a performance. It is held because it is required, at a point when the decisions
 are already made: people are shown finished work, handed a comment card, and thanked, and a report says the community
-was consulted. Sherry Arnstein put consultation on the tokenism rungs of her ladder of citizen participation (1969)
-for this reason: people are heard, with no assurance that what they say will change anything.
+was consulted. People are heard, with no assurance that what they say will change anything.
 
 Participatory design asks for something else, and Engage Kit is built around it:
 
