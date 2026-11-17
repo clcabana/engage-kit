@@ -62,7 +62,7 @@ pre.mermaid{background:none;border:none;padding:0}
     </button>
     <nav id="siteNav" aria-label="Page"><a href="#intro">Overview</a><a href="#why">Why participation</a><a href="#platforms">Why not a platform</a><a href="#how">How it works</a><a href="#skills">Skills</a><a href="#agents">Agents</a><a href="#build">Build yours</a><a href="#demo">Showcase</a></nav>
   </div>
-  <video class="lead-video" id="demoVideo" src="engage-kit-demo.mp4" poster="demo-poster.jpg" autoplay muted loop playsinline controls preload="metadata" aria-label="One-minute demonstration of Engage Kit, without sound: a deck is handed to an AI model, the model builds a project's engagement site, and the design team reads every visitor's reactions in one record."></video>
+  <video class="lead-video" id="demoVideo" src="engage-kit-demo.mp4" poster="demo-poster.jpg" autoplay muted loop playsinline controls preload="auto" aria-label="One-minute demonstration of Engage Kit, without sound: a deck is handed to an AI model, the model builds a project's engagement site, and the design team reads every visitor's reactions in one record."></video>
   <p class="lead-note">One minute, no sound. A deck goes to an AI model; the model builds that project's own site; the design team reads what every visitor left, and where. The reactions in the video are test data from simulated visitors, and the shared record it shows is a prototype. <a href="#intro">Read on</a></p>
 </header>
 
@@ -212,8 +212,15 @@ mkdir input && cp ~/Desktop/pre-design-deck.pdf input/
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&hdr.classList.contains("open")){setOpen(false);btn.focus();}});
   document.addEventListener("click",function(e){if(hdr.classList.contains("open")&&!hdr.contains(e.target)) setOpen(false);});
 })();
-/* the landing video plays by itself only for people who have not asked for reduced motion */
-(function(){var v=document.getElementById("demoVideo");if(!v) return;try{if(matchMedia("(prefers-reduced-motion: reduce)").matches){v.removeAttribute("autoplay");v.pause();}}catch(e){}})();
+/* the landing video starts by itself, muted, as soon as the page opens (the author's choice, 2026-11-17: also when the
+   device asks for reduced motion; the controls pause it). Some browsers ignore the autoplay attribute, so it is also
+   started from script, and again when enough has loaded or the tab becomes visible. */
+(function(){var v=document.getElementById("demoVideo");if(!v) return;
+  function go(){try{v.muted=true;v.defaultMuted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});}catch(e){}}
+  var stopped=false;v.addEventListener("pause",function(){if(v.currentTime>0.3&&!v.ended)stopped=true;});   /* a person paused it: leave it */
+  go();v.addEventListener("loadeddata",function(){if(v.paused&&!stopped)go();});v.addEventListener("canplay",function(){if(v.paused&&!stopped)go();});
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"&&v.paused&&!stopped)go();});
+})();
 </script>
 </body>
 </html>
